@@ -1,23 +1,25 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/auth/";
+const API_URL = "http://localhost:3000/api/";
 
-const register = (username, email, password) => {
-  return axios.post(API_URL + "signup", {
-    username,
+
+const register = ( email, password) => {
+  return axios.post(API_URL + "register", {
+   
     email,
     password,
   });
 };
 
-const login = (username, password) => {
+const login = (email, password) => {
+
   return axios
-    .post(API_URL + "signin", {
-      username,
+    .post(API_URL + "login", {
+      email,
       password,
     })
     .then((response) => {
-      if (response.data.username) {
+      if (response.data.email) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
 
@@ -26,14 +28,69 @@ const login = (username, password) => {
 };
 
 const logout = () => {
-  localStorage.removeItem("user");
-  return axios.post(API_URL + "signout").then((response) => {
-    return response.data;
-  });
+
+  const user = getCurrentUser();
+  
+  if(user){
+    localStorage.removeItem("user");
+  } 
+  
+  return axios
+    .get(API_URL + "logout", { headers: {"Authorization" : `Bearer ${user.token}`} })
+    
+    .then((response) => {
+
+        
+        console.log(response)
+        
+        return response;
+      
+    })
+    .catch((error) => {
+      
+      if(error.status === 401){
+
+        localStorage.removeItem("user");
+      }
+    })
+    
+    ; 
+    
+  
+  
+  
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+
+  const user = localStorage.getItem("user");
+  
+  if(!user){
+    return null;
+  } else {
+
+    if (user.exp < Date.now()){
+      //removeCurrentUser();
+      localStorage.removeItem("user");
+      return null;
+    }
+
+    return JSON.parse(user);    
+  }
+  
+    
+};
+
+const removeCurrentUser = () => {
+
+  
+  if(!localStorage.getItem("user")){
+    return null;
+  } else {
+    return localStorage.removeItem("user");    
+  }
+  
+    
 };
 
 const AuthService = {
@@ -41,6 +98,7 @@ const AuthService = {
   login,
   logout,
   getCurrentUser,
+  removeCurrentUser
 }
 
 export default AuthService;

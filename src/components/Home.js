@@ -1,33 +1,46 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import UserService from "../services/user.service";
+import AuthService from "../services/auth.service";
 
-const Home = () => {
-  const [content, setContent] = useState("");
 
-  useEffect(() => {
-    UserService.getPublicContent().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        const _content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
+export default function Home () {
+  
+  const navigate = useNavigate();
 
-        setContent(_content);
-      }
-    );
-  }, []);
+  const user = AuthService.getCurrentUser();  
 
-  return (
-    <div className="container">
-      <header className="jumbotron">
-        <h3>{content}</h3>
-      </header>
-    </div>
-  );
+
+  if (!user ){
+     localStorage.removeItem("user");
+  } 
+  
+    return (
+    
+      <div className="container">
+        
+          <h4 className="text-zinc-600">Bienvenido, 
+            {user &&
+              <span>{user.fullname}</span>
+            }
+          </h4>
+          {user 
+              
+            ? <p className="text-zinc-600">Ver <Link to="/campanas" >campañas</Link> disponibles.</p>
+            : <p className="text-zinc-600">Para empezar, <Link to="/login" >ingrese a su cuenta.</Link></p>
+           
+           }
+          
+           
+      
+        
+      </div>
+    ); 
+
+    
+  
+  
 };
 
-export default Home;
+
