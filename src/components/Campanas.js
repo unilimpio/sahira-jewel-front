@@ -230,8 +230,8 @@ export default function Campanas () {
         <>  
           <table className="table-fixed border-collapse border border-slate-400">
             <thead>
-                <tr>
-                  <th>Fecha</th>
+                <tr className="border border-slate-400">
+                  <th className="border border-slate-400">Fecha</th>
                   <th>dolares</th>
                   <th>puntos</th>
                 </tr>
@@ -241,13 +241,13 @@ export default function Campanas () {
               content.puntos.map(row => (
                 
                 
-                <tr className="" 
+                <tr className="border border-slate-400" 
                         key={"tr."+row.id}
                         
                         >  
-                  <td className="" key={"dateCreated."+row.date_created}></td>
-                  <td className="" key={"dolares"+row.id}>{row.dolares}</td>
-                  <td className="" key={"puntos."+row.id}>{row.puntos}</td>
+                  <td className="border border-slate-400-" key={"dateCreated."+row.date_created}></td>
+                  <td className="border border-salte-400" key={"dolares"+row.id}>{row.dolares}</td>
+                  <td className="border border-slate-400" key={"puntos."+row.id}>{row.puntos}</td>
                   
                 </tr>
           
