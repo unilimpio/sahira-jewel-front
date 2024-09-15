@@ -18,7 +18,7 @@ export default function Home () {
   
     return (
     
-      <div className="container">
+      <div className="container mx-auto mb-20">
         
           <h4 className="text-zinc-600">Bienvenido, 
             {user &&
@@ -27,7 +27,7 @@ export default function Home () {
           </h4>
           {user 
               
-            ? <p className="text-zinc-600">Ver <Link to="/campanas" >campañas</Link> disponibles.</p>
+            ? <p className="text-zinc-600">Ver <Link to="/evals" className="text-cyan-600 hover:text-slate-600">Evaluaciones</Link> disponibles.</p>
             : <p className="text-zinc-600">Para empezar, <Link to="/login" >ingrese a su cuenta.</Link></p>
            
            }

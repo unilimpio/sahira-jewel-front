@@ -6,12 +6,11 @@ import AuthService from "../services/auth.service";
 
 
 
-export default function Campanas () {
+export default function Evals () {
   
   
   
-  
-  function CampanasList({clientID}){
+  function EvalsList({uId}){
   
     const [content, setContent] = useState("");
     
@@ -24,20 +23,24 @@ export default function Campanas () {
 
       function createOptions() {
         return {
-          clientID: user.cid,
+          uId: user.uId,
           
                    
         };
       }
       const options = createOptions();
       
-      if(!options.clientID){
+      if(!options.uId){
         setContent("");
-        setMessage("no se recibio el id del cliente ")
+        setMessage("no se recibieron los parametros correctos.")
         
       } else {
-  
-        UserService.getIndex(options.clientID).then(
+        try {
+          
+        } catch (error) {
+          
+        }
+        UserService.getEvals(options.uId).then(
 
             (response) => {
               setContent(response.data);
@@ -63,24 +66,20 @@ export default function Campanas () {
         )
       }  
   
-    }, [clientID]);
+    }, [user.uId]);
   
     return (
-      <>
+      
         
-        <p>Estas son las campanas habilitadas para su usuario ({clientID}): </p>
-        <div className="container">
+        
+      <div className="">
           
-          <div className="flex flex-row ">
+          <div className="">
+            <p>Estas son las campanas habilitadas para su usuario ({uId}): </p>
           
-          {content.campanas 
-            ? <RenderCampanas content={content}/>
-            : <p>Loading...</p>          
-                
-    
-          }
           </div>
-          <div className="flex flex-row">
+          <div className="">
+
           {message && (
             <div className="form-group">
               <div className="alert alert-danger" role="alert">
@@ -88,47 +87,58 @@ export default function Campanas () {
               </div>
             </div>
           )}
+            {content.evals 
+            ? <RenderEvals content={content}/>
+            : <>
+                <svg className="ml-4animate-spin h-4 w-4 fill-slate-700" viewBox="0 0 24 24">
+                  <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                  <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                </svg>
+                <span className="text-white ml-8">Loading</span></>    
+                
+    
+            }
           </div>
           
           
-        </div>
-      </>
+      </div>
+      
     );
   
   }
 
   
-  function RenderCampanas({content}){
+  function RenderEvals({content}){
   
     
     if(content){
   
       return(
-        <>
+        <div className="">
                 
-                <label>
-              Campanas disponibles:
+              <label htmlFor="eval-select">Evaluaciones disponibles:</label>
               
-              <select className="text-zinc-800 font-normal text-md border-2 rounded-md bg-zinc-100"
-                defaultValue={campanaId}
-                onChange={e => setCampanaId(e.target.value) }
+              <select id="eval-select" 
+                className="text-zinc-800 text-xs md:text-sm border-1 rounded-md bg-zinc-100"
+                defaultValue={evalId}
+                onChange={e => setEvalId(e.target.value) }
               >
                 <option defaultValue={''} ></option>
           
             
             {
-              content.campanas.map(campana => (
+              content.evals.map(row => (
                 
-                <option key={'option'+campana.campana_id} value={campana.campana_id}>{campana.name+' ('+campana.campana_id+')'}</option> 
+                <option key={'option-'+row.id} value={row.id}>{'(id: ' + row.id + ')' + row.date_inicio_planif + ' - ' + row.verif_name}</option> 
                 
                 
           
               ))
             }
             </select>
-          </label>
           
-        </>
+          
+        </div>
       );
   
     } else {
@@ -144,7 +154,7 @@ export default function Campanas () {
   
   }
   
-  function CampanaDetail({campanaID}){
+  function EvalDetail({evalId}){
   
     const [content, setContent] = useState("");
     
@@ -156,21 +166,21 @@ export default function Campanas () {
   
       function createOptions() {
         return {
-          clientID: user.cid,
-          campanaID: campanaID
+          uId: user.uId,
+          evalId: evalId
                    
         };
       }
   
       const options = createOptions();
       
-      if(!options.campanaID){
+      if(!options.evalId){
         setContent("");
         
       
       } else {
   
-        UserService.getPoints(options.clientID, options.campanaID).then(
+        UserService.getPuntos(options.evalId).then(
   
             (response) => {
               setContent(response.data);
@@ -197,57 +207,58 @@ export default function Campanas () {
         )
       }  
   
-    }, [campanaID]);
+    }, [user.uId, evalId]);
   
     return (
-      <>
-        <div className="container">
+      <div className="flex flex-col p-4">
         
-          <div className="flex flex-row">
-            <p>Este es su estado de cuenta de la campana seleccionada ({campanaID}): </p>
-          </div>
+        
+          <div className="border-1 border-white">
+            <p className="">Estos son los resultados registrados para la evaluación seleccionada: ({evalId}): </p>
+        
           
-          <div className="flex flex-row">
-          {content.puntos
-            ? <RenderPoints content={content}/>
-            : <p>Loading...</p>          
-                
-    
-          }
+            <div className="">
+              {content.puntos
+                ? <RenderPuntos content={content}/>
+                : <p>Loading...</p>          
+                    
+        
+              }
+            </div>
           </div>
-        </div>
-      </>
+      </div>
     );
   
   
   }
   
-  function RenderPoints({content}){
+  function RenderPuntos({content}){
   
     if(content){
   
       return(
-        <>  
-          <table className="table-fixed border-collapse border border-slate-400">
-            <thead>
-                <tr className="border border-slate-400">
-                  <th className="border border-slate-400">Fecha</th>
-                  <th>dolares</th>
-                  <th>puntos</th>
+        <> 
+          <p className="">Fecha Realizada: </p>
+          <table className="table-auto  bg-zinc-200 rounded-lg shadow-md p-2">
+            <thead className="text-sm">
+                <tr className="text-slate-800 font-semibold">
+                  <th className="">Fecha</th>
+                  <th className="">Criterio Cumplido</th>
+                  <th className="">Observaciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody className="text-sm">
             {
               content.puntos.map(row => (
                 
                 
-                <tr className="border border-slate-400" 
+                <tr className="" 
                         key={"tr."+row.id}
                         
                         >  
-                  <td className="border border-slate-400-" key={"dateCreated."+row.date_created}></td>
-                  <td className="border border-salte-400" key={"dolares"+row.id}>{row.dolares}</td>
-                  <td className="border border-slate-400" key={"puntos."+row.id}>{row.puntos}</td>
+                  <td className="" key={"dateCreated-"+row.date_created}>{row.date_created}</td>
+                  <td className="" key={"dolares-"+row.id}>{row.criterio_cumplido}</td>
+                  <td className="" key={"puntos-"+row.id}>{row.observaciones}</td>
                   
                 </tr>
           
@@ -273,29 +284,29 @@ export default function Campanas () {
 
   const user = AuthService.getCurrentUser();
   
-  const onChangeCampana = (e) => {
+  const onChangeEval = (e) => {
 
-    const campanaID  = e.target.value;
-    setCampanaId(campanaID);
-    setShowCampana(true);
+    const evalId  = e.target.value;
+    setEvalId(evalId);
+    setShowEval(true);
  
   }
 
-  const [campanaId, setCampanaId] = useState("");
-  const [showCampana, setShowCampana] = useState(false);
+  const [evalId, setEvalId] = useState("");
+  const [showEval, setShowEval] = useState(false);
   
   return (
     
-      <div className="container">
+      <div className="container mx-auto py-2 mb-10">
         
-          <h4 className="text-zinc-600">Campanas</h4>
+          <h4 className="text-zinc-600">Evaluaciones</h4>
       
-        <div className="row flex-1">
-          <div className="flex">
+        <div className="flex flex-col">
+          <div className="">
             
                 {user &&
 
-                  <CampanasList clientID={user.cid} />
+                  <EvalsList uId={user.uId} />
 
                 }
               
@@ -305,16 +316,16 @@ export default function Campanas () {
 
         {!user &&
           
-          <p>Favor <Link to="/Login"> ingrese </Link> para ver campañas disponibles.</p>
+          <p>Favor <Link to="/Login"> ingrese </Link> para ver evaluaciones disponibles.</p>
           
         }
         
         </div>
         
         
-        {campanaId &&
+        {evalId &&
           <div className="row">
-           <CampanaDetail campanaID={campanaId} />
+           <EvalDetail evalId={evalId} />
            </div>
         }
         

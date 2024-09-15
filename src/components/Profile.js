@@ -13,7 +13,7 @@ const Profile = () => {
         </h4>
       
       <p>
-        <strong>Id:</strong> {currentUser.id}
+        <strong>Id:</strong> {currentUser.uId}
       </p>
       <p>
         <strong>Email:</strong> {currentUser.email}

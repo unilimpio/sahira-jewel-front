@@ -6,9 +6,9 @@ const API_URL = "http://localhost:3000/api/";
 const user = AuthService.getCurrentUser();
 
 
-const getPoints = (clientID, campanaID) => {
+const getPuntos = (evalId) => {
   return axios
-  .get(API_URL + "getPoints/" + clientID + "/" + campanaID, 
+  .get(API_URL + "getPuntos/" + evalId, 
     { headers: {"Authorization" : `Bearer ${user.token}`}})
   .catch(function (error) {
     if(error.status === 401){
@@ -18,9 +18,9 @@ const getPoints = (clientID, campanaID) => {
   })
 };
 
-const getIndex = (clientID) => {
+const getEvals = (uId) => {
   return axios
-  .get(API_URL + "getIndex/" + clientID, { headers: {"Authorization" : `Bearer ${user.token}`} } )
+  .get(API_URL + "getEvals/" + uId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
   .catch(function (error){
     if(error.status){
       localStorage.removeItem("user");
@@ -42,8 +42,8 @@ const getAdminBoard = () => {
 };
 */
 const UserService = {
-  getPoints,
-  getIndex,
+  getPuntos,
+  getEvals,
   //getUserBoard,
   //getModeratorBoard,
   //getAdminBoard,
