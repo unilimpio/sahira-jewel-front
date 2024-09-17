@@ -1,7 +1,7 @@
 import axios from "axios";
 import AuthService from "./auth.service";
 
-const API_URL = "http://localhost:3000/api/";
+const API_URL = "https://cmx.unilimpio.com/index.php/api/";
 
 const user = AuthService.getCurrentUser();
 

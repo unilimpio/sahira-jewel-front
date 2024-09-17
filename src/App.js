@@ -54,8 +54,9 @@ const App = () => {
   */
 
   return (
-    <div className="container mx-auto">
-      <nav className="flex flex-col sm:flex-row w-full bg-sky-600  rounded-t-md">
+    <div className="container mx-auto pt-3">
+      <header className="container bg-gradient-to-tr from-sky-600 to-white border-1 rounded-t-md border-slate-700">
+      <nav className="flex flex-col sm:flex-row w-full   ">
         <div className=" flex flex-nowrap relative mx-2 grow-0">
             {/*<img src={logo} alt="CLEANVerif Compliance Verification App." 
                 className=" sm:w-20 w-10 mb-2"/>*/}
@@ -86,7 +87,7 @@ const App = () => {
             <span className="absolute bottom-0 text-white text-xs md:text-sm font-extralight overline">Compliance Verification App.</span>
         </div>
         
-        <div className="w-1/3  sm:w-2/3 ">
+        <div className="w-1/3  sm:w-2/3 content-end ">
 
           <div className="flex flex-col sm:flex-row">
           
@@ -146,8 +147,9 @@ const App = () => {
           </div>
         </div>
       </nav>
+    </header>
     
-      <div className="border border-1 border-slate-500 
+      <div className="border border-1 border-slate-800 
       h-fit p-2 bg-gradient-to-br from-white to-zinc-300" id="routes">
         <Routes>
           <Route exact path={"/"} element={<Home />} />
