@@ -72,13 +72,13 @@ export default function Evals () {
       
         
         
-      <div className="">
+      <div className="flex flex-col">
           
-          <div className="">
-            <p>Estas son las campanas habilitadas para su usuario ({uId}): </p>
           
-          </div>
-          <div className="">
+          <p className="text-sm md:text-md mb-0">Estas son las campanas habilitadas para su usuario ({uId}): </p>
+          
+          
+          
 
           {message && (
             <div className="form-group">
@@ -89,16 +89,17 @@ export default function Evals () {
           )}
             {content.evals 
             ? <RenderEvals content={content}/>
-            : <>
-                <svg className="ml-4animate-spin h-4 w-4 fill-slate-700" viewBox="0 0 24 24">
+            : <div className="flex">
+                <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
                   <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
                   <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
                 </svg>
-                <span className="text-white ml-8">Loading</span></>    
+                <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+              </div>    
                 
     
             }
-          </div>
+          
           
           
       </div>
@@ -114,12 +115,12 @@ export default function Evals () {
     if(content){
   
       return(
-        <div className="">
+        <div className="m-1 pb-4">
                 
-              <label htmlFor="eval-select">Evaluaciones disponibles:</label>
+              <label htmlFor="eval-select" className="text-xs md:text-sm mb-0">Seleccionar evaluación:</label>
               
               <select id="eval-select" 
-                className="text-zinc-800 text-xs md:text-sm border-1 rounded-md bg-zinc-100"
+                className="h-8 w-full text-zinc-600 text-xs text-ellipsis md:text-sm border border-slate-500  bg-white shadow-md rounded-sm"
                 defaultValue={evalId}
                 onChange={e => setEvalId(e.target.value) }
               >
@@ -129,7 +130,7 @@ export default function Evals () {
             {
               content.evals.map(row => (
                 
-                <option key={'option-'+row.id} value={row.id}>{'(id: ' + row.id + ')' + row.date_inicio_planif + ' - ' + row.verif_name}</option> 
+                <option className="" key={'option-'+row.id} value={row.id}>{'(id: ' + row.id + ')' + row.date_inicio_planif + ' - ' + row.verif_name}</option> 
                 
                 
           
@@ -210,22 +211,26 @@ export default function Evals () {
     }, [user.uId, evalId]);
   
     return (
-      <div className="flex flex-col p-4">
-        
-        
-          <div className="border-1 border-white">
-            <p className="">Estos son los resultados registrados para la evaluación seleccionada: ({evalId}): </p>
+      <div className="flex flex-col p-3 bg-neutral-100 rounded-sm">       
+          
+            <h2 className="text-base md:text-lg text-slate-600">Evaluación ({evalId}) - Resumen </h2>
         
           
-            <div className="">
+            <div className="m-1">
               {content.puntos
                 ? <RenderPuntos content={content}/>
-                : <p>Loading...</p>          
+                : <div className="flex">
+                    <svg className=" animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                      <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                      <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                    </svg>
+                    <span className="text-slate-700 font-extralight ml-2">Loading ...</span>
+                  </div>         
                     
         
               }
             </div>
-          </div>
+          
       </div>
     );
   
@@ -237,17 +242,19 @@ export default function Evals () {
     if(content){
   
       return(
-        <> 
-          <p className="">Fecha Realizada: </p>
-          <table className="table-auto  bg-zinc-200 rounded-lg shadow-md p-2">
-            <thead className="text-sm">
+        <div className="flex flex-col"> 
+          <p className="text-sm md:text-base my-1">Fecha Realizada: </p>
+          <p className="text-sm md:text-base my-1">Ubicacion: </p>
+          <p className="text-sm md:text-base my-1">Resultados: </p>
+          <table className="table-fixed w-full border-separate border-spacing-2 bg-white border border-slate-500 rounded-sm shadow-md">
+            <thead className="text-xs md:text-sm">
                 <tr className="text-slate-800 font-semibold">
                   <th className="">Fecha</th>
                   <th className="">Criterio Cumplido</th>
                   <th className="">Observaciones</th>
                 </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-xs md:text-sm">
             {
               content.puntos.map(row => (
                 
@@ -266,7 +273,7 @@ export default function Evals () {
             }
             </tbody>
           </table>
-        </>
+        </div>
       );
   
     } else {
@@ -299,7 +306,7 @@ export default function Evals () {
     
       <div className="container mx-auto py-2 mb-10">
         
-          <h4 className="text-zinc-600">Evaluaciones</h4>
+          <h1 className="text-zinc-600 font-bold text-lg md:text-xl lg:text-2xl">Evaluaciones</h1>
       
         <div className="flex flex-col">
           <div className="">
