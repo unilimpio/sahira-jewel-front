@@ -54,13 +54,16 @@ const App = () => {
   */
 
   return (
-    <div className="container mx-auto pt-3">
-      <header className="container bg-gradient-to-r from-sky-600 to-white border rounded-t-md border-slate-800">
-      <nav className="flex flex-col sm:flex-row w-full   ">
-        <div id="logo" className=" flex flex-nowrap relative mx-2 my-2 grow-0">
+    <div className="container mx-auto  pt-3 ">
+      <header className="flex place-content-between bg-gradient-to-r from-sky-600 to-white border rounded-t-md border-slate-800">
+        
+        <Link to={"/"} className="hover:no-underline ">
+          <div id="brand" className="container flex-col  px-3 py-3 m-0 ">
             {/*<img src={logo} alt="CLEANVerif Compliance Verification App." 
                 className=" sm:w-20 w-10 mb-2"/>*/}
-            <svg viewBox="0 0 509.604 509.604" className="fill-green-500 w-6 h-6 sm:w-7 sm:h-7 md:h-8 md:w-8 mt-2">
+            <div id="brand-logo" className="flex flex-row -mb-4  sm:-mb-4 ">
+              <svg viewBox="0 0 509.604 509.604" 
+                    className="fill-green-500  mr-1 w-6 h-6 sm:w-7 sm:h-7 md:h-8 md:w-8 z-20">
                 <path d="M34.262,333.282c8.119,6.75,14.793,15.223,14.143,20.988c-0.382,3.443-0.593,6.943-0.593,10.5
                   c0,52.393,41.3,94.861,92.24,94.861c6.292,0,12.431-0.65,18.37-1.885c10.002-2.074,21.812,1.941,28.888,9.793
                   c16.82,18.646,40.803,30.342,67.492,30.342c28.19,0,53.426-13.016,70.342-33.518c6.723-8.146,18.103-11.533,28.22-8.5
@@ -75,21 +78,29 @@ const App = () => {
                   l153.985-154.138c9.629-10.471,18.99-14.162,25.102-10.146c2.82,1.855,4.646,4.647,5.135,7.87
                   c0.583,3.825-0.756,7.946-3.768,11.599l-185.149,224.91c-2.687,3.26-6.11,5.059-9.629,5.059c-4.179,0-7.965-2.516-10.404-6.895
                   l-54.344-97.969C130.519,269.422,130.021,265.618,131.475,263.016z"/>
-	          </svg>
-            <Link to={"/"} className="m-2 text-white hover:no-underline">
-              
-              <h1 className="font-bolder text-lg md:text-2xl mr-1 ">
-                CLEANVerif<span className="text-xs font-extralight">®</span> 
-              </h1>
+	            </svg>
               
               
-            </Link>
-            <span className="absolute bottom-0 text-white text-xs md:text-sm font-extralight overline">Compliance Verification App.</span>
-        </div>
-        
-        <div id="links" className="container w-full sm:w-2/3 content-end fixed -top-20 -left-20 sm:static">
+                <h1 className="text-white  font-bolder text-xl md:text-2xl">
+                  CLEANVerif<span className="text-xs font-extralight">®</span> 
+                </h1>
+              
+              
+             
+            </div>
+            
+            <span id="brand-slogan" 
+              className="-z-20 text-white text-xs md:text-sm font-light border-t border-t-white text-nowrap">
+              Compliance Verification App.
+            </span>
+          
+          </div>
+        </Link>
+        <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 justify-evenly">
+                
+          
 
-          <div className="flex sm:flex-row justify-evenly">
+          
           
             <Link to={"/home"} className="m-1 md:mx-4 text-slate-800 hover:text-white md:text-lg lg:text-xl">
               Home
@@ -144,14 +155,14 @@ const App = () => {
               </>
             )}
         
-          </div>
-        </div>
-      </nav>
-    </header>
+          
+        
+        </nav>
+      </header>
     
-    <div className="border border-slate-600 
+    <div id="routes" className="border border-slate-600 
       h-fit p-2 bg-gradient-to-br from-white to-neutral-200
-      rounded-b-md sm:rounded-none" id="routes">
+      rounded-b-md sm:rounded-none" >
         <Routes>
           <Route exact path={"/"} element={<Home />} />
           <Route exact path={"/home"} element={<Home />} />
@@ -170,7 +181,8 @@ const App = () => {
 
         </Routes>
     </div>
-    <div id="links-bottom" className="container w-full h-12 bg-slate-700 sm:hidden fixed bottom-0 left-0 ">
+    <nav id="responsive-bottom-nav" 
+          className="container w-full content-end h-12 bg-slate-700 sm:hidden fixed bottom-0 left-0 ">
 
         <div className="flex flex-row justify-between font-extralight ">
           
@@ -223,8 +235,8 @@ const App = () => {
             )}
         
         </div>
-    </div>
-    <footer className="mb-4 p-2 sm:bg-slate-700 h-[10vh] rounded-b-md sm:visible">
+    </nav>
+    <footer className="mb-4 p-2 sm:bg-slate-700 h-[10vh] rounded-b-md ">
         <p className="text-zinc-800 sm:text-white text-xs font-light">
           &copy;Unilimpio S.A. 2024 - All rights reserved.
         </p>
