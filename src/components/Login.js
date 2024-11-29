@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -69,33 +69,40 @@ const Login = () => {
   };
 
   return (
-    <div className="m-2 p-2 sm-p-4 border-1 border-slate-400 bg-zinc-100 shadow-md rounded-md ">
-      
-        <img
+    <div className=" sm:w-1/2 z-0 m-2 p-2 sm-p-4 border-1 border-slate-400 bg-zinc-100 shadow-md rounded-md ">
+       
+        <div className="flex flex-row ">
+          <img
           src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
           alt="profile-img"
-          className="w-10 sm:w-20 rounded-full"
-        />
+          className="w-16 sm:w-20 rounded-full opacity-75 z-10 "
+          /> 
+          <h1 className="text-zinc-600 -ml-4 mt-2 z-30">Login</h1> 
+        </div>
+        
 
         <Form onSubmit={handleLogin} ref={form}>
-          <div className="form-group flex flex-col sm:flex-row">
-            <label htmlFor="email" className="mx-2">Email:</label>
-            <Input
-              type="text"
-              className="form-control"
-              name="email"
-              autoComplete="username"
-              value={email}
-              onChange={onChangeEmail}
-              validations={[required]}
-            />
+          <div className=" flex flex-col sm:flex-row  sm:justify-start sm:w-fit sm:pl-12 my-2">
+            
+              <label htmlFor="email" className="mx-2">Email:</label>
+            
+            
+              <Input
+                type="text"
+                className="text-lg rounded-md border border-zinc-600 h-10 p-3 "
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={onChangeEmail}
+                validations={[required]}
+              />
           </div>
 
-          <div className="form-group flex flex-col sm:flex-row">
+          <div className="flex flex-col sm:flex-row sm:pl-12 justify-center sm:justify-start my-2">
             <label htmlFor="password" className="mx-2">Password:</label>
             <Input
               type="password"
-              className="form-control "
+              className=" rounded-md border border-zinc-600 h-10 p-3"
               autoComplete="current-password"
               name="password"
               value={password}
@@ -104,7 +111,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className=" flex sm:pl-12 sm:w-8/12 justify-center sm:justify-start my-2">
             
               {loading && (
               <button className="bg-slate-400 border-2 rounded-md py-2 w-[7rem] relative text-left" disabled={loading}>
@@ -124,7 +131,7 @@ const Login = () => {
           </div>
 
           {message && (
-            <div className="form-group">
+            <div className="">
               <div className="alert alert-danger" role="alert">
                 {message}
               </div>
@@ -135,6 +142,7 @@ const Login = () => {
       
     </div>
   );
+
 };
 
 export default Login;

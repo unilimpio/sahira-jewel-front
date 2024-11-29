@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "./logo_clean_verify.png"
+//import logo from "./logo_clean_verify.png"
 import "./App.css";
 
 import AuthService from "./services/auth.service";
@@ -12,7 +12,10 @@ import Logout from "./components/Logout";
 
 import Register from "./components/Register";
 import Home from "./components/Home";
-import Evals from "./components/Evals";
+import MyEvals from "./components/MyEvals";
+
+import Puntos from "./components/Puntos.js";
+
 
 import Profile from "./components/Profile";
 
@@ -54,8 +57,19 @@ const App = () => {
   */
 
   return (
-    <div className="container mx-auto  pt-3 ">
-      <header className="flex place-content-between bg-gradient-to-r from-sky-600 to-white border rounded-t-md border-slate-800">
+    <div className="m-1">
+      <header  
+        className={
+          `
+          flex sticky top-1 z-40
+          place-content-between
+          bg-gradient-to-tl from-sky-600 to-white border 
+          rounded-t-md 
+          border-slate-800`
+          
+        }
+        
+        >
         
         <Link to={"/"} className="hover:no-underline ">
           <div id="brand" className="container flex-col  px-3 py-3 m-0 ">
@@ -63,7 +77,7 @@ const App = () => {
                 className=" sm:w-20 w-10 mb-2"/>*/}
             <div id="brand-logo" className="flex flex-row -mb-4  sm:-mb-4 ">
               <svg viewBox="0 0 509.604 509.604" 
-                    className="fill-green-500  mr-1 w-6 h-6 sm:w-7 sm:h-7 md:h-8 md:w-8 z-20">
+                    className="fill-green-500  mr-1 w-6 h-6 sm:w-7 sm:h-7 md:h-8 md:w-8 z-5">
                 <path d="M34.262,333.282c8.119,6.75,14.793,15.223,14.143,20.988c-0.382,3.443-0.593,6.943-0.593,10.5
                   c0,52.393,41.3,94.861,92.24,94.861c6.292,0,12.431-0.65,18.37-1.885c10.002-2.074,21.812,1.941,28.888,9.793
                   c16.82,18.646,40.803,30.342,67.492,30.342c28.19,0,53.426-13.016,70.342-33.518c6.723-8.146,18.103-11.533,28.22-8.5
@@ -90,7 +104,7 @@ const App = () => {
             </div>
             
             <span id="brand-slogan" 
-              className="-z-20 text-white text-xs md:text-sm font-light border-t border-t-white text-nowrap">
+              className="-z-5 text-white text-xs md:text-sm font-light border-t border-t-white text-nowrap">
               Compliance Verification App.
             </span>
           
@@ -107,8 +121,12 @@ const App = () => {
             </Link>
           
           
-            <Link to={"/evals"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
+            <Link to={"/myevals"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
               Evaluaciones
+            </Link>
+
+            <Link to={"/puntos"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
+              Puntos
             </Link>
           
           
@@ -118,7 +136,11 @@ const App = () => {
           
             {currentUser ? (
           
-              <>  
+              <> 
+                <Link to={"/myevals"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
+                  Mis Evals
+                </Link>
+
                 <Link to={"/profile"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
                   Mi Perfil
                 </Link>
@@ -160,90 +182,94 @@ const App = () => {
         </nav>
       </header>
     
-    <div id="routes" className="border border-slate-600 
-      h-fit p-2 bg-gradient-to-br from-white to-neutral-200
-      rounded-b-md sm:rounded-none" >
-        <Routes>
-          <Route exact path={"/"} element={<Home />} />
-          <Route exact path={"/home"} element={<Home />} />
-          <Route exact path={"/evals"} element={<Evals />} />
-          <Route exact path={"/login"} element={<Login />} />
-          <Route exact path={"/logout"} element={<Logout />} />
-          <Route exact path={"/register"} element={<Register />} />
-          <Route exact path={"/profile"} element={<Profile />} />
-          
-          
-          {/*}
-          <Route path="/user" element={<BoardUser />} />
-          <Route path="/mod" element={<BoardModerator />} />
-          <Route path="/admin" element={<BoardAdmin />} />
-        */}
-
-        </Routes>
-    </div>
-    <nav id="responsive-bottom-nav" 
-          className="container w-full content-end h-12 bg-slate-700 sm:hidden fixed bottom-0 left-0 ">
-
-        <div className="flex flex-row justify-between font-extralight ">
-          
-            <Link to={"/home"} className="m-1 hover:text-slate-800 text-white">
-              Home
-            </Link>
-          
-          
-            <Link to={"/evals"} className="m-1 hover:text-slate-800 text-white">
-              Evaluaciones
-            </Link>
-          
-            {currentUser ? (
-          
-              <>  
-                <Link to={"/profile"} className="m-1 hover:text-slate-800 text-white">
-                  Mi Perfil
-                </Link>
-              
-                {/*
-                <li className="nav-item">
-                  <a href="/logout" className="nav-link" onClick={logOut}>
-                    LogOut
-                  </a>
-                </li>
-
-
-              */}
-              
-                <Link to={"/logout"} className="m-1 hover:text-slate-800 text-white">
-                  Logout
-                </Link>
+      <div id="routes" className=" border border-slate-600 
+        h-fit p-2 bg-gradient-to-br from-white to-neutral-200
+        rounded-b-md sm:rounded-none" >
+          <Routes>
+            <Route path={"/"} element={<Home />} />
+            <Route path={"/home"} element={<Home />} />
             
-
-              </>  
-            ) : (
-              <>
+            <Route path={"/myevals"} element={<MyEvals />} />
+            <Route path={"/puntos"} element={<Puntos />} />
+            <Route path={"/login"} element={<Login />} />
+            <Route path={"/logout"} element={<Logout />} />
+            <Route path={"/register"} element={<Register />} />
+            <Route path={"/profile"} element={<Profile />} />
             
-                <Link to={"/login"} className="m-1 hover:text-slate-800 text-white">
-                  Login
-                </Link>
+            
+            
+            {/*}
+            <Route path="/user" element={<BoardUser />} />
+            <Route path="/mod" element={<BoardModerator />} />
+            <Route path="/admin" element={<BoardAdmin />} />
+          */}
+
+          </Routes>
+      </div>
+      <nav id="responsive-bottom-nav" 
+            className="container w-full content-start h-16 bg-slate-700 sm:hidden fixed bottom-0 left-0 ">
+
+          <div className="flex flex-row justify-between font-extralight ">
+            
+              <Link to={"/home"} className="m-1 hover:text-slate-800 text-white">
+                Home
+              </Link>
+            
+            
+              
+            
+              {currentUser ? (
+            
+                <>
+                  <Link to={"/myevals"} className="m-1 hover:text-slate-800 text-white">
+                    Mis Evals
+                  </Link>
+                  <Link to={"/profile"} className="m-1 hover:text-slate-800 text-white">
+                    Mi Perfil
+                  </Link>
+                
+                  {/*
+                  <li className="nav-item">
+                    <a href="/logout" className="nav-link" onClick={logOut}>
+                      LogOut
+                    </a>
+                  </li>
+
+
+                */}
+                
+                  <Link to={"/logout"} className="m-1 hover:text-slate-800 text-white">
+                    Logout
+                  </Link>
               
 
+                </>  
+              ) : (
+                <>
               
-                <Link to={"/register"} className="m-1 hover:text-slate-800 text-white">
-                  Sign Up
-                </Link>
-            
-              </>
-            )}
-        
-        </div>
-    </nav>
-    <footer className="mb-4 p-2 sm:bg-slate-700 h-[10vh] rounded-b-md ">
+                  <Link to={"/login"} className="m-1 hover:text-slate-800 text-white">
+                    Login
+                  </Link>
+                
+
+                
+                  <Link to={"/register"} className="m-1 hover:text-slate-800 text-white">
+                    Sign Up
+                  </Link>
+              
+                </>
+              )}
+          
+          </div>
+      </nav>
+      <footer className="mb-12 p-2 sm:bg-slate-700 h-[10vh] rounded-b-md ">
         <p className="text-zinc-800 sm:text-white text-xs font-light">
           &copy;Unilimpio S.A. 2024 - All rights reserved.
         </p>
         
-    </footer>
+      </footer>
       
-  </div>
+    </div>
   );
 };
 

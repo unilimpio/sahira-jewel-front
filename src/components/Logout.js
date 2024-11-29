@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import AuthService from "../services/auth.service";
 
@@ -12,28 +12,32 @@ const Logout = () => {
 
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+
+  const user = AuthService.getCurrentUser();
   
   AuthService.logout().then(
-        () => {
+          () => {
+            localStorage.removeItem("user");
+          console.log('local storage removed')
+            navigate("/home");
+            window.location.reload();
+          },
+          (error) => {
+            
 
-          navigate("/home");
-          window.location.reload();
-        },
-        (error) => {
-          
+            const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-          const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+            setLoading(false);
+            setMessage(resMessage);
 
-          setLoading(false);
-          setMessage(resMessage);
-
-        }
-  );
+          }
+    );
+  
 
   return (
       <>

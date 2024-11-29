@@ -4,7 +4,8 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "https://cmx.unilimpio.com/index.php",
+      //target: "https://cmx.unilimpio.com/index.php",
+     target: "http://cmxbk/index.php",
       changeOrigin: true,
     })
   );

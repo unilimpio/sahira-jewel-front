@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://cmx.unilimpio.com/index.php/api/";
-//const API_URL = "http://localhost:3000/api/";
+//const API_URL = "https://cmx.unilimpio.com/index.php/api/";
+const API_URL = "http://localhost:3000/api/";
 
 
 const register = ( email, password) => {
@@ -32,30 +32,28 @@ const logout = () => {
 
   const user = getCurrentUser();
   
-  if(user){
-    localStorage.removeItem("user");
-  } 
-  
-  return axios
-    .get(API_URL + "logout", { headers: {"Authorization" : `Bearer ${user.token}`} })
-    
-    .then((response) => {
+  if(typeof user !== "undefined"){ 
+    return axios
+      .get(API_URL + "logout", { headers: {"Authorization" : `Bearer ${user?.token}`} })
+      
+      .then((response) => {
 
-        
         console.log(response)
-        
+                   
+          
         return response;
-      
-    })
-    .catch((error) => {
-      
-      if(error.status === 401){
+        
+      })
+      .catch((error) => {
+        
+        if(error.status === 401){
 
-        localStorage.removeItem("user");
-      }
-    })
+          localStorage.removeItem("user");
+        }
+      })
+  
+  } 
     
-    ; 
     
   
   

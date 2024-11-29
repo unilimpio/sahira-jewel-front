@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
@@ -306,7 +306,7 @@ export default function Evals () {
     
       <div className="container mx-auto py-2 mb-10">
         
-          <h1 className="text-zinc-600 font-bold text-lg md:text-xl lg:text-2xl">Evaluaciones</h1>
+          <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Evaluaciones</h1>
       
         <div className="flex flex-col">
           <div className="">

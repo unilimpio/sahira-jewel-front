@@ -1,10 +1,12 @@
 import axios from "axios";
 import AuthService from "./auth.service";
 
-const API_URL = "https://cmx.unilimpio.com/index.php/api/";
-//const API_URL = "http://localhost:3000/api/";
+
+//const API_URL = "https://cmx.unilimpio.com/index.php/api/";
+const API_URL = "http://localhost:3000/api/";
 
 const user = AuthService.getCurrentUser();
+
 
 
 const getPuntos = (evalId) => {
@@ -19,15 +21,60 @@ const getPuntos = (evalId) => {
   })
 };
 
+const getEvalState = (evalId) => {
+  return axios
+  .get(API_URL + "getEvalState/" + evalId, 
+    { headers: {"Authorization" : `Bearer ${user.token}`}})
+  .catch(function (error) {
+    if(error.status === 401){
+      localStorage.removeItem("user");
+    }
+
+  })
+};
+
 const getEvals = (uId) => {
+  
   return axios
   .get(API_URL + "getEvals/" + uId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
   .catch(function (error){
-    if(error.status){
+    //if(error.status === 401){
       localStorage.removeItem("user");
-    }
+      //console.log()
+      
+
+    //}
   });
   
+};
+
+const setPunto = (evalId, instance, data) => {
+  
+  
+
+  return axios
+    .post(API_URL + "setPunto/" + evalId + '/' + instance, data,
+      { headers: {
+        "Authorization" : `Bearer ${user.token}`
+      } }
+      
+
+    )
+    .then((response) => {
+      /*
+      if (response.data.flag) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      */
+
+      return response;
+    })
+    .catch( (error) => {
+      
+
+      return error;
+    
+    })
 };
 /*
 const getUserBoard = () => {
@@ -45,6 +92,8 @@ const getAdminBoard = () => {
 const UserService = {
   getPuntos,
   getEvals,
+  getEvalState,
+  setPunto,
   //getUserBoard,
   //getModeratorBoard,
   //getAdminBoard,
