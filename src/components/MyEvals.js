@@ -12,6 +12,8 @@ import AuthService from "../services/auth.service";
 
 //import RenderPuntosForm from "./Puntos"
 
+import logoUni from '../logo-unilimpio.svg';
+
 
 
 export default function MyEvals () {
@@ -395,7 +397,8 @@ export default function MyEvals () {
 
       function handleCancel (){
       
-        setError("Process cancelled by the user");
+        setMessage('Evaluación cancelada por el usuario. Puede continuar más tarde desde él último criterio verificado.');
+        setError('Atención: la evaluación no se ha completado! No olvide completarla más adelante.')
         console.log('cancelled by the user');
         setLoading(false);
         setContent(''); 
@@ -418,7 +421,7 @@ export default function MyEvals () {
                 className={className +
                   `m-1 p-2 flex flex-row  
                    rounded-md 
-                  hover:bg-white  border border-zinc-400 font-semibold
+                  hover:bg-white bg-zinc-50  border border-zinc-400 font-semibold
                   
                   `
                 } 
@@ -458,7 +461,7 @@ export default function MyEvals () {
                 className={className +
                   `m-1 p-2 flex flex-row  
                    rounded-md 
-                  hover:bg-white  border border-zinc-400 font-semibold
+                  hover:bg-white bg-zinc-50 border border-zinc-400 font-semibold
                   
                   `
                 } 
@@ -579,61 +582,9 @@ export default function MyEvals () {
         
       }     
     
-      if(state.instance_key === 9999){
+      
 
-        return(
-  
-          <form onSubmit={handleSubmit} >
-  
-            <div className=" flex flex-col 
-                  sm:flex-row sm:justify-start 
-                  sm:w-fit sm:pl-12 my-2
-                  ">
-                    <p className="text-sm font-thin ">
-                      Esta evaluación ha terminado.&nbsp;
-                      <span className="text-red-500 font-bold">
-                        Nº  {evalId} [{instance}]
-                      </span>.<br/>
-                      <span className="text-slate-700 font-bold">
-                      A continuacion un resumen de los resultados: 
-                      </span>
-                    </p>
-                    
-                    
-                         
-            </div>   
-            {error && (
-                          
-                          <div className="alert alert-danger " role="alert">
-                              {error}
-                          </div>
-                                  
-                )}      
-    
-            <div className=" flex sm:pl-12 sm:w-8/12 justify-evenly sm:justify-start my-2">
-                
-                
-                
-                    
-                    <CancelButton 
-                      className=" ">
-                        Cerrar
-                    </CancelButton>           
-                    
-                  
-              
-            </div>
-    
-    
-            
-          </form>
-        
-        );
-
-
-      } else {
-
-        return(
+      return(
   
           <form onSubmit={handleSubmit} >
   
@@ -696,9 +647,9 @@ export default function MyEvals () {
             
           </form>
         
-        );
+      );
 
-      }
+      
       
   
     }
@@ -708,6 +659,8 @@ export default function MyEvals () {
 
       const [isPasaChecked, setIsPasaChecked] = useState(false);
       const [isNoPasaChecked, setIsNoPasaChecked] = useState(false);
+
+      //var steps = Object.keys(criterios).length;
       
       
 
@@ -1071,65 +1024,13 @@ export default function MyEvals () {
         );
       }
 
-      if(state.instance_key === 9999){
-
-        return(
-  
-          <form onSubmit={handleSubmit} >
-  
-            <div className=" flex flex-col 
-                  sm:flex-row sm:justify-start 
-                  sm:w-fit sm:pl-12 my-2
-                  ">
-                    <p className="text-sm font-thin ">
-                      Esta evaluación ha terminado.&nbsp;
-                      <span className="text-red-500 font-bold">
-                        Nº  {evalId} [{instance}]
-                      </span>.<br/>
-                      <span className="text-slate-700 font-bold">
-                      A continuacion un resumen de los resultados: 
-                      </span>
-                    </p>
-                    
-                    
-                         
-            </div>   
-            {error && (
-                          
-                          <div className="alert alert-danger " role="alert">
-                              {error}
-                          </div>
-                                  
-                )}      
+      
     
-            <div className=" flex sm:pl-12 sm:w-8/12 justify-evenly sm:justify-start my-2">
-                
-                
-                
-                    
-                    <CancelButton 
-                      className=" ">
-                        Cerrar
-                    </CancelButton>           
-                    
-                  
-              
-            </div>
-    
-    
-            
-          </form>
-        
-        );
-
-
-      } else {
-    
-        return(
+      return(
     
           <form id="eval" onSubmit={handleSubmit}  className="">
 
-            <div className="flex flex-col p-2 ">
+            <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 ">
                     <h3 className="text-sm font-thin bg-slate-200">
                       Criterio &nbsp;
                       <span className="text-red-500 font-bold">
@@ -1207,9 +1108,9 @@ export default function MyEvals () {
             
           </form>
         
-        );
+      );
 
-      }
+      
   
     }
 
@@ -1414,36 +1315,78 @@ export default function MyEvals () {
                           
                       {message && (
                         
-                          <div className="alert alert-info " role="alert">
+                          <div className="alert alert-info" role="alert">
                             {message}
                           </div>
                         
                       )}
 
-                    <div className="flex flex-row p-2">
+                    <Link to={"/"} className="hover:no-underline ">
+                        <div id="brand" className="container flex-col  px-3 py-3 m-0 ">
+                          {/*<img src={logo} alt="CLEANVerif Compliance Verification App." 
+                              className=" sm:w-20 w-10 mb-2"/>*/}
+                          <div id="brand-logo" className="flex flex-row -mb-4  sm:-mb-4 ">
+                            <svg viewBox="0 0 509.604 509.604" 
+                                  className="fill-green-500  mr-1 w-6 h-6 sm:w-7 sm:h-7 md:h-8 md:w-8 z-5">
+                              <path d="M34.262,333.282c8.119,6.75,14.793,15.223,14.143,20.988c-0.382,3.443-0.593,6.943-0.593,10.5
+                                c0,52.393,41.3,94.861,92.24,94.861c6.292,0,12.431-0.65,18.37-1.885c10.002-2.074,21.812,1.941,28.888,9.793
+                                c16.82,18.646,40.803,30.342,67.492,30.342c28.19,0,53.426-13.016,70.342-33.518c6.723-8.146,18.103-11.533,28.22-8.5
+                                c8.166,2.447,16.811,3.768,25.751,3.768c50.939,0,92.24-42.477,92.24-94.861c0-5.861-0.535-11.59-1.549-17.145
+                                c-1.712-9.371,2.85-21.047,10.471-28.363c18.025-17.289,29.328-41.883,29.328-69.242c0-29.787-13.368-56.323-34.263-73.698
+                                c-8.118-6.751-14.793-15.224-14.143-20.99c0.383-3.442,0.593-6.942,0.593-10.5c0-52.393-41.301-94.86-92.24-94.86
+                                c-6.292,0-12.431,0.65-18.369,1.884c-10.002,2.075-21.812-1.941-28.889-9.792c-16.82-18.647-40.803-30.342-67.492-30.342
+                                c-26.688,0-50.671,11.695-67.492,30.342c-7.076,7.841-18.886,11.867-28.888,9.792c-5.938-1.234-12.078-1.884-18.37-1.884
+                                c-50.939,0-92.24,42.477-92.24,94.86c0,5.049,0.392,10.002,1.147,14.832c1.262,8.128-4.447,18.149-12.747,24.681
+                                C14.219,201.663,0,228.887,0,259.583C0,289.37,13.368,315.907,34.262,333.282z M131.475,263.016
+                                c2.046-3.625,7.268-3.672,12.049,0.479l48.119,33.918c2.61,1.588,5.106,2.4,7.506,2.4c4.963,0,8.893-3.576,12.689-7.02
+                                l153.985-154.138c9.629-10.471,18.99-14.162,25.102-10.146c2.82,1.855,4.646,4.647,5.135,7.87
+                                c0.583,3.825-0.756,7.946-3.768,11.599l-185.149,224.91c-2.687,3.26-6.11,5.059-9.629,5.059c-4.179,0-7.965-2.516-10.404-6.895
+                                l-54.344-97.969C130.519,269.422,130.021,265.618,131.475,263.016z"/>
+                            </svg>
+                            
+                            
+                              <h1 className="text-sky-400  font-bolder text-xl md:text-2xl">
+                                CLEANVerif<span className="text-xs font-extralight">®</span> 
+                              </h1>
+                            
+                            
+                          
+                          </div>
+                          
+                          <span id="brand-slogan" 
+                            className="-z-5 text-sky-400 text-xs md:text-sm font-light border-t border-t-white text-nowrap">
+                            Compliance Verification App.
+                          </span>
+                        
+                        </div>
+                    </Link>
+                    
+                    <div className="flex flex-row p-2 ">
+                      
+                      
 
-                     <h2 className="grow                       
-                      text-sky-500 text-2xl md:text-6xl text-left
-                        opacity-90 font-black ">
+                     <h2 className="m-2 grow                       
+                      text-sky-500 text-xl md:text-4xl text-left
+                         font-black ">
                         📋&nbsp;Eval. N°{evalId}
                       </h2>
 
-                      <div className=" bg-stone-100 rounded-md ">
+                      <div className="w-1/2 bg-stone-100 rounded-md border  border-slate-700 p-2 ">
                         
-                        <p className="text-zinc-600 text-xs sm:text-sm font-normal ">
+                        <p className="text-zinc-600 text-xs sm:text-sm font-thin ">
                           <span className="font-bold">Fecha Planificada:&nbsp;</span> 
                           {state.date_inicio_planif}
                           
                         </p>
-                        <p className="text-zinc-600 text-xs sm:text-sm font-normal">
+                        <p className="text-zinc-600 text-xs sm:text-sm font-thin">
                           <span className="font-bold">Estado:&nbsp;</span> 
                           {state.estado}
                           
                         </p>
                         {state.estado === 'Iniciada' ? (
-                            <p className="text-zinc-600 text-xs sm:text-sm font-normal">
+                            <p className="text-zinc-600 text-xs sm:text-sm font-thin">
                             <span className="font-bold">Criterio:&nbsp; </span>
-                            <span className="font-thin">{current.id}</span>
+                            <span className="font-thin">{parseInt(state.instance_key)+1} de {Object.keys(criterios).length}</span>
                               
                             
                             </p> 
@@ -1456,7 +1399,7 @@ export default function MyEvals () {
                     </div>
 
                     
-                        
+                    <div className="z-50" >  
                              
                              
                               {(current) ? (
@@ -1473,8 +1416,8 @@ export default function MyEvals () {
                                 
 
                               )}
-                              
-                              
+                  </div>        
+                  <img src={logoUni} alt="logo Unilimpio" className="w-64 h-64 opacity-15 absolute right-2 bottom-2 z-20" />        
                                               
 
                                                      
@@ -1678,13 +1621,15 @@ export default function MyEvals () {
           <div className="absolute flex top-0 left-0 m-0 w-full overflow-hidden h-screen">
             
             {/**/}
-            <div id="overlay" className="absolute z-50 bg-slate-600 opacity-80 w-full h-screen"></div>
+            <div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-screen"></div>
             <EvalRun />
 
           </div>
 
 
-        )}    
+        )}
+
+       
             
       </div>
   );

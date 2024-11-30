@@ -19,6 +19,10 @@ import Puntos from "./components/Puntos.js";
 
 import Profile from "./components/Profile";
 
+import logoUni from './logo-unilimpio.svg';
+
+
+
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
@@ -61,7 +65,7 @@ const App = () => {
       <header  
         className={
           `
-          flex sticky top-1 z-40
+          flex sticky top-1 z-20
           place-content-between
           bg-gradient-to-tl from-sky-600 to-white border 
           rounded-t-md 
@@ -120,20 +124,7 @@ const App = () => {
               Home
             </Link>
           
-          
-            <Link to={"/myevals"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
-              Evaluaciones
-            </Link>
-
-            <Link to={"/puntos"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
-              Puntos
-            </Link>
-          
-          
-          
-          
-
-          
+                    
             {currentUser ? (
           
               <> 
@@ -180,11 +171,18 @@ const App = () => {
           
         
         </nav>
+        <div className="flex flex-col w-10 h-10">
+          <span className="text-white text-xs font-thin mb-1">
+            by
+          </span>
+          <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
+        </div>
+        
       </header>
     
       <div id="routes" className=" border border-slate-600 
         h-fit p-2 bg-gradient-to-br from-white to-neutral-200
-        rounded-b-md sm:rounded-none" >
+        rounded-b-md sm:rounded-none z-10" >
           <Routes>
             <Route path={"/"} element={<Home />} />
             <Route path={"/home"} element={<Home />} />
@@ -206,8 +204,9 @@ const App = () => {
 
           </Routes>
       </div>
+       
       <nav id="responsive-bottom-nav" 
-            className="container w-full content-start h-16 bg-slate-700 sm:hidden fixed bottom-0 left-0 ">
+            className="container w-full content-start h-16 bg-slate-700 sm:hidden fixed bottom-0 left-0 z-20 ">
 
           <div className="flex flex-row justify-between font-extralight ">
             
