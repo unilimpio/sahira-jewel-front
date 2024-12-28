@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef, useId} from "react";
+import React, { useState, useEffect, useId} from "react";
 import { Link } from "react-router";
 
 
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
+
 
 
 import UserService from "../services/user.service";
@@ -16,7 +14,7 @@ import logoUni from '../logo-unilimpio.svg';
 
 
 
-export default function MyEvals () {
+export default function MyCompliance () {
 
   const user = AuthService.getCurrentUser();
   
@@ -286,7 +284,8 @@ export default function MyEvals () {
   
     useEffect(() => {
 
-      document.body.style.overflow = "hidden";
+      //this blocks the app from scrolling
+      //document.body.style.overflow = "hidden";
         
       try { 
 
@@ -300,40 +299,10 @@ export default function MyEvals () {
               setCriterios(response.data.criterios);
               setCurrent(response.data.current);
               
-                //const criteriosArray = Object.entries(criterios);
-              
-              //console.log(Object.entries(response.data.criterios));
-              //console.log(criterios);
-                //setCriterio(criteriosArray[content.instance_key])
-              /*
-              response.data.criterios.map((criterio, index) => {
-
-                if(index === response.data.eval.instance_key){
-                   
-                  return setCriterio(criterio); 
-                
-                } else {
-
-                  return null;
-
-                }
-
-              })
-              */
-              //console.log(criterio); 
-
-              
-              //setInstance(content.instance_key)
               console.log(content);
-              //console.log(instance);
+              
               console.log(response);              
-              //console.log(response?.status);
-              //console.log(response?.statusText)
-
-              //if(response?.data.message){
-                //console.log(response.data.message)
-                //setMessage(response.data.message)
-              //}
+              
             
             
             },
@@ -356,11 +325,13 @@ export default function MyEvals () {
           
         }
         
-      //}  
+     
       // Clean up the event listener when the component unmounts
       return () => {
-        document.body.style.overflow = "scroll"
-        //window.removeEventListener('scroll', handleScroll);
+        //this is the reset state of the scroll blocking above
+        //document.body.style.overflow = "scroll"
+
+        
 
     };
   
@@ -1030,7 +1001,7 @@ export default function MyEvals () {
     
           <form id="eval" onSubmit={handleSubmit}  className="">
 
-            <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 ">
+            <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 text-wrap ">
                     <h3 className="text-sm font-thin bg-slate-200">
                       Criterio &nbsp;
                       <span className="text-red-500 font-bold">
@@ -1042,7 +1013,9 @@ export default function MyEvals () {
                         
                       </span>
                     </h3>
-                    <h4 className="text-sm font-thin text-zinc-700 bg-slate-100 ">Descripcion: {current.descripcion}</h4>
+                    
+                    <h4 className="text-sm font-thin text-zinc-700 bg-slate-100 text-left text-ellipsis overflow-hidden ">Descripcion: {current.descripcion}</h4>
+                    
 
                     <div className="flex flex-row justify-evenly">
 
@@ -1074,7 +1047,7 @@ export default function MyEvals () {
                                   
                 )}      
     
-            <div className=" flex sm:pl-12 sm:w-8/12 justify-evenly sm:justify-start my-2">
+            <div className=" flex justify-evenly my-2">
                 
                 {loading && (
                 <button className="bg-slate-400 border-2 rounded-md py-2 w-[7rem] relative text-left" disabled={loading}>
@@ -1300,17 +1273,17 @@ export default function MyEvals () {
     return (
         
         <>
-          <div className="flex p-2">
+          <div className="w-11/12 mx-auto p-2 ">
               
               
               {content ? (
 
                 <div id="eval-modal" 
-                    className=" flex flex-col   my-2
+                    className="  my-2 flex flex-col   
                         bg-gradient-to-br from-white  to-zinc-200  
                         z-50 relative
                         rounded-md shadow-md 
-                        border border-zinc-800 py-6 px-2
+                        border border-zinc-800 py-3 px-2
                         ">
                           
                       {message && (
@@ -1321,55 +1294,65 @@ export default function MyEvals () {
                         
                       )}
 
-                    <Link to={"/"} className="hover:no-underline ">
-                        <div id="brand" className="container flex-col  px-3 py-3 m-0 ">
-                          {/*<img src={logo} alt="CLEANVerif Compliance Verification App." 
-                              className=" sm:w-20 w-10 mb-2"/>*/}
-                          <div id="brand-logo" className="flex flex-row -mb-4  sm:-mb-4 ">
-                            <svg viewBox="0 0 509.604 509.604" 
-                                  className="fill-green-500  mr-1 w-6 h-6 sm:w-7 sm:h-7 md:h-8 md:w-8 z-5">
-                              <path d="M34.262,333.282c8.119,6.75,14.793,15.223,14.143,20.988c-0.382,3.443-0.593,6.943-0.593,10.5
-                                c0,52.393,41.3,94.861,92.24,94.861c6.292,0,12.431-0.65,18.37-1.885c10.002-2.074,21.812,1.941,28.888,9.793
-                                c16.82,18.646,40.803,30.342,67.492,30.342c28.19,0,53.426-13.016,70.342-33.518c6.723-8.146,18.103-11.533,28.22-8.5
-                                c8.166,2.447,16.811,3.768,25.751,3.768c50.939,0,92.24-42.477,92.24-94.861c0-5.861-0.535-11.59-1.549-17.145
-                                c-1.712-9.371,2.85-21.047,10.471-28.363c18.025-17.289,29.328-41.883,29.328-69.242c0-29.787-13.368-56.323-34.263-73.698
-                                c-8.118-6.751-14.793-15.224-14.143-20.99c0.383-3.442,0.593-6.942,0.593-10.5c0-52.393-41.301-94.86-92.24-94.86
-                                c-6.292,0-12.431,0.65-18.369,1.884c-10.002,2.075-21.812-1.941-28.889-9.792c-16.82-18.647-40.803-30.342-67.492-30.342
-                                c-26.688,0-50.671,11.695-67.492,30.342c-7.076,7.841-18.886,11.867-28.888,9.792c-5.938-1.234-12.078-1.884-18.37-1.884
-                                c-50.939,0-92.24,42.477-92.24,94.86c0,5.049,0.392,10.002,1.147,14.832c1.262,8.128-4.447,18.149-12.747,24.681
-                                C14.219,201.663,0,228.887,0,259.583C0,289.37,13.368,315.907,34.262,333.282z M131.475,263.016
-                                c2.046-3.625,7.268-3.672,12.049,0.479l48.119,33.918c2.61,1.588,5.106,2.4,7.506,2.4c4.963,0,8.893-3.576,12.689-7.02
-                                l153.985-154.138c9.629-10.471,18.99-14.162,25.102-10.146c2.82,1.855,4.646,4.647,5.135,7.87
-                                c0.583,3.825-0.756,7.946-3.768,11.599l-185.149,224.91c-2.687,3.26-6.11,5.059-9.629,5.059c-4.179,0-7.965-2.516-10.404-6.895
-                                l-54.344-97.969C130.519,269.422,130.021,265.618,131.475,263.016z"/>
-                            </svg>
+                  <div id="app-logo" className="justify-center opacity-50">  
+                    <Link to={"/"} className="hover:no-underline">
+                          <div id="brand" className="container flex-col  px-1 py-1 m-0">
+                            {/*<img src={logo} alt="CLEANVerif Compliance Verification App." 
+                                className=" sm:w-20 w-10 mb-2"/>*/}
+                            <div id="brand-logo" className="flex flex-row -mb-4  sm:-mb-4 ">
+                              <svg viewBox="0 0 509.604 509.604" 
+                                    className="fill-green-500  mr-1 w-6 h-6 sm:w-7 sm:h-7 md:h-8 md:w-8 z-5">
+                                <path d="M34.262,333.282c8.119,6.75,14.793,15.223,14.143,20.988c-0.382,3.443-0.593,6.943-0.593,10.5
+                                  c0,52.393,41.3,94.861,92.24,94.861c6.292,0,12.431-0.65,18.37-1.885c10.002-2.074,21.812,1.941,28.888,9.793
+                                  c16.82,18.646,40.803,30.342,67.492,30.342c28.19,0,53.426-13.016,70.342-33.518c6.723-8.146,18.103-11.533,28.22-8.5
+                                  c8.166,2.447,16.811,3.768,25.751,3.768c50.939,0,92.24-42.477,92.24-94.861c0-5.861-0.535-11.59-1.549-17.145
+                                  c-1.712-9.371,2.85-21.047,10.471-28.363c18.025-17.289,29.328-41.883,29.328-69.242c0-29.787-13.368-56.323-34.263-73.698
+                                  c-8.118-6.751-14.793-15.224-14.143-20.99c0.383-3.442,0.593-6.942,0.593-10.5c0-52.393-41.301-94.86-92.24-94.86
+                                  c-6.292,0-12.431,0.65-18.369,1.884c-10.002,2.075-21.812-1.941-28.889-9.792c-16.82-18.647-40.803-30.342-67.492-30.342
+                                  c-26.688,0-50.671,11.695-67.492,30.342c-7.076,7.841-18.886,11.867-28.888,9.792c-5.938-1.234-12.078-1.884-18.37-1.884
+                                  c-50.939,0-92.24,42.477-92.24,94.86c0,5.049,0.392,10.002,1.147,14.832c1.262,8.128-4.447,18.149-12.747,24.681
+                                  C14.219,201.663,0,228.887,0,259.583C0,289.37,13.368,315.907,34.262,333.282z M131.475,263.016
+                                  c2.046-3.625,7.268-3.672,12.049,0.479l48.119,33.918c2.61,1.588,5.106,2.4,7.506,2.4c4.963,0,8.893-3.576,12.689-7.02
+                                  l153.985-154.138c9.629-10.471,18.99-14.162,25.102-10.146c2.82,1.855,4.646,4.647,5.135,7.87
+                                  c0.583,3.825-0.756,7.946-3.768,11.599l-185.149,224.91c-2.687,3.26-6.11,5.059-9.629,5.059c-4.179,0-7.965-2.516-10.404-6.895
+                                  l-54.344-97.969C130.519,269.422,130.021,265.618,131.475,263.016z"/>
+                              </svg>
+                              
+                              
+                                <h1 className="text-sky-400  font-bolder text-xl md:text-2xl">
+                                  CLEANVerif<span className="text-xs font-extralight">®</span> 
+                                </h1>
+                              
+                              
                             
+                            </div>
                             
-                              <h1 className="text-sky-400  font-bolder text-xl md:text-2xl">
-                                CLEANVerif<span className="text-xs font-extralight">®</span> 
-                              </h1>
-                            
-                            
+                            <span id="brand-slogan" 
+                              className="-z-5 text-sky-400 text-xs md:text-sm font-light border-t border-t-white text-nowrap">
+                              Compliance Verification App.
+                            </span>
                           
                           </div>
-                          
-                          <span id="brand-slogan" 
-                            className="-z-5 text-sky-400 text-xs md:text-sm font-light border-t border-t-white text-nowrap">
-                            Compliance Verification App.
-                          </span>
-                        
-                        </div>
                     </Link>
-                    
-                    <div className="flex flex-row p-2 ">
-                      
-                      
+                  </div>
 
-                     <h2 className="m-2 grow                       
-                      text-sky-500 text-xl md:text-4xl text-left
-                         font-black ">
-                        📋&nbsp;Eval. N°{evalId}
-                      </h2>
+                    <div className="flex flex-row p-1 place-content-between">
+                      
+                      
+                      <div className="flex flex-col">
+
+                        
+
+                          <h2 className="m-1 grow                       
+                        text-stone-500 text-xl md:text-4xl text-left
+                          font-black ">
+                          📋&nbsp;Eval. N°{evalId}
+                        </h2>
+
+                      </div>
+                    
+
+                     
 
                       <div className="w-1/2 bg-stone-100 rounded-md border  border-slate-700 p-2 ">
                         
@@ -1417,7 +1400,7 @@ export default function MyEvals () {
 
                               )}
                   </div>        
-                  <img src={logoUni} alt="logo Unilimpio" className="w-64 h-64 opacity-15 absolute right-2 bottom-2 z-20" />        
+                  {<img src={logoUni} alt="logo Unilimpio" className="w-64 h-64 opacity-5 absolute right-2 bottom-2 z-20" />}        
                                               
 
                                                      
@@ -1443,126 +1426,7 @@ export default function MyEvals () {
         </>
         
     );
-  //  } else if(content.data.instance_key === 9999){
-  /*    
-      return (
-        
-        <>
-          <div className="flex flex-col p-6">
-              
-              {content ? (
-
-                <div id="eval-modal" 
-                    className="flex flex-col mx-auto w-full 
-                        bg-gradient-to-br from-zinc-100 to-zinc-300  
-                        z-30 p-2
-                        rounded-md shadow-md 
-                        border border-zinc-800">
-                  
-                      {message && (
-                        <div className="form-group">
-                          <div className="alert alert-info" role="alert">
-                            {message}
-                          </div>
-                        </div>
-                      )} 
-                      <div className="m-0 p-0 bg-stone-100 rounded-md p-2">
-                        <h2 className="text-red-500 text-xs font-black">Ev.N°000{content.data.eval_id}</h2>
-                        <h3 className="text-zinc-600 text-xs sm:text-sm font-thin">
-                          <span className="font-bold">Fecha Planificada:&nbsp;</span> 
-                          {content.data.date_inicio_planif}
-                        </h3>
-                        <h4 className="text-xs sm:text-sm">
-                          <span className="">Criterio n°</span>
-                          {content.data.instance_key+1}
-                        </h4>
-                        
-
-                            <RenderFinish content={content} />
-
-                          
-                      </div>
-                    
-
-                </div>
-              ) : (
-                
-                <div className="flex">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
-                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                  </svg>
-                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
-                </div>
-
-              
-              )}
-                              
-          </div>
-        </>
-        
-      );
-*/
-
-  //  } else {
-      /*
-      return (
-        
-        <>
-          <div className="flex flex-col p-6">
-              
-              {content ? (
-
-                <div id="eval-modal" 
-                    className="flex flex-col mx-auto w-full 
-                        bg-gradient-to-br from-zinc-100 to-zinc-300  
-                        z-30 p-2
-                        rounded-md shadow-md 
-                        border border-zinc-800">
-                  
-                      {message && (
-                        <div className="form-group">
-                          <div className="alert alert-info" role="alert">
-                            {message}
-                          </div>
-                        </div>
-                      )} 
-                      <div className="m-0 p-0 bg-stone-100 rounded-md p-2">
-                        <h2 className="text-red-500 text-xs font-black">Ev.N°000{content.data.eval_id}</h2>
-                        <h3 className="text-zinc-600 text-xs sm:text-sm font-thin">
-                          <span className="font-bold">Fecha Planificada:&nbsp;</span> 
-                          {content.data.date_inicio_planif}
-                        </h3>
-                        <h4 className="text-xs sm:text-sm">
-                          <span className="">Criterio n°</span>
-                          {content.data.instance_key+1}
-                        </h4>                       
-
-                            <RenderInstance content={content} selectedCheck={selectedCheck} obs={obs} />                         
-                        
-                      </div>
-                    
-
-                </div>
-              ) : (
-                
-                <div className="flex">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
-                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                  </svg>
-                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
-                </div>
-
-              
-              )}
-                              
-          </div>
-        </>
-        
-      );
-  //  }
-*/
+ 
 
 
   } 
@@ -1618,7 +1482,7 @@ export default function MyEvals () {
         
         {evalId &&(
 
-          <div className="absolute flex top-0 left-0 m-0 w-full overflow-hidden h-screen">
+          <div className="absolute flex top-0 left-0 m-0 w-full  h-screen">
             
             {/**/}
             <div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-screen"></div>

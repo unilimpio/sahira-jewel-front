@@ -12,7 +12,8 @@ import Logout from "./components/Logout";
 
 import Register from "./components/Register";
 import Home from "./components/Home";
-import MyEvals from "./components/MyEvals";
+import MyCompliance from "./components/MyCompliance";
+import MyUserX from "./components/MyUserX.js";
 
 import Puntos from "./components/Puntos.js";
 
@@ -128,8 +129,11 @@ const App = () => {
             {currentUser ? (
           
               <> 
-                <Link to={"/myevals"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
-                  Mis Evals
+                <Link to={"/mycompliance"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
+                  My Compliance Mx
+                </Link>
+                <Link to={"/myux"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
+                  My User Xp
                 </Link>
 
                 <Link to={"/profile"} className="m-1 text-slate-800 hover:text-white md:text-lg lg:text-xl">
@@ -173,7 +177,7 @@ const App = () => {
         </nav>
         <div className="flex flex-col w-10 h-10">
           <span className="text-white text-xs font-thin mb-1">
-            by
+            por:
           </span>
           <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
         </div>
@@ -187,7 +191,8 @@ const App = () => {
             <Route path={"/"} element={<Home />} />
             <Route path={"/home"} element={<Home />} />
             
-            <Route path={"/myevals"} element={<MyEvals />} />
+            <Route path={"/mycompliance"} element={<MyCompliance />} />
+            <Route path={"/myux"} element={<MyUserX />} />
             <Route path={"/puntos"} element={<Puntos />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/logout"} element={<Logout />} />
