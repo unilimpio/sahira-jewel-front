@@ -27,8 +27,17 @@ export default function Home () {
           </h1>
           {user 
               
-            ? <p className="text-zinc-600">Ver <Link to="/myevals" className="text-cyan-600 hover:text-slate-600">Mis evaluaciones</Link> disponibles.</p>
-            : <p className="text-zinc-600">Para empezar, <Link to="/login" >ingrese a su cuenta.</Link></p>
+            ? (
+                <>
+                  <p className="text-zinc-600">
+                    Ver <Link to="/mycompliance" className="text-cyan-600 hover:text-slate-600">Mis evaluaciones internas</Link> disponibles.<br/>
+                    Ver <Link to="/myuserx" className="text-cyan-600 hover:text-slate-600">Mi experiencia de usuario</Link> de los servicios disponibles.
+                  </p>
+                </>
+              )
+            : (
+                <p className="text-zinc-600">Para empezar, <Link to="/login" >ingrese a su cuenta.</Link></p>
+              )
            
            }
           

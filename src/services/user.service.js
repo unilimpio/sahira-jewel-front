@@ -1,5 +1,6 @@
 import axios from "axios";
 import AuthService from "./auth.service";
+import qs from "qs";
 
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
 //const API_URL = "https://cmx.unilimpio.com/index.php/api/";
@@ -109,9 +110,11 @@ const setUx = (serviceId, data) => {
   
 
   return axios
-    .post(API_URL + "setUx/" + serviceId , data,
+    .post(API_URL + "setUx/" + serviceId , qs.stringify(data),
       { headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
         "Authorization" : `Bearer ${user.token}`
+        
       } }
       
 
@@ -132,6 +135,39 @@ const setUx = (serviceId, data) => {
     
     })
 };
+
+const setBadUx = (serviceId, uxId, data) => {
+  
+  
+
+  return axios
+    .post(API_URL + "setBadUx/" + serviceId + "/" + uxId, qs.stringify(data),
+      { headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        "Authorization" : `Bearer ${user.token}`
+        
+      } }
+      
+
+    )
+    .then((response) => {
+      /*
+      if (response.data.flag) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      */
+
+      return response;
+    })
+    .catch( (error) => {
+      
+
+      return error;
+    
+    })
+};
+
+
 /*
 const getUserBoard = () => {
   return axios.get(API_URL + "user");
@@ -151,6 +187,7 @@ const UserService = {
   getEvalState,
   setPunto,
   setUx,
+  setBadUx,
   getServices,
   getService,
   //getUserBoard,

@@ -77,7 +77,7 @@ const Login = () => {
           alt="profile-img"
           className="w-16 sm:w-20 rounded-full opacity-75 z-10 "
           /> 
-          <h1 className="text-zinc-600 -ml-4 mt-2 z-30">Login</h1> 
+          <h1 className="text-zinc-600 -ml-4 mt-2 z-10">Login</h1> 
         </div>
         
 
