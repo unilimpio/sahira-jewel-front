@@ -3,6 +3,8 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
+import Template from "./common/template/Template";
+
 
 import AuthService from "../services/auth.service";
 
@@ -56,6 +58,7 @@ const Register = (props) => {
   const [password, setPassword] = useState("");
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
+  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
 
   //const onChangeUsername = (e) => {
     //const username = e.target.value;
@@ -102,76 +105,79 @@ const Register = (props) => {
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
+    <Template>
+      <div className={wrapperClass}>
+        <div className="card card-container">
+          <img
+            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            alt="profile-img"
+            className="profile-img-card"
+          />
 
-        <Form onSubmit={handleRegister} ref={form}>
-          {!successful && (
-            <div>
-              {/*
-              <div className="form-group">
-                <label htmlFor="username">Username</label>
-              <Input
-                  type="text"
-                  className="form-control"
-                  name="username"
-                  value={username}
-                  onChange={onChangeUsername}
-                  validations={[required, vusername]}
-                />
-              </div>
-          */}
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
+          <Form onSubmit={handleRegister} ref={form}>
+            {!successful && (
+              <div>
+                {/*
+                <div className="form-group">
+                  <label htmlFor="username">Username</label>
                 <Input
-                  type="text"
-                  className="form-control"
-                  name="email"
-                  value={email}
-                  onChange={onChangeEmail}
-                  validations={[required, validEmail]}
-                />
-              </div>
+                    type="text"
+                    className="form-control"
+                    name="username"
+                    value={username}
+                    onChange={onChangeUsername}
+                    validations={[required, vusername]}
+                  />
+                </div>
+            */}
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="email"
+                    value={email}
+                    onChange={onChangeEmail}
+                    validations={[required, validEmail]}
+                  />
+                </div>
 
+                <div className="form-group">
+                  <label htmlFor="password">Password</label>
+                  <Input
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    value={password}
+                    onChange={onChangePassword}
+                    validations={[required, vpassword]}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <button className="btn btn-primary btn-block">Register</button>
+                </div>
+              </div>
+            )}
+
+            {message && (
               <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <Input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  value={password}
-                  onChange={onChangePassword}
-                  validations={[required, vpassword]}
-                />
+                <div
+                  className={
+                    successful ? "alert alert-success" : "alert alert-danger"
+                  }
+                  role="alert"
+                >
+                  {message}
+                </div>
               </div>
-
-              <div className="form-group">
-                <button className="btn btn-primary btn-block">Register</button>
-              </div>
-            </div>
-          )}
-
-          {message && (
-            <div className="form-group">
-              <div
-                className={
-                  successful ? "alert alert-success" : "alert alert-danger"
-                }
-                role="alert"
-              >
-                {message}
-              </div>
-            </div>
-          )}
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
-        </Form>
+            )}
+            <CheckButton style={{ display: "none" }} ref={checkBtn} />
+          </Form>
+        </div>
       </div>
-    </div>
+    </Template>
+
   );
 };
 

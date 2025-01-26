@@ -4,10 +4,14 @@ import { useNavigate } from "react-router";
 
 import AuthService from "../services/auth.service";
 
+import Template from "./common/template/Template";
+
 
 export default function Home () {
   
   const navigate = useNavigate();
+
+  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
 
   const user = AuthService.getCurrentUser();  
 
@@ -18,8 +22,11 @@ export default function Home () {
   
     return (
     
-      <div className="container mx-auto py-2 mb-10">
-        
+
+      <Template >
+
+        <div className={` `+wrapperClass}>
+          
           <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Bienvenido, 
             {user &&
               <span>{user.fullname}</span>
@@ -38,13 +45,19 @@ export default function Home () {
             : (
                 <p className="text-zinc-600">Para empezar, <Link to="/login" >ingrese a su cuenta.</Link></p>
               )
-           
-           }
           
-           
+          }
+          
+          
       
         
-      </div>
+        </div>
+      
+      
+      </Template>
+    
+    
+      
     ); 
 
     

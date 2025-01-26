@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useId} from "react";
 import { Link, Navigate} from "react-router";
-
-import Template from "./common/template/Template";
+import { useSearchParams } from "react-router";
 
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
@@ -16,257 +15,28 @@ import Logo from "./common/Logo";
 
 
 
-export default function MyUserX () {
+export default function UxSurvey () {
 
   
-  
-  const [serviceId, setServiceId] = useState(false);
   
   const [showModal, setShowModal] = useState(false);
 
   const [message, setMessage] = useState(false);
 
   const [error, setError] = useState(false);
-
-  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
+  const [errorMessage, setErrorMessage] = useState('');
 
   const user = AuthService.getCurrentUser();
   //const [user, setUser] = useState(AuthService.getCurrentUser());
 
+  const [searchParams, setSearchParams] = useSearchParams();
   
+  const [serviceId, setServiceId] = useState(searchParams.get("sID"));
+  const [code, setCode] = useState(searchParams.get("c"));
+  const [verifier, setVerifier] = useState(null);
+
   
- 
-  
-  
-  function ServicesList(){   
-    
-    const [loading, setLoading] = useState(false);
-    //const [message, setMessage] = useState("");
-    const [listContent, setListContent] = useState(false);
-
-   
-    
-    
-  
-    useEffect(() => {
-      // Add scroll event listener when the component mounts
-   
-      
-    
-      let ignore = false;
-
-      function createOptions() {
-        
-        return {
-          uId: user.uId,           
-                   
-        };
-      }
-      
-      const options = createOptions();
-      
-      if(!options.uId){
-        setListContent("");
-        setError("no se recibieron los parametros correctos.")
-        //setMessage("no se recibieron los parametros correctos.")
-        
-      } else {
-
-          UserService.getServices(options.uId).then(
-
-              (response) => {
-
-                if(!ignore){
-                
-                  setListContent(response?.data);
-                  
-                  
-
-                  if(response?.data?.message){
-                    
-                    
-                  }
-                  console.log(response?.data?.message)
-
-                }
-              
-              },
-
-              (error) => {
-                const _content =
-                  (error?.response && error?.response.data) ||
-                  error?.message ||
-                  error?.toString();
-                
-                setListContent(_content);
-                setError(true);
-                
-              
-              }
-            
-          )
-
-        
-      }  
-
- 
-      return () => {
-
-        ignore = true;
-        
-        if(error){
-          return <Navigate to="/landingPage" replace={true} />
-        }
-
-      };
-  
-    }, []);
-
-    const FblButton = ({serviceId}) => {
-
-      function handleClick (){
-      
-        setMessage(false);
-        setError(false);
-        setLoading(true);
-        setListContent(''); 
-        
-        setServiceId(serviceId);
-        
-        
-        
-        setShowModal(true);
-      
-      }
-    
-      return (
-  
-  
-        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
-                onClick={handleClick}>📢
-          {/*<svg  className="w-4 h-4 " viewBox="0 0 512 512"> 
-    
-            <path className=" fill-green-400 " d="M256,0C114.625,0,0,114.625,0,256c0,141.374,114.625,256,256,256c141.374,0,256-114.626,256-256
-              C512,114.625,397.374,0,256,0z M351.062,258.898l-144,85.945c-1.031,0.626-2.344,0.657-3.406,0.031
-              c-1.031-0.594-1.687-1.702-1.687-2.937v-85.946v-85.946c0-1.218,0.656-2.343,1.687-2.938c1.062-0.609,2.375-0.578,3.406,0.031
-              l144,85.962c1.031,0.586,1.641,1.718,1.641,2.89C352.703,257.187,352.094,258.297,351.062,258.898z"/>
-  
-          </svg>*/}
-          
-          
-  
-        </button>
-  
-      );
-    }  
-
-    function RenderList({listContent}){
-  
-    
-      if(listContent){
-    
-        return(
-          <div className="mt-2 mb-4">
-                
-            <table id="eval-display" 
-              className="bg-white opacity-90 text-xs sm:text-sm shadow-md rounded-sm">
-                             
-            
-                  <thead id="table-evals-display-head" 
-                          className="border border-b-zinc-300 " >
-                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold">
-                      <td className="p-2"   >
-                        id#
-                      </td>
-                      <td className="p-2"   >
-                        Ubicacion
-                      </td>
-                      <td className="p-2"  >
-                        Nombre</td> 
-                      
-                      <td className="p-2">Accion</td>
-  
-                    </tr>
-  
-  
-  
-                  </thead>
-                  <tbody className="text-zinc-600 ">
-            
-              
-              {
-                listContent.services.map(row => (
-                  
-                  <tr className="" key={'tr-'+row.id} >
-                    <td className="p-2" id={'td-id'+row.id}   >
-                      { row.id  }
-                    </td>
-                    <td className="p-2 " id={'td-date_inicio_planif'+row.id}   >
-                      { row.ubicacion_name+`[${row.ubicacion_id}]` }
-                    </td>
-                    <td className="p-2 " id={'td-verif_name'+row.id}   >
-                      { row.name }
-                    </td> 
-                    
-                    <td className="p-2">
-                      <FblButton serviceId={row.id}/>
-                    </td>    
-                  
-                  </tr> 
-                  
-            
-                ))
-              }
-              </tbody>
-              </table>
-            
-            
-          </div>
-        );
-    
-      } else {
-    
-        return(
-          
-            <p>no se pudo cargar la info</p>
-          
-    
-        );
-    
-      }
-    
-    }
-  
-    return (
-      
-      
-      
-        
-      <div className="flex flex-col relative z-1">
-          
-              <p className="text-sm md:text-md mb-0">Estas son los servicios habilitadas para su usuario / organización ({user.uId}): </p>
-              {loading && (
-                <div className="flex">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
-                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                  </svg>
-                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
-                </div>
-
-              )}
-              {listContent && (   
-
-              <RenderList listContent={listContent}/>
-              )}
-            
-                           
-      </div>
- 
-    );
-  
-  }
-
+  console.log(serviceId)
 
   function FeedBackLive(){   
     
@@ -332,22 +102,36 @@ export default function MyUserX () {
 
             (response) => {
 
-              setContent(response);
-              setService(response.data?.service);
-              setAlertCriterios(response.data?.alert_criterios);
-              setMessage(response.data?.message);
-              setAlertMode(response.data?.service.alert_mode);
-              setAlertLevel(response.data?.service.alert_value);
+              
+              setService(response.data?.service);              
+              setVerifier(response.data?.service.code_verifier);
               
               console.log(response);
               console.log(response.data?.alert_criterios);
               console.log(response.data?.service.alert_mode);       
               console.log(response.data?.service.alert_value);
+              console.log(response.data?.service.code_verifier);
+              console.log(code);
             
-            
+              if(code === verifier){
+                setAlertCriterios(response.data?.alert_criterios);                
+                setAlertMode(response.data?.service.alert_mode);
+                setAlertLevel(response.data?.service.alert_value);
+                
+                setMessage(response.data?.message);
+                setContent(response);
+              
+              } else {
+
+                setError(true);
+                setErrorMessage("no se pudo validar el QR utilizado");
+                console.log(errorMessage);
+              }
             },
 
             (error) => {
+
+              console.log(error);
               const _content =
                 (error?.response && error?.response.data) ||
                 error?.message ||
@@ -461,9 +245,6 @@ export default function MyUserX () {
       );
     } 
 
-    
-
-    
 
     const RenderInterface = () => { 
    
@@ -473,7 +254,6 @@ export default function MyUserX () {
        const [isComments, setIsComments] = useState("");
        const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 m-1 rounded-md flex flex-row items-center text-xl`;
        const inputClassName = ` m-2 w-10 h-10`;
-       const [ready2Go, setReady2Go] = useState(false);
       
 
       function CancelProcessing() {
@@ -521,7 +301,6 @@ export default function MyUserX () {
         console.log(onSubmitFeedbackValue);
         console.log(onSubmitFeedbackValue <= alertLevel)
         console.log(alertMode);
-        console.log(ready2Go);
 
         if(onSubmitFeedbackValue <= alertLevel){
           if(alertMode){            
@@ -535,16 +314,9 @@ export default function MyUserX () {
         //setLoading (false);
         } else {
           console.log("we are ready to go");
-          setReady2Go(1);
-          console.log(ready2Go);
-          
 
+        }  
 
-        }  //setReady2Go(true);
-
-          console.log(ready2Go);
-
-        
 
           console.log("beginning API post call");
           console.log(loading);
@@ -633,144 +405,13 @@ export default function MyUserX () {
       };
 
       
-       
-
-      /*const RadioButton = ({className, children, clave}) => {       
-        
-        const [isChecked, setIsChecked] = useState(false);
-        
-        const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 m-1 rounded-md flex flex-col items-center `;
-        const inputClassName = ` m-2 ` + className;
-        
-        const id = useId();
-        function handleCheck(e){
-
-          const value = e.target.value;
-          
-          setIsChecked(!isChecked);
-          
-          console.log('selected Check noted! value:'+value);
-          
-  
-          return setUxValue(value);
-  
-          
-  
-        }
-        
-          
-          
-          return (  
-            
-            <div className="">
-              <label htmlFor={`ux-feedback-radio-`+id} className={`` + labelClassName}>    
-                <input type="radio"
-                      id={`ux-feedback-radio-`+id}
-                      name={`ux-feedback-value`}
-                      value={clave}
-                      
-                      className={
-                                          
-                        inputClassName + ` `
-    
-                      } 
-                      
-                      onChange={handleCheck}
-                    
-                    
-                      
-                         
-                />
-                
-                  {children}
-              </label> 
-              
-              
-            </div>   
-        
-          );
-
-        
-          
-        
-        
-
-      }*/
-
-      /*const CommentsInput = ({className, children}) => {
-
-        const [comments, setComments] = useState("");
-        
-        const id = useId();
-
-        function handleChange(e){
-
-          const value = e.target.value;
-  
-          console.log(value);
-  
-          return setComments(value);
-  
-          
-  
-        }
-        
-
-        return (
-
-          <label htmlFor={`comments`+id} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">{children}:
-                    
-          <br/>  <textarea 
-              className={className + 
-                `text-sm font-thin 
-                border-zinc-800 
-                border rounded-md 
-                focus:shadow-sm 
-                focus:ring-slate-500 focus:ring-1 focus:outline-none
-                
-                
-              `}
-              name="comments" 
-              id="comments"
-              
-              
-              value={comments}
-              cols="64"
-              onChange={ handleChange }
-             
-                      
-                      
-            /> 
-          </label>
-        );
-      }*/
-
-      
     
       return(
     
           <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
 
-            <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 text-wrap bg-opacity-50">
-                    <h2 className="m-1  text-center                       
-                        text-stone-500 text-xl md:text-4xl 
-                          font-black ">
-                          📢FeedBackLive!
-                    </h2>
-                    
-                    
-                    
-                    <h3 className="text-sm font-thin ">
-                      Por favor califique su experiencia con este servicio:<br/>
-                      <span className="text-zinc-500 font-extrathin  text-xs">Sevicio:
-                        <span className="bg-slate-200">
-                          {`${service.name}  [id: ${service.id}]`}
-                        </span>
-                        
-                      </span>. 
-                      
-                    </h3>
-                    
+            <div className="flex flex-col ">                  
+                     
                     
                     <div className="container" id="options-holder">
 
@@ -846,7 +487,7 @@ export default function MyUserX () {
                         
                         
                     </div>
-                    <div className="mx-auto">
+                    <div className="w-10/12 mx-auto">
                       
                       
                       <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
@@ -855,7 +496,7 @@ export default function MyUserX () {
                         <br/>  
                         <textarea 
                           className={ 
-                            `text-xs font-thin 
+                            `w-full text-xs font-thin 
                             border-zinc-800 
                             border rounded-md 
                             focus:shadow-sm 
@@ -1071,28 +712,9 @@ export default function MyUserX () {
      return(
    
          <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
-
-           <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 text-wrap bg-opacity-50">
-                   <h2 className="m-1  text-center                       
-                       text-stone-500 text-xl md:text-4xl 
-                         font-black ">
-                         📢FeedBackLive!
-                   </h2>
-                   
-                   
-                   
-                   <h3 className="text-sm font-thin ">
-                     Lamentamos que tu experiencia no haya sido positiva, podrías indicarnos por qué? Esto nos permitirá mejorar nuestro servicio!<br/>
-                     <span className="text-zinc-500 font-extrathin  text-xs">Servicio:
-                      <span className="bg-slate-200">  
-                        {`${service.name}  [id: ${service.id}]`}
-                      </span>
-                       
-                     </span>. 
-                     
-                   </h3>                   
                                  
-                  <div className="container" id="bad-ux-options-holder">
+                  <div className="container flex-col" id="bad-ux-options-holder">
+                    <p className="text-red-400">Lamentamos que tu experiencia no haya sido positiva, podrías indicarnos por qué? Esto nos permitirá mejorar nuestro servicio!</p>
                     <div className='flex flex-col sm:flex-row justify-evenly overflow-y-scroll'>
                         
                         {alertCriterios.map((criterio, index) =>
@@ -1116,7 +738,7 @@ export default function MyUserX () {
                         )}
 
                     </div>
-                   </div>  
+                  </div>  
                    
                    <div className="mx-auto">
                      {/*<CommentsInput className="">Comentarios (opcional)</CommentsInput>*/}
@@ -1125,8 +747,8 @@ export default function MyUserX () {
                    
                        <br/>  
                        <textarea 
-                         className={ 
-                           `text-xs font-thin 
+                         className={
+                           `w-full text-xs font-thin 
                            border-zinc-800 
                            border rounded-md 
                            focus:shadow-sm 
@@ -1172,7 +794,7 @@ export default function MyUserX () {
                    
                    
                        
-           </div>   
+            
            {error && (
                          
                          <div className="alert alert-danger " role="alert">
@@ -1243,43 +865,38 @@ export default function MyUserX () {
   
     }
 
-
-
-
   
     return (
         
         
-          <div className="w-full mx-auto p-1 ">
+          <div className="w-full mx-auto">
               
+              {error && (
+                  <div className="form-group">
+                    <div className="alert alert-danger" role="alert">
+                      {errorMessage}
+                    </div>
+                  </div>
+                )}
               
               {content && (
 
-                <div id="eval-modal" 
-                    className="flex flex-col   
-                        bg-gradient-to-br from-white  to-zinc-200  
-                        z-50 relative
-                        rounded-lg shadow-lg
-                        border border-zinc-800
-                        overflow-hidden
-                        ">
-                          
-                      {message && (
-                        
-                          <div className="alert alert-info" role="alert">
-                            {message}
-                          </div>
-                        
-                      )}
-
-                  <Logo mainColor={"slate-600"}/>
-
-                  <div className="container p-2">
+                  
+                  <main className="w-full mx-auto md:container bg-neutral-100 border border-slate-700 rounded-md p-2">
                       
-                      
-                    
-                    <div className="z-50" >  
-                             
+                      <h2 className="m-1  text-center                       
+                        text-stone-500 text-xl md:text-4xl 
+                          font-black ">
+                          📢FeedBackLive!
+                      </h2>
+                      <p className="text-sm font-thin ">
+                        Por favor califique su experiencia con este servicio:<br/>
+                        <span className="text-zinc-500 font-extrathin  text-xs">&nbsp;
+                        <span className="bg-white shadow-sm p-1">
+                          {`${service.name}  [id: ${service.id}].`}
+                        </span>                        
+                      </span> 
+                      </p>
                              
                               {(serviceId) ? (
 
@@ -1289,20 +906,19 @@ export default function MyUserX () {
                                  
                               ) : (
 
-                                <RenderFinal  />
+                                null
 
                               )}
-                    </div> 
+                    
 
-                    {<img src={logoUni} alt="logo Unilimpio" className="min-w-96 h-auto opacity-10 absolute bottom-0 left-1 -z-20" />}        
+                            
                                               
 
-                  </div>
+                  </main>
             
-                              
-                </div>
           
-            )}                 
+              )}                 
+          
           </div>
     );
  
@@ -1313,70 +929,38 @@ export default function MyUserX () {
   
   return (
     
-      <Template>
-        <div 
-          className={`  `+wrapperClass}>
-          
+      <div 
+        className={`w-full mx-auto p-2`}>
         
-          <div className={`flex flex-col h-max
-                      
-                      ${showModal && (
-                        `hidden`
-                      )
-                      }
-                      
-          `} >
-            
-            <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Mi Experiencia de Usuario</h1>
-
-                {message && (
-                  <div className="form-group">
-                    <div className="alert alert-info" role="alert">
-                      {message}
+      
+        <header className="flex flex-row place-content-between">
+                    <Logo mainColor={"slate-600"}/>
+                    <div className="flex flex-col w-12 h-12">
+                      <span className="text-slate-700 text-xs font-thin mb-1">
+                        por:
+                      </span>
+                      <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
                     </div>
-                  </div>
-                )}
-                {error && (
-                  <div className="form-group">
-                    <div className="alert alert-danger" role="alert">
-                      {error}
-                    </div>
-                  </div>
-                )}
-              
-                  {user &&
-
-
-                    <ServicesList  />
-
-
-                  }
-                  {!user &&
-            
-                    <p>Favor <Link to="/Login"> ingrese </Link> para ver servicios disponibles.</p>
-            
-                  }
-                                
-          
-          </div>   
-          
-          {serviceId &&(
-
-            <div className="absolute flex top-0 left-0 m-0 p-2 w-full h-max  ">
-              
-              {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
-              
-              <FeedBackLive />
-
-            </div>
-
-
-          )}
-
+        </header>   
         
-              
-        </div>
-      </Template>
+        {serviceId ?(
+
+          <div className="">
+            
+            {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
+            
+            <FeedBackLive />
+
+          </div>
+
+
+        ): (
+          <div><p>Nada que mostrar</p></div>
+        )}
+
+       
+            
+      </div>
   );
 
   

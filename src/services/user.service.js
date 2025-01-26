@@ -3,8 +3,8 @@ import AuthService from "./auth.service";
 import qs from "qs";
 
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
-const API_URL = "https://cmx.unilimpio.com/index.php/api/";
-//const API_URL = "http://localhost:3000/api/";
+//const API_URL = "https://cmx.unilimpio.com/index.php/api/";
+const API_URL = "http://localhost:3000/api/";
 
 const user = AuthService.getCurrentUser();
 

@@ -7,8 +7,7 @@ const Logo = ({mainColor}) => {
 
   return (
     <div id="brand" className="container flex flex-row  p-1 m-0 ">
-            {/*<img src={logo} alt="CLEANVerif Compliance Verification App." 
-                className=" sm:w-20 w-10 mb-2"/>*/}
+            
             <div id="brand-logo" className="flex relative -mb-4 sm:-mb-4 content-end">
               {/*
                 <svg viewBox="0 0 509.604 509.604" className="fill-green-500 content-end mr-1 w-5 h-5 sm:w-6 sm:h-6 md:h-7 md:w-7 -z-10">
@@ -53,14 +52,14 @@ const Logo = ({mainColor}) => {
             <div id="brand-text" className="flex flex-col">
               <div id="brand-name" className="flex flex-row">
                 
-                <h1 className={`${textColor} justify-end right font-bolder text-xl md:text-2xl`}>
+                <h1 className={`${textColor} justify-end right font-bolder text-2xl`}>
                   <span className={`text-base font-light ${textColor} hover:${textColor} content-center`}>clean</span>
                   Smart
                   <span className={`text-xs font-extralight ${textColor}`}>®</span> 
                 </h1>
               </div>
               <span id="brand-slogan" 
-                className={`-z-5 justify-end ${textColor} hover:${textColor} text-xs md:text-xs font-extralight border-t ${borderColor} text-nowrap`}>
+                className={`-z-5 justify-end ${textColor} hover:${textColor} text-xs  font-extralight border-t ${borderColor} text-nowrap`}>
                 Compliance Management App.
               </span>
             </div>

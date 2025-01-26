@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import Logo from "./common/Logo";
 
 
+import Template from "./common/template/Template";
 
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
@@ -26,7 +27,8 @@ export default function MyCompliance () {
 
   const [error, setError] = useState(false);
 
-  
+  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
+
 
   
   function EvalsList({uId}){   
@@ -1391,8 +1393,9 @@ export default function MyCompliance () {
   
   return (
     
-      <div 
-        className={`      `}>
+    <Template>
+        <div 
+        className={`      `+wrapperClass}>
         
       
         <div className={`flex flex-col
@@ -1450,9 +1453,10 @@ export default function MyCompliance () {
 
         )}
 
-       
+        
             
-      </div>
+        </div>
+      </Template>
   );
 
   
