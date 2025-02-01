@@ -3,8 +3,8 @@ import AuthService from "./auth.service";
 import qs from "qs";
 
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
-//const API_URL = "https://cmx.unilimpio.com/index.php/api/";
-const API_URL = "http://localhost:3000/api/";
+const API_URL = "https://cmx.unilimpio.com/index.php/api/";
+//const API_URL = "http://localhost:3000/api/";
 
 const user = AuthService.getCurrentUser();
 
@@ -34,6 +34,18 @@ const getEvalState = (evalId) => {
   })
 };
 
+const getServicePub = (serviceId) => {
+  return axios
+  .get(API_URL + "getServicePublic/" + serviceId, 
+    { headers: {}})
+  .catch(function (error) {
+    if(error.status === 401){
+      localStorage.removeItem("user");
+    }
+
+  })
+};
+
 const getService = (serviceId) => {
   return axios
   .get(API_URL + "getService/" + serviceId, 
@@ -42,6 +54,16 @@ const getService = (serviceId) => {
     if(error.status === 401){
       localStorage.removeItem("user");
     }
+
+  })
+};
+
+const getIp = () => {
+  return axios
+  .get('https://geolocation-db.com/json/e6256a50-6cef-11ef-9699-010d5e77689d', 
+    { headers: {}})
+  .catch(function (error) {
+    console.log("unable to connect to User info API:"+error);
 
   })
 };
@@ -136,6 +158,37 @@ const setUx = (serviceId, data) => {
     })
 };
 
+const setUxPub = (serviceId, data) => {
+  
+  
+
+  return axios
+    .post(API_URL + "setUxPublic/" + serviceId , qs.stringify(data),
+      { headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        
+        
+      } }
+      
+
+    )
+    .then((response) => {
+      /*
+      if (response.data.flag) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      */
+
+      return response;
+    })
+    .catch( (error) => {
+      
+
+      return error;
+    
+    })
+};
+
 const setBadUx = (serviceId, uxId, data) => {
   
   
@@ -187,9 +240,12 @@ const UserService = {
   getEvalState,
   setPunto,
   setUx,
+  setUxPub,
   setBadUx,
   getServices,
   getService,
+  getServicePub,
+  getIp,
   //getUserBoard,
   //getModeratorBoard,
   //getAdminBoard,

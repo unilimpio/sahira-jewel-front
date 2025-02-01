@@ -29,27 +29,7 @@ import Profile from "./components/Profile";
 const App = () => {
   //const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   //const [showAdminBoard, setShowAdminBoard] = useState(false);
-  const [currentUser, setCurrentUser] = useState(undefined);
-
-  useEffect(() => {
-    const user = AuthService.getCurrentUser();
-
-    if (user) {
-      setCurrentUser(user);
-    //  setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-    //  setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
-    }
-
-    /*
-    EventBus.on("logout", () => {
-      logOut();
-    });
-
-    return () => {
-      EventBus.remove("logout");
-    };
-    */
-  }, []);
+  
 
   /*
   const logOut = () => {
@@ -65,7 +45,7 @@ const App = () => {
       
     
       <div id="routes" className=" 
-        sm:h-screen  bg-gradient-to-br from-neutral-200 via-white to-neutral-300
+          bg-gradient-to-br from-neutral-200 via-white to-neutral-300
         z-10" >
           <Routes>
             <Route path={"/"} element={<Home />} />
