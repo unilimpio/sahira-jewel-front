@@ -1107,7 +1107,7 @@ export default function MyCompliance () {
                         Nº  {evalId} [{instance}]
                     </span>.<br/>
                       <span className="text-slate-700 font-bold">
-                      A continuacion un resumen de los resultados: 
+                       
                       </span>
                     </p>
                                              
