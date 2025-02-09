@@ -20,9 +20,9 @@ const NavBottom = ({isLoggedIn}) => {
   return (
        
       <nav id="responsive-bottom-nav" 
-            className="w-full content-start h-16 bg-gradient-to-b from-slate-500 to-slate-800 md:hidden fixed bottom-0 left-0 z-20 px-2">
+            className="w-full content-start h-20 bg-gradient-to-b from-slate-500 to-slate-800 md:hidden fixed bottom-0 left-0 z-20 px-4">
 
-          <div className="flex flex-row justify-between font-light text-sm ">
+          <div className="flex flex-row justify-between font-light text-xs ">
             
               <Link to={"/home"} className={` `+linkClass}>
                 <HomeIcon/>
