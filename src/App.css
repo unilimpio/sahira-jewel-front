@@ -58,3 +58,12 @@ label {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.custom-tooltip {
+  border: 1px dotted rgb(121, 121, 121);
+  padding: 0px 10px;
+}
+
+.small {
+  font: 10px sans-serif;
+}

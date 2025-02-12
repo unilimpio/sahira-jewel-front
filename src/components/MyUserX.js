@@ -1,7 +1,11 @@
-import React, { useState, useEffect, useId} from "react";
-import { Link, Navigate} from "react-router";
+import React, { useState, useEffect} from "react";
+import { Link, Navigate, useNavigate} from "react-router";
 
 import Template from "./common/template/Template";
+import AlertBox from "./common/template/AlertBox";
+
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+
 
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
@@ -20,7 +24,7 @@ export default function MyUserX () {
 
   
   
-  const [serviceId, setServiceId] = useState(false);
+  const [serviceId, setServiceId] = useState(null);
   
   const [showModal, setShowModal] = useState(false);
 
@@ -126,16 +130,17 @@ export default function MyUserX () {
 
       function handleClick (){
       
+        console.log(serviceId);
         setMessage(false);
         setError(false);
         setLoading(true);
         setListContent(''); 
-        
+        setShowModal(true);
         setServiceId(serviceId);
         
         
         
-        setShowModal(true);
+        
       
       }
     
@@ -258,6 +263,337 @@ export default function MyUserX () {
               {listContent && (   
 
               <RenderList listContent={listContent}/>
+              )}
+            
+                           
+      </div>
+ 
+    );
+  
+  }
+
+  function ServiceResult(){   
+    
+    const [loading, setLoading] = useState(false);
+    //const [message, setMessage] = useState("");
+    const [serviceContent, setServiceContent] = useState("");
+
+    let navigate = useNavigate();
+  
+    useEffect(() => {
+
+      //this blocks the app from scrolling
+      //document.body.style.overflow = "hidden";
+        
+      try { 
+
+        UserService.getService(serviceId).then(
+
+            (response) => {
+
+              console.log(response);
+              console.log(response?.data);
+              console.log(response?.data.service_ux_count_grouped);
+              setServiceContent(response.data);
+              //setAvgResult(response.data.service)
+              setMessage(response.data?.message);
+              
+              
+              
+              
+            
+            
+            },
+
+            (error) => {
+              const _content =
+                (error?.response && error?.response.data) ||
+                error?.message ||
+                error?.toString();
+              
+              setError(_content);
+              
+              
+            
+            }
+          
+        )
+          
+        } catch (error) {
+          
+        }
+        
+     
+      // Clean up the event listener when the component unmounts
+      return () => {
+        //this is the reset state of the scroll blocking above
+        //document.body.style.overflow = "scroll"
+
+        
+
+    };
+  
+    }, []);
+
+    function RenderAvgOdo({result}){
+  
+      const RADIAN = Math.PI / 180;
+
+      const data = [
+        { name: 'Detractores: 1 al 3', value: 108, color: '#ff6666' },
+        { name: 'Promotores: 4 y 5', value: 72, color: '#ccff66' },
+        //{ name: 'Detractores', value: 25, color: '#0000ff' },
+      ];
+
+      const CustomTooltip = ({ active, payload }) => {
+        if (active && payload && payload.length) {
+          return (
+            <div className="custom-tooltip">
+
+              <p className="label">{`${payload[0].name}`}</p>
+              
+        
+            </div>
+          );
+        }
+      
+        return null;
+      };
+
+      const AvgResultBox = ({ result }) => {
+        
+          return (
+            <div className={`border border-slate-500 p-1  
+             
+
+            `}>
+
+              <p className="text-xs text-slate-700 text-center m-0">Ux Promedio: {result}</p>
+              
+        
+            </div>
+          );
+        
+      
+        
+      };
+
+      
+      
+
+      const cx = 100;
+      const cy = 100;
+      const iR = 50;
+      const oR = 80;
+
+      const value = result*180/5;
+      const roundedValue = value.toFixed(2);
+      const roundedResult = Math.round(result * 100) / 100
+
+      
+
+      const needle = (value, data, cx, cy, iR, oR, color) => {
+
+        let total = 0;
+        data.forEach((v) => {
+          total += v.value;
+        });
+        
+        const ang = 180.0 * (1 - value / total);
+        const length = (iR + 2 * oR) / 3;
+        const sin = Math.sin(-RADIAN * ang);
+        const cos = Math.cos(-RADIAN * ang);
+        const r = 5;
+        const x0 = cx + 5;
+        const y0 = cy - 5;
+        const xba = x0 + r * sin;
+        const yba = y0 - r * cos;
+        const xbb = x0 - r * sin;
+        const ybb = y0 + r * cos;
+        const xp = x0 + length * cos;
+        const yp = y0 + length * sin;
+
+        return [
+          <circle key="circle-1234" cx={x0} cy={y0} r={r} fill={color} stroke="none" />,
+          <path key="path-1234" d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`} stroke="#none" fill={color} />,
+        ];
+
+      };
+
+    
+      if(result){
+    
+        return(
+          <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2">
+            
+            <PieChart width={cx*2} height={cy}>
+              <Pie
+                  dataKey="value"
+                  startAngle={180}
+                  endAngle={0}
+                  data={data}
+                  cx={cx}
+                  cy={cy}
+                  innerRadius={iR}
+                  outerRadius={oR}
+                  fill="#8884d8"
+                  stroke="none"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+              </Pie>
+                {needle(value, data, cx, cy, iR, oR, ' #afafb1')}
+                <Tooltip content={<CustomTooltip />}/>
+                
+            </PieChart>
+            <AvgResultBox result={roundedResult}/>
+              
+          </div>
+        );
+    
+      } else {
+    
+        return(
+          
+            <p>no se pudo cargar el gráfico</p>
+          
+    
+        );
+    
+      }
+    
+    }//end avg_odo
+
+    function RenderPie({groupedUxData}){
+  
+      console.log(groupedUxData);
+      
+      const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+      const RADIAN = Math.PI / 180;
+
+      const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+          <text className="small" x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+            {`${(percent * 100).toFixed(0)}%`}
+          </text>
+        );
+      };
+
+      const data = groupedUxData;
+      let detractors = 0;
+      let promoters = 0;
+      let total = 0;
+      
+
+      for (let i=0; i<data.length; i++){
+        total += parseInt(data[i].value, 10)
+
+        if(data[i].name <= 3){
+          detractors += parseInt(data[i].value, 10)
+        } else {
+          promoters += parseInt(data[i].value, 10)
+        }
+        
+        data[i].value = parseInt(data[i].value, 10)
+       
+      }
+
+      
+
+      const ResultBox = ({ promoters, detractors, total }) => {
+        
+          return (
+            <div className={`border border-slate-500 p-1  
+             
+
+            `}>
+
+              <p className="text-xs text-slate-700">
+                Número de detractores: {detractors} ({Math.round(detractors/total*100)}%)<br/>
+                Número de promotores: {promoters} ({Math.round(promoters/total*100)}%)
+              </p>
+              
+        
+            </div>
+          );
+        
+      
+        
+      };
+
+    
+      if(groupedUxData){
+    
+        return (
+          <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2">
+            <PieChart width={200} height={200}>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={renderCustomizedLabel}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+            <ResultBox promoters={promoters} detractors={detractors} total={total}/>
+          </div>
+          
+        );
+    
+      } 
+    
+    }
+  
+    
+    return (
+      
+      
+      
+        
+      <div className="flex flex-col ">
+          
+              <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Resultados de Ux </h1>
+              <p className="text-sm md:text-md mb-0">Servicio: {serviceContent.service?.name} </p>
+              {loading && (
+                
+                <div className="flex">
+                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                  </svg>
+                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+                </div>
+
+              )}
+              {serviceContent && (   
+                <div className="mx-auto mt-2 flex flex-col">
+                  
+                  <p className={`mt-2 mb-0 text-center text-sm text-slate-700`}>
+                    Resultado de UX<br/>
+                    <span className="text-xs text-slate-500 m-0">(promedio de calificaciones)</span>
+                  </p>    
+                  <RenderAvgOdo result={serviceContent.service_ux_avg.avg_feedback_value}/>
+                  <p className={`mt-4 mb-0 text-center text-sm text-slate-700`}>
+                    Calificaciones recibidas<br/>
+                    <span className="text-xs text-slate-500 m-0">(numero y porcentaje por calificación)</span>
+                  </p> 
+                  <RenderPie groupedUxData={serviceContent.service_ux_count_grouped}/>
+
+                </div>
               )}
             
                            
@@ -1309,6 +1645,8 @@ export default function MyUserX () {
 
 
   } 
+
+  
  
   
   return (
@@ -1330,18 +1668,22 @@ export default function MyUserX () {
             <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Mi Experiencia de Usuario</h1>
 
                 {message && (
-                  <div className="form-group">
+                  
+                  <AlertBox message={message} type="info"/>
+                  /*<div className="form-group">
                     <div className="alert alert-info" role="alert">
                       {message}
                     </div>
-                  </div>
+                  </div>*/
                 )}
+                
                 {error && (
-                  <div className="form-group">
+                  <AlertBox message={error} type="error"/>
+                  /*<div className="form-group">
                     <div className="alert alert-danger" role="alert">
                       {error}
                     </div>
-                  </div>
+                  </div>*/
                 )}
               
                   {user &&
@@ -1362,11 +1704,11 @@ export default function MyUserX () {
           
           {serviceId &&(
 
-            <div className="absolute flex top-0 left-0 m-0 p-2 w-full h-max  ">
+            <div className="">
               
               {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
               
-              <FeedBackLive />
+              <ServiceResult  />
 
             </div>
 
