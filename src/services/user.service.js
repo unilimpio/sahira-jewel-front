@@ -83,10 +83,25 @@ const getEvals = (uId) => {
   
 };
 
-const getServices = (uId) => {
+const getServices = (ubId) => {
   
   return axios
-  .get(API_URL + "getServices/" + uId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
+  .get(API_URL + "getServices/" + ubId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
+  .catch(function (error){
+    //if(error.status === 401){
+      localStorage.removeItem("user");
+      //console.log()
+      
+
+    //}
+  });
+  
+};
+
+const getUbs = (uId) => {
+  
+  return axios
+  .get(API_URL + "getUbs/" + uId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
   .catch(function (error){
     //if(error.status === 401){
       localStorage.removeItem("user");
@@ -242,6 +257,7 @@ const UserService = {
   setUx,
   setUxPub,
   setBadUx,
+  getUbs,
   getServices,
   getService,
   getServicePub,

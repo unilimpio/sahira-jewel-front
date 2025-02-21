@@ -60,7 +60,7 @@ const Logo = ({mainColor}) => {
               </div>
               <span id="brand-slogan" 
                 className={`-z-5 justify-start ${textColor} hover:${textColor} text-xs  font-extralight border-t ${borderColor} text-nowrap`}>
-                Services Metrics App.
+                Hygiene & Compliance Management
               </span>
             </div>
             

@@ -5,6 +5,19 @@ import Template from "./common/template/Template";
 import AlertBox from "./common/template/AlertBox";
 
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+import {
+  ComposedChart,
+  Line,
+  Area,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+ 
+  Legend,
+  
+} from 'recharts';
+
 
 
 import UserService from "../services/user.service";
@@ -23,108 +36,306 @@ import Logo from "./common/Logo";
 export default function MyUserX () {
 
   
-  
+  const [ubicacionId, setUbicacionId] = useState(null);
   const [serviceId, setServiceId] = useState(null);
   
+  
+  const [content, setContent] = useState(null);
+  
   const [showModal, setShowModal] = useState(false);
+  const [showServices, setShowServices] = useState(false);
+  const [showServiceResult, setShowServiceResult] = useState(false);
+
 
   const [message, setMessage] = useState(false);
 
   const [error, setError] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
   const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
 
-  const user = AuthService.getCurrentUser();
+  const [user, setUser]  = useState(AuthService.getCurrentUser());
   //const [user, setUser] = useState(AuthService.getCurrentUser());
+  console.log(ubicacionId);
+  console.log(serviceId);
 
   
-  
+  //const [message, setMessage] = useState("");
  
-  
-  
-  function ServicesList(){   
-    
-    const [loading, setLoading] = useState(false);
-    //const [message, setMessage] = useState("");
-    const [listContent, setListContent] = useState(false);
 
    
-    
-    
   
-    useEffect(() => {
-      // Add scroll event listener when the component mounts
-   
-      
     
-      let ignore = false;
+   
 
-      function createOptions() {
-        
-        return {
-          uId: user.uId,           
-                   
-        };
-      }
+  const UbicacionPicker=({user}) => {
+
       
-      const options = createOptions();
+      const [selectedOption, setSelectedOption] = useState(''); // Declare a state variable...
+      // ...
+      const optionClassName = ``;
+      const selectClassName = `border border-slate-500 bg-neutral-50 rounded-md p-2 m-1 w-1/3`;
+
+      const [ubsContent, setUbsContent] = useState(false);
       
-      if(!options.uId){
-        setListContent("");
-        setError("no se recibieron los parametros correctos.")
-        //setMessage("no se recibieron los parametros correctos.")
+
+      useEffect(()=>{
+
+      
+      
+        //let ignore = false;
+    
+        function createOptions() {
+          
+          return {
+            uId: user.uId,           
+                     
+          };
+        }
         
-      } else {
-
-          UserService.getServices(options.uId).then(
-
-              (response) => {
-
-                if(!ignore){
+        const options = createOptions();
+        
+        if(!options.uId){
+          setUbsContent("");
+          setError("no se recibieron los parametros correctos.")
+          //setMessage("no se recibieron los parametros correctos.")
+          
+        } else {
+    
+            UserService.getUbs(options.uId).then(
+    
+                (response) => {
+    
+               
+                  
+                    setUbsContent(response?.data);
+                    //setContent(response?.data);
+                    setLoading(false);
+                    console.log(response?.data)
+                    
+    
+                    if(response?.data?.message){
+                      
+                      console.log(response?.data?.message)
+                      
+                    }
+                    
+                    
+                }
                 
-                  setListContent(response?.data);
+           
+                ,
+    
+                (error) => {
+                  const _content =
+                    (error?.response && error?.response.data) ||
+                    error?.message ||
+                    error?.toString();
                   
+                  setUbsContent(_content);
+                  //setContent(_content);
+                  setError(true);
                   
-
-                  if(response?.data?.message){
-                    
-                    
-                  }
-                  console.log(response?.data?.message)
-
+                
                 }
               
-              },
-
-              (error) => {
-                const _content =
-                  (error?.response && error?.response.data) ||
-                  error?.message ||
-                  error?.toString();
-                
-                setListContent(_content);
-                setError(true);
-                
-              
-              }
-            
-          )
-
+            )
+    
+          
+        }  
+    
+    
+      },[user]);
+    
+      
+      
+      const handleChange = (event) =>{
+        setUbicacionId(event.target.value); 
+               
+        setSelectedOption(event.target.value);
+        console.log("option changed!")
+        console.log(event.target.value)
+        setLoading(true);
+        setShowServices(true);
         
-      }  
+      }
 
- 
-      return () => {
-
-        ignore = true;
+      const handleSubmit = (event) => {
+        event.preventDefault();
         
-        if(error){
-          return <Navigate to="/landingPage" replace={true} />
-        }
+        //console.log(ubicacionId)
+      }
 
-      };
+      const SaveButton = ({loading, className, children}) => {
+
+        if(loading){
+          
+          return (   
+            <button className={className + ` bg-slate-600 border-1 border-white  rounded-md m-1 p-1 relative text-left`} disabled={loading}>
+              <svg className="absolute left-1 animate-spin h-6 w-6 fill-white" viewBox="0 0 24 24">
+                <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+              </svg>
+              <span className="text-white ml-8">Loading</span>
+            </button>   
+          );
+        
+        } else {
   
-    }, []);
+          return (   
+    
+              
+            <button  type="submit" id="submit"
+                    className={className + 
+                      `m-1 p-1 rounded-md border border-white 
+                      
+                      bg-gradient-to-b from-sky-400 to-sky-800 
+                          hover:shadow-md hover:bg-sky-600 
+                      transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110 duration-150
+                      `                    
+                    } 
+                    disabled={loading} >
+              
+              <span className="mx-1 text-white font-semibold text-sm">{children}</span>
+              
+              
+              
+      
+            </button>
+                  
+          );
+  
+        }      
+        
+      
+      }
+
+      return (
+        
+                  
+        <div className="flex flex-col relative z-1">
+            
+                <p className="text-sm md:text-md mb-0">Estas son las ubicaciones habilitadas para su organización ({user.uId}): </p>
+                {loading && (
+                  <div className="flex">
+                    <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                      <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                      <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                    </svg>
+                    <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+                  </div>
+  
+                )}
+                {ubsContent && (   
+  
+                
+                <form onSubmit={handleSubmit}>
+                  <select
+                    name="ubicacion"
+                    value={selectedOption} // ...force the select's value to match the state variable...
+                    onChange={e=> handleChange(e)} // ... and update the state variable on any change!
+                    className={selectClassName + ``}
+                  >
+                      <option value="0">Seleccione una ubicación</option>
+                    {
+          
+                      ubsContent.ubicaciones?.map((ub) => (
+                        <option key={`ub-key-${ub.id}`} 
+                          value={ub.id} 
+                        >{ub.name}
+                        </option>
+          
+          
+                      ))  
+          
+                    }
+                  </select>
+                  <SaveButton loading={loading}>Go</SaveButton>
+                </form>
+                
+                )}
+              
+                            
+        </div>
+  
+      );
+
+      
+      
+  }
+
+      
+ 
+  const ShowServices=({ubicacionId})=>{   
+    
+    
+    //const [message, setMessage] = useState("");
+    const [servicesContent, setServicesContent] = useState(null);
+  
+      useEffect(()=>{
+
+        
+          function createOptions() {
+          
+            return {
+                       
+              ubId: ubicacionId         
+            };
+          }
+          
+          const options = createOptions();
+
+          if(!options){
+            setServicesContent("");
+            setError("no se recibieron todos los parametros.")
+            //setMessage("no se recibieron los parametros correctos.")
+            
+          } else {
+    
+              UserService.getServices(options.ubId).then(
+    
+                  (response) => {
+    
+                      
+                    
+                      setServicesContent(response?.data);
+                      setShowServices(true);
+                      //setContent(response?.data)
+                      console.log(response?.data)
+    
+                      if(response?.data?.message){
+                        setMessage(response?.data.message)
+                        
+                      }
+                      console.log(response?.data?.message)
+    
+                      setLoading(false);
+                  
+                  },
+    
+                  (error) => {
+                    const _content =
+                      (error?.response && error?.response.data) ||
+                      error?.message ||
+                      error?.toString();
+                    
+                    setServicesContent(_content);
+                    setError(true);
+                    
+                  
+                  }
+                
+              )
+    
+            
+          }
+
+         
+
+      },[ubicacionId]); 
+
+         
 
     const FblButton = ({serviceId}) => {
 
@@ -134,7 +345,7 @@ export default function MyUserX () {
         setMessage(false);
         setError(false);
         setLoading(true);
-        setListContent(''); 
+        //setServicesContent(''); 
         setShowModal(true);
         setServiceId(serviceId);
         
@@ -200,21 +411,21 @@ export default function MyUserX () {
             
               
               {
-                listContent.services.map(row => (
+                listContent.map(row => (
                   
                   <tr className="" key={'tr-'+row.id} >
                     <td className="p-2" id={'td-id'+row.id}   >
-                      { row.id  }
+                      { row.service_id  }
                     </td>
                     <td className="p-2 " id={'td-date_inicio_planif'+row.id}   >
                       { row.ubicacion_name+`[${row.ubicacion_id}]` }
                     </td>
                     <td className="p-2 " id={'td-verif_name'+row.id}   >
-                      { row.name }
+                      { row.service_name }
                     </td> 
                     
                     <td className="p-2">
-                      <FblButton serviceId={row.id}/>
+                      <FblButton serviceId={row.service_id}/>
                     </td>    
                   
                   </tr> 
@@ -241,15 +452,57 @@ export default function MyUserX () {
       }
     
     }
+
+    function RenderBarChart({graphData}){
+  
+      console.log(graphData);
+      const data = graphData;
+      
+        
+      if(graphData){
+    
+        return (
+          <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2">
+            <ComposedChart
+              layout="horizontal"
+              width={300}
+              height={300}
+              data={data}
+              margin={{
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20,
+            }}
+          >
+              <CartesianGrid stroke="#f5f5f5" />
+              <YAxis type="number" />
+              <XAxis dataKey="name" type="category" scale="band" />
+              <Tooltip />
+              <Legend />
+              
+              <Bar dataKey="1" barSize={10} fill="#ff0000" />
+              <Bar dataKey="2" barSize={10} fill="#ff4000" />
+              <Bar dataKey="3" barSize={10} fill="#ff8000" />
+              <Bar dataKey="4" barSize={10} fill="#bfff00" />
+              <Bar dataKey="5" barSize={10} fill="#80ff00" />
+              <Line dataKey="average" stroke="#ff7300" />
+            </ComposedChart>
+            
+          </div>
+          
+        );
+    
+      } 
+    
+    }
   
     return (
       
-      
-      
-        
+         
       <div className="flex flex-col relative z-1">
           
-              <p className="text-sm md:text-md mb-0">Estas son los servicios habilitadas para su usuario / organización ({user.uId}): </p>
+              
               {loading && (
                 <div className="flex">
                   <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
@@ -260,9 +513,11 @@ export default function MyUserX () {
                 </div>
 
               )}
-              {listContent && (   
-
-              <RenderList listContent={listContent}/>
+              {servicesContent && (   
+              <>
+                <RenderBarChart graphData={servicesContent.uxData} />
+                <RenderList listContent={servicesContent.services}/>
+              </>
               )}
             
                            
@@ -272,11 +527,13 @@ export default function MyUserX () {
   
   }
 
-  function ServiceResult(){   
+  function ServiceResult({serviceId}){   
     
     const [loading, setLoading] = useState(false);
     //const [message, setMessage] = useState("");
     const [serviceContent, setServiceContent] = useState("");
+    const [content, setContent] = useState("");
+
 
     let navigate = useNavigate();
   
@@ -287,7 +544,7 @@ export default function MyUserX () {
         
       try { 
 
-        UserService.getService(serviceId).then(
+        /*UserService.getService(serviceId).then(
 
             (response) => {
 
@@ -317,7 +574,39 @@ export default function MyUserX () {
             
             }
           
-        )
+        )*/
+
+        UserService.getService(serviceId).then(
+
+          (response) => {
+
+            console.log(response);
+            console.log(response?.data);
+            console.log(response?.data.service_ux_count_grouped);
+            setServiceContent(response.data);
+            //setAvgResult(response.data.service)
+            setMessage(response.data?.message);
+            
+            
+            
+            
+          
+          
+          },
+
+          (error) => {
+            const _content =
+              (error?.response && error?.response.data) ||
+              error?.message ||
+              error?.toString();
+            
+            setError(_content);
+            
+            
+          
+          }
+        
+      )
           
         } catch (error) {
           
@@ -333,7 +622,7 @@ export default function MyUserX () {
 
     };
   
-    }, []);
+    }, [serviceId]);
 
     function RenderAvgOdo({result}){
   
@@ -465,6 +754,8 @@ export default function MyUserX () {
     
     }//end avg_odo
 
+    
+
     function RenderPie({groupedUxData}){
   
       console.log(groupedUxData);
@@ -557,6 +848,9 @@ export default function MyUserX () {
       } 
     
     }
+
+    
+    
   
     
     return (
@@ -592,6 +886,9 @@ export default function MyUserX () {
                     <span className="text-xs text-slate-500 m-0">(numero y porcentaje por calificación)</span>
                   </p> 
                   <RenderPie groupedUxData={serviceContent.service_ux_count_grouped}/>
+                  
+                  
+                 
 
                 </div>
               )}
@@ -602,7 +899,6 @@ export default function MyUserX () {
     );
   
   }
-
 
   function FeedBackLive(){   
     
@@ -1658,10 +1954,7 @@ export default function MyUserX () {
         
           <div className={`flex flex-col h-max
                       
-                      ${showModal && (
-                        `hidden`
-                      )
-                      }
+                      
                       
           `} >
             
@@ -1686,38 +1979,56 @@ export default function MyUserX () {
                   </div>*/
                 )}
               
-                  {user &&
+                  {user ? (
+
+                    <>
+                      <UbicacionPicker  user={user}/>
+
+                      {showServices &&(
+
+                        <div className="">
+                          
+                          {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
+                          
+                          <ShowServices  ubicacionId={ubicacionId}/>
+
+                        </div>
 
 
-                    <ServicesList  />
+                      )}
+
+                      {showServiceResult &&(
+
+                        <div className="">
+                          
+                          {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
+                          
+                          <ServiceResult serviceId={serviceId}/>
+
+                        </div>
 
 
-                  }
-                  {!user &&
+                      )}
+                    
+                    
+                    </>
+
+                  ) : (
+                  
             
-                    <p>Favor <Link to="/Login"> ingrese </Link> para ver servicios disponibles.</p>
+                    <p>Favor <Link to="/Login"> ingrese </Link> para ver ubicaciones disponibles.</p>
             
-                  }
+                  )}
                                 
           
           </div>   
           
-          {serviceId &&(
-
-            <div className="">
-              
-              {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
-              
-              <ServiceResult  />
-
-            </div>
-
-
-          )}
+          
 
         
               
         </div>
+
       </Template>
   );
 
