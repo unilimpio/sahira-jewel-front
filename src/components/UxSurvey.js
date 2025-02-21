@@ -31,7 +31,9 @@ export default function UxSurvey () {
     const days = hours * 24;
     const years = days * 365; 
 
-  const [message, setMessage] = useState(false);
+    let navigate = useNavigate();
+
+    const [message, setMessage] = useState(false);
 
     const [error, setError] = useState(false);
   
@@ -72,9 +74,9 @@ export default function UxSurvey () {
     const [location, setLocation] = useState(null);
     const [ip, setIp] = useState(null);
 
-    const [verified,setVerified] = useState(localStorage.getItem("cs_uxsurvey_verified"));
+    const [verified,setVerified] = useState(null);
 
-    const [isComplete, setIsComplete] = useState(localStorage.getItem("cs_uxsurvey_complete"));
+    const [isComplete, setIsComplete] = useState(null);
 
     
 
@@ -89,18 +91,7 @@ export default function UxSurvey () {
     console.log(prevInstance);
     console.log(prevInstance?.accessDate);
 
-    if(prevInstance){
-
-      let elapsedMilliseconds = Date.now() - prevInstance.accessDate;
-
-      console.log(formatElapsedTime(elapsedMilliseconds, minutes, 60));
-
-      if((elapsedMilliseconds/1000/60) > 15){
-        localStorage.removeItem("cs_uxsurvey_verified");
-        localStorage.removeItem("cs_uxsurvey_session");
-        localStorage.removeItem("cs_uxsurvey_complete");
-      }
-    }
+    
 
     function formatElapsedTime(elapsedtime, timeunit, base) {
       let time = base ? (elapsedtime / timeunit) % base : elapsedtime / timeunit;
@@ -109,7 +100,60 @@ export default function UxSurvey () {
       return time;
     }
 
+    function userLoc () {
+
+      
+      
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+       } else {
+         console.log("Geolocation not supported");
+       }
+    
+    
+
+      function success(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        console.log(` ${latitude}, ${longitude}`);
+        //setLocation({ latitude, longitude });
+        return `Latitude: ${latitude}, Longitude: ${longitude}`;
+            
+      }
+    
+      function error() {
+        console.log("Unable to retrieve your location");
+        return null;
+      }
+
+   
+      return;
+    }
+
     useEffect(() => {
+
+      if(prevInstance){
+
+        let elapsedMilliseconds = Date.now() - prevInstance.accessDate;
+  
+        console.log(formatElapsedTime(elapsedMilliseconds, minutes, 60));
+  
+        if((elapsedMilliseconds/1000/60) >= 15){
+  
+          localStorage.removeItem("cs_uxsurvey_verified");
+          localStorage.removeItem("cs_uxsurvey_session");
+          localStorage.removeItem("cs_uxsurvey_complete");
+          //navigate(0);
+  
+        } else {
+  
+          setVerified(localStorage.getItem("cs_uxsurvey_verified"));
+          setIsComplete(localStorage.getItem("cs_uxsurvey_complete"));
+  
+        }
+  
+      }
 
       //this blocks the app from scrolling
       //document.body.style.overflow = "hidden";
@@ -122,7 +166,7 @@ export default function UxSurvey () {
             (response) => {
               
               
-              setService(response.data?.service); 
+              
               setAlertCriterios(response.data?.alert_criterios);                
               setAlertMode(response.data?.service.alert_mode);
               setAlertLevel(response.data?.service.alert_value);
@@ -140,12 +184,44 @@ export default function UxSurvey () {
               console.log(code === response.data?.service.code_verifier);
              
               
-             if(code === response.data?.service.code_verifier){
+              if(code === response.data?.service.code_verifier){
+                  
+                setContent(response?.data);
+                setService(response?.data.service);
                 
-              setContent(response?.data);
-              setLoading(false);
-              setVerified(code === response.data?.service.code_verifier);
-              
+                setVerified(code === response.data?.service.code_verifier);
+
+                UserService.getIp().then(
+  
+                  (response) => {
+                    console.log(response.data)
+                    setIp(response.data.IPv4);
+                    
+                  },
+          
+                  (error) => {
+          
+                    console.log("unable to get IP information:"+error);
+          
+                  }
+        
+        
+                )
+                
+                setLocation(userLoc());
+
+                if(prevInstance === null){
+
+                  localStorage.setItem("cs_uxsurvey_session", JSON.stringify({"serviceId":serviceId,"accessDate":Date.now()}));
+                  localStorage.setItem("cs_uxsurvey_verified", true);
+                  localStorage.setItem("cs_uxsurvey_complete", false);
+
+                }
+
+                
+
+                setLoading(false);
+                
               }
 
               
@@ -179,7 +255,7 @@ export default function UxSurvey () {
   
       };
   
-    }, [serviceId, code, error]);
+    }, [serviceId, code, error, prevInstance]);
 
     console.log(serviceId);
     console.log(code);
@@ -258,8 +334,9 @@ export default function UxSurvey () {
       localStorage.removeItem("cs_uxsurvey_session");
       //localStorage.setItem("cs_uxsurvey_complete",true);
       localStorage.removeItem("cs_uxsurvey_verified");
-      localStorage.removeItem("cs_uxsurvey_complete");
-      setIsComplete(!isComplete);
+      //localStorage.removeItem("cs_uxsurvey_complete");
+      localStorage.setItem("cs_uxsurvey_complete", true);
+      setIsComplete(true);
       //console.log(evalId)
       //console.log(instance)
       //console.log(showModal)
@@ -290,7 +367,7 @@ export default function UxSurvey () {
     );
   } 
 
-
+  /*
   const Start = ()=> { 
 
        
@@ -388,17 +465,17 @@ export default function UxSurvey () {
           
           UserService.getIp().then(
   
-          (response) => {
-            console.log(response.data)
-            setIp(response.data.IPv4);
-            
-          },
-  
-          (error) => {
-  
-            console.log("unable to get IP information:"+error);
-  
-          }
+            (response) => {
+              console.log(response.data)
+              setIp(response.data.IPv4);
+              
+            },
+    
+            (error) => {
+    
+              console.log("unable to get IP information:"+error);
+    
+            }
   
   
           )
@@ -478,7 +555,7 @@ export default function UxSurvey () {
                    
 
           
-          navigate(0);
+          /*navigate(0);
 
         }
                 
@@ -540,7 +617,7 @@ export default function UxSurvey () {
       <TermsForm/>
     
     );
-  }
+  }*/
 
   const FeedBackLive = ({service}) => {   
     
@@ -1354,68 +1431,9 @@ export default function UxSurvey () {
   
   if(verified){
 
-    if(isComplete === null){
-      return (
-      
-        <div 
-          className={`w-full mx-auto p-2 h-screen`}>
-          
-        
-          <header className="flex flex-row place-content-between">
-                      <Logo mainColor={"slate-600"}/>
-                      <div className="flex flex-col w-12 h-12">
-                        <span className="text-slate-700 text-xs font-thin mb-1">
-                          por:
-                        </span>
-                        <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
-                      </div>
-          </header>
-  
-                       
-                
-          <div className="w-fit mx-auto p-4">
-            <Start />
-          </div>
-                
-  
-         
-              
-        </div>
-      );
-    }
+   
 
-    if(isComplete === 'false'){
-    
-        return (
-      
-          <div 
-            className={`w-full mx-auto p-2 h-screen`}>
-            
-          
-            <header className="flex flex-row place-content-between">
-                        <Logo mainColor={"slate-600"}/>
-                        <div className="flex flex-col w-12 h-12">
-                          <span className="text-slate-700 text-xs font-thin mb-1">
-                            por:
-                          </span>
-                          <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
-                        </div>
-            </header>
-              
-    
-            <div className="">
-                  
-                  
-              <FeedBackLive service={service}/>
-                  
-    
-            </div>
-           
-                
-          </div>
-        );
-  
-    }   
+     
 
     if(isComplete === 'true'){
   
@@ -1447,6 +1465,37 @@ export default function UxSurvey () {
         </div>
       );
     
+    } else {
+
+      return (
+      
+        <div 
+          className={`w-full mx-auto p-2 h-screen`}>
+          
+        
+          <header className="flex flex-row place-content-between">
+                      <Logo mainColor={"slate-600"}/>
+                      <div className="flex flex-col w-12 h-12">
+                        <span className="text-slate-700 text-xs font-thin mb-1">
+                          por:
+                        </span>
+                        <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
+                      </div>
+          </header>
+            
+  
+          <div className="">
+                
+                
+            <FeedBackLive service={service}/>
+                
+  
+          </div>
+         
+              
+        </div>
+      );
+
     }
 
   } else {

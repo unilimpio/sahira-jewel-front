@@ -413,11 +413,11 @@ export default function MyUserX () {
               {
                 listContent.map(row => (
                   
-                  <tr className="" key={'tr-'+row.id} >
-                    <td className="p-2" id={'td-id'+row.id}   >
+                  <tr className="" key={'tr-'+row.service_id} >
+                    <td className="p-2" id={'td-id'+row.service_id}   >
                       { row.service_id  }
                     </td>
-                    <td className="p-2 " id={'td-date_inicio_planif'+row.id}   >
+                    <td className="p-2 " id={'td-date_inicio_planif'+row.service_id}   >
                       { row.ubicacion_name+`[${row.ubicacion_id}]` }
                     </td>
                     <td className="p-2 " id={'td-verif_name'+row.id}   >
@@ -470,13 +470,13 @@ export default function MyUserX () {
               data={data}
               margin={{
                 top: 20,
-                right: 20,
+                right: 5,
                 bottom: 20,
-                left: 20,
+                left: 5,
             }}
           >
               <CartesianGrid stroke="#f5f5f5" />
-              <YAxis type="number" />
+              <YAxis type="number" domain={[0, 10]} allowDataOverflow allowDecimals/>
               <XAxis dataKey="name" type="category" scale="band" />
               <Tooltip />
               <Legend />
@@ -486,7 +486,7 @@ export default function MyUserX () {
               <Bar dataKey="3" barSize={10} fill="#ff8000" />
               <Bar dataKey="4" barSize={10} fill="#bfff00" />
               <Bar dataKey="5" barSize={10} fill="#80ff00" />
-              <Line dataKey="average" stroke="#ff7300" />
+              <Line dataKey="Average" stroke="#ff7300" />
             </ComposedChart>
             
           </div>
