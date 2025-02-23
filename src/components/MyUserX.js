@@ -476,17 +476,17 @@ export default function MyUserX () {
             }}
           >
               <CartesianGrid stroke="#f5f5f5" />
-              <YAxis type="number" domain={[0, 10]} allowDataOverflow allowDecimals/>
+              <YAxis type="number" domain={[0, 10]} allowDataOverflow allowDecimals label={{ value: '# Calificaciones', angle: -90, position: 'insideLeft' }}/>
               <XAxis dataKey="name" type="category" scale="band" />
               <Tooltip />
               <Legend />
               
-              <Bar dataKey="1" barSize={10} fill="#ff0000" />
-              <Bar dataKey="2" barSize={10} fill="#ff4000" />
-              <Bar dataKey="3" barSize={10} fill="#ff8000" />
-              <Bar dataKey="4" barSize={10} fill="#bfff00" />
-              <Bar dataKey="5" barSize={10} fill="#80ff00" />
-              <Line dataKey="Average" stroke="#ff7300" />
+              <Bar dataKey="1" barSize={10} fill="#F93827" />
+              <Bar dataKey="2" barSize={10} fill="#FF9D23" />
+              <Bar dataKey="3" barSize={10} fill="#FFD65A" />
+              <Bar dataKey="4" barSize={10} fill="#D3EE98" />
+              <Bar dataKey="5" barSize={10} fill="#A0D683" />
+              <Line dataKey="Average" stroke="#41B3A2" />
             </ComposedChart>
             
           </div>
@@ -515,6 +515,7 @@ export default function MyUserX () {
               )}
               {servicesContent && (   
               <>
+                <h6>Resumen de Ux:</h6>
                 <RenderBarChart graphData={servicesContent.uxData} />
                 <RenderList listContent={servicesContent.services}/>
               </>
@@ -1828,7 +1829,7 @@ export default function MyUserX () {
     const RenderFinal = ()=> { 
    
       
-
+      
       
       
       return(

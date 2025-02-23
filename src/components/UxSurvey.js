@@ -74,9 +74,9 @@ export default function UxSurvey () {
     const [location, setLocation] = useState(null);
     const [ip, setIp] = useState(null);
 
-    const [verified,setVerified] = useState(null);
+    const [verified,setVerified] = useState(false);
 
-    const [isComplete, setIsComplete] = useState(null);
+    const [isComplete, setIsComplete] = useState(false);
 
     
 
@@ -135,41 +135,61 @@ export default function UxSurvey () {
 
       if(prevInstance){
 
-        let elapsedMilliseconds = Date.now() - prevInstance.accessDate;
-  
-        console.log(formatElapsedTime(elapsedMilliseconds, minutes, 60));
-  
-        if((elapsedMilliseconds/1000/60) >= 15){
-  
-          localStorage.removeItem("cs_uxsurvey_verified");
-          localStorage.removeItem("cs_uxsurvey_session");
-          localStorage.removeItem("cs_uxsurvey_complete");
-          //navigate(0);
-  
-        } else {
-  
-          setVerified(localStorage.getItem("cs_uxsurvey_verified"));
-          setIsComplete(localStorage.getItem("cs_uxsurvey_complete"));
-  
-        }
-  
-      }
+        if(prevInstance.serviceId === serviceId){
 
-      //this blocks the app from scrolling
-      //document.body.style.overflow = "hidden";
+          console.log(prevInstance.serviceId === serviceId);
+          //trying to give ux of the same service as previous instance, lets check how long ago that was
+          let elapsedMilliseconds = Date.now() - prevInstance.accessDate;
+
         
-        setLoading(true);
+  
+          console.log(formatElapsedTime(elapsedMilliseconds, minutes, 60));
+          console.log((elapsedMilliseconds/1000/60) <= 15);
+          
+          if((elapsedMilliseconds/1000/60) <= 15){
+
+            let verif = localStorage.getItem("cs_uxsurvey_verified");
+            let comp = localStorage.getItem("cs_uxsurvey_complete")
+
+            setVerified(verif);
+            setIsComplete(comp);           
+    
+            //it was more than 15 minutes ago, delete old instance data and proceed to clean start
+            
+            //navigate(0);
+    
+          } else {
+
+            localStorage.removeItem("cs_uxsurvey_verified");
+            localStorage.removeItem("cs_uxsurvey_session");
+            localStorage.removeItem("cs_uxsurvey_complete");
+
+          }
+
+        } else {
+          //the user is tryin gto give ux of a different service, delete old intance data and proceed to clean start
+            localStorage.removeItem("cs_uxsurvey_verified");
+            localStorage.removeItem("cs_uxsurvey_session");
+            localStorage.removeItem("cs_uxsurvey_complete");
+
+        }
+
+        
+  
+      } 
+
+      setLoading(true);
   
         
-        UserService.getServicePub(serviceId).then(
+      UserService.getServicePub(serviceId).then(
   
             (response) => {
               
               
               
-              setAlertCriterios(response.data?.alert_criterios);                
-              setAlertMode(response.data?.service.alert_mode);
-              setAlertLevel(response.data?.service.alert_value);
+              setAlertCriterios(response?.data?.alert_criterios);                
+              setAlertMode(response?.data?.service.alert_mode);
+              setAlertLevel(response?.data?.service.alert_value);
                 
                 
               setMessage(response.data?.message); 
@@ -243,7 +263,14 @@ export default function UxSurvey () {
             
             }
           
-        )
+      )
+
+      
+
+      //this blocks the app from scrolling
+      //document.body.style.overflow = "hidden";
+        
+        
          
      
       // Clean up the event listener when the component unmounts
@@ -255,7 +282,7 @@ export default function UxSurvey () {
   
       };
   
-    }, [serviceId, code, error, prevInstance]);
+    }, [serviceId, code, error, prevInstance, minutes]);
 
     console.log(serviceId);
     console.log(code);
@@ -619,7 +646,7 @@ export default function UxSurvey () {
     );
   }*/
 
-  const FeedBackLive = ({service}) => {   
+  const FeedBackLive = ({service, isVerified, isComplete}) => {   
     
    /* useEffect(() => {
 
@@ -836,8 +863,9 @@ export default function UxSurvey () {
                       
                       setIsComplete(true);
                       localStorage.setItem("cs_uxsurvey_complete",true)
+                      
                       setLoading (false);
-                      navigate(0);
+                      
       
                   })
                   .catch( 
@@ -1140,7 +1168,7 @@ export default function UxSurvey () {
                    setIsComplete(true);
                    localStorage.setItem("cs_uxsurvey_complete",true)
                    setLoading(false);
-                   navigate(0);
+                   
                    
                       
                     
@@ -1295,179 +1323,199 @@ export default function UxSurvey () {
  
     }
 
-    return (
-        
-        
-          <div className="w-full mx-auto h-full">
-              
-              {error && (
-                  <div className="form-group">
-                    <div className="alert alert-danger" role="alert">
-                      {error}
-                    </div>
-                  </div>
-              )}
-              {console.log("content is:"+content)}
-              
-
-                  
-                  <main className="w-full mx-auto md:container bg-neutral-100 border border-slate-700 rounded-md p-2 shadow-md">
-                      
-                      <h2 className="m-1  text-center                       
-                        text-stone-500 text-xl md:text-4xl 
-                          font-black ">
-                          📢FeedBackLive!
-                      </h2>
-                      <div className="p-0">
-                        <p className="text-sm font-thin mb-0">
-                          Por favor califique su experiencia con este servicio:<br/>
-                        </p>  
+    const Final = ()=> { 
+      
+      return(
+  
+          
+        <div className="h-full">
+            <div className=" flex flex-col 
+                  sm:flex-row sm:justify-start 
+                  sm:w-fit sm:pl-12 my-2 p-2
+                  border-1 border-neutral-500 bg-neutral-100 rounded-md shadow-md
+                  ">
+                    <h1 className="text-3xl font-extrabold text-lime-500">Gracias!</h1>
+                    <p className="text-sm font-thin m-1 ">
+                      <span className="font-bold text-md text-sky-700">
                         
-                          {
-                          !loading && (
-                          <>
-                            <span className="bg-white shadow-sm p-1text-zinc-500 font-extrathin  text-xs ">&nbsp;
-                              {`${service?.name}  [id: ${service?.id}].`}
-                            </span> 
-                                        
-                          </>)
-                          }
-                          {
-                            loading && (
-                              <div className="mr-8 flex flex-row ">
-                            
-                              <svg className=" animate-spin h-6 w-6 fill-slate-700" viewBox="0 0 24 24">
-                                <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                                <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                              </svg>
-                              <span className="text-slate-700">Loading</span>
-
-                                        
-                          </div>)
-
-                          }
-
-                      </div>
+                        Apreciamos tu retroalimentación. Será utilizada para mejorar nuestros servicios. 
                           
-                          
-                          
-                                               
+                      </span>
+                      <br/>
+                      {service && (
+                        <>Servicio calificado:  {`${service.name} ${service.referencia} [${service.id}]`}</>
+                      )}
                       
-                      
-                             
-                              {(serviceId) && (
-
-                                !isBadUx ? ( <RenderInterface />)
-                                
-                                : (<RenderBadUxInterface />)
-                                 
-                              ) }
-                              
-                              
+                    </p>
+                                             
+            </div>   
+                  
+    
+            <div className=" flex sm:pl-12 sm:w-8/12 justify-evenly sm:justify-start my-2">
+                
                     
-
-                            
-                                              
-
-                  </main>
+                    &nbsp;        
+                    
+                  
+              
+            </div>
+    
+        </div>
             
           
-                             
+        
+      );
+  
+  
+    }
+
+    if(isVerified){
+
+
+        if(!isComplete){
+
+
+          return (
+        
+        
+            <div className="w-full mx-auto h-full">
+                
+                {error && (
+                    <div className="form-group">
+                      <div className="alert alert-danger" role="alert">
+                        {error}
+                      </div>
+                    </div>
+                )}
+                
+                
+  
+                    
+                    <div className="w-full mx-auto md:container bg-neutral-100 border border-slate-700 rounded-md p-2 shadow-md">
+                        
+                        <h2 className="m-1  text-center                       
+                          text-stone-500 text-xl md:text-4xl 
+                            font-black ">
+                            📢FeedBackLive!
+                        </h2>
+                        <div className="p-0">
+                          <p className="text-sm font-thin mb-0">
+                            Por favor califique su experiencia con este servicio:<br/>
+                          </p>  
+                          
+                            {
+                            !loading && (
+                            <>
+                              <span className="bg-white shadow-sm p-1text-zinc-500 font-extrathin  text-xs ">&nbsp;
+                                {`${service?.name}  [id: ${service?.id}].`}
+                              </span> 
+                                          
+                            </>)
+                            }
+                            {
+                              loading && (
+                                <div className="mr-8 flex flex-row ">
+                              
+                                <svg className=" animate-spin h-6 w-6 fill-slate-700" viewBox="0 0 24 24">
+                                  <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                                  <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                                </svg>
+                                <span className="text-slate-700">Loading</span>
+  
+                                          
+                            </div>)
+  
+                            }
+  
+                        </div>
+                            
+                            
+                            
+                                                 
+                        
+                        
+                               
+                                {(serviceId) && (
+  
+                                  !isBadUx ? ( <RenderInterface />)
+                                  
+                                  : (<RenderBadUxInterface />)
+                                   
+                                ) }
+  
+                                
+                                
+                      
+  
+                              
+                                                
+  
+                    </div>
+              
+            
+                               
+            
+            </div>
+          );
+
+        } else {
+
+          return (
+      
+            
+      
+              <div className="">
+                    
+                   
+                <Final />
+      
+              </div>
+      
+      
+                  
           
+          );
+
+
+        }
+
+
+
+
+    } else {
+
+      return (
+      
+        
+  
+          <div className="">
+                
+            <p>No se pudo autenticar la solicitud. Acceso denegado.</p>   
+            
+  
           </div>
-    );
+  
+  
+              
+        
+      );
+
+    }
+
+    
  
 
 
   } //end const feedbacklive
  
-  const Final = ()=> { 
-      
-    return(
-
-        
-      <div className="h-full">
-          <div className=" flex flex-col 
-                sm:flex-row sm:justify-start 
-                sm:w-fit sm:pl-12 my-2 p-2
-                border-1 border-neutral-500 bg-neutral-100 rounded-md shadow-md
-                ">
-                  <p className="text-sm font-thin m-1 ">
-                    <span className="text-lime-500 font-bold text-lg">
-                      Gracias por utilizar FeedBackLive&copy; de CleanSmart&reg;.
-                      
-                        
-                    </span>
-                    <br/>
-                    {service && (
-                      <>Servicio calificado:  {`${service.name} ${service.referencia} [${service.id}]`}</>
-                    )}
-                    
-                  </p>
-                                           
-          </div>   
-                
   
-          <div className=" flex sm:pl-12 sm:w-8/12 justify-evenly sm:justify-start my-2">
-              
-                  
-                  &nbsp;        
-                  
-                
-            
-          </div>
-  
-      </div>
-          
-        
-      
-    );
-
-
-  }
 
   console.log(verified)
   console.log(isComplete)
   
-  if(verified){
+  
 
-   
-
-     
-
-    if(isComplete === 'true'){
-  
-      return (
-      
-        <div 
-          className={`w-full mx-auto h-screen p-2`}>
-          
-        
-          <header className="flex flex-row place-content-between">
-                      <Logo mainColor={"slate-600"}/>
-                      <div className="flex flex-col w-12 h-12">
-                        <span className="text-slate-700 text-xs font-thin mb-1">
-                          por:
-                        </span>
-                        <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
-                      </div>
-          </header>
-  
-          <div className="">
-                
-               
-            <Final />
-  
-          </div>
-  
-  
-              
-        </div>
-      );
-    
-    } else {
-
-      return (
+  return (
       
         <div 
           className={`w-full mx-auto p-2 h-screen`}>
@@ -1484,49 +1532,21 @@ export default function UxSurvey () {
           </header>
             
   
-          <div className="">
+          <main className="">
                 
                 
-            <FeedBackLive service={service}/>
+            <FeedBackLive service={service} isVerified={verified} isComplete={isComplete}/>
                 
   
-          </div>
+          </main>
          
               
         </div>
-      );
-
-    }
-
-  } else {
-
-    return (
-      
-      <div 
-        className={`w-full mx-auto p-2`}>
-        
-      
-        <header className="flex flex-row place-content-between">
-                    <Logo mainColor={"slate-600"}/>
-                    <div className="flex flex-col w-12 h-12">
-                      <span className="text-slate-700 text-xs font-thin mb-1">
-                        por:
-                      </span>
-                      <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
-                    </div>
-        </header>
-
-        <div className="">
-              
-          <p>No se pudo autenticar la solicitud. Acceso denegado.</p>   
-          
-
-        </div>
-
-
-            
-      </div>
     );
+
+   
+
+    
 
   }
 
@@ -1536,6 +1556,6 @@ export default function UxSurvey () {
 
   
   
-};
+
 
 
