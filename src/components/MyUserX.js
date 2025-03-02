@@ -38,6 +38,8 @@ export default function MyUserX () {
   
   const [ubicacionId, setUbicacionId] = useState(null);
   const [serviceId, setServiceId] = useState(null);
+  const [uxId, setUxId] = useState(null);
+
   
   
   const [content, setContent] = useState(null);
@@ -45,6 +47,7 @@ export default function MyUserX () {
   const [showModal, setShowModal] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [showServiceResult, setShowServiceResult] = useState(false);
+  const [showServiceAction, setShowServiceAction] = useState(false);
 
 
   const [message, setMessage] = useState(false);
@@ -59,23 +62,16 @@ export default function MyUserX () {
   //const [user, setUser] = useState(AuthService.getCurrentUser());
   console.log(ubicacionId);
   console.log(serviceId);
-
+  console.log(uxId);
   
   //const [message, setMessage] = useState("");
  
 
-   
-  
-    
-   
 
   const UbicacionPicker=({user}) => {
 
       
-      const [selectedOption, setSelectedOption] = useState(''); // Declare a state variable...
-      // ...
-      const optionClassName = ``;
-      const selectClassName = `border border-slate-500 bg-neutral-50 rounded-md p-2 m-1 w-1/3`;
+      
 
       const [ubsContent, setUbsContent] = useState(false);
       
@@ -150,24 +146,28 @@ export default function MyUserX () {
     
       
       
-      const handleChange = (event) =>{
-        setUbicacionId(event.target.value); 
-               
-        setSelectedOption(event.target.value);
-        console.log("option changed!")
-        console.log(event.target.value)
-        setLoading(true);
-        setShowServices(true);
-        
-      }
+      
 
       const handleSubmit = (event) => {
         event.preventDefault();
+
+        setLoading(true);
         
+        const form = event.target;
+
+        const formData = new FormData(form);
+        const values = [...formData.entries()];
+        const formElements = form.elements;
+        
+        const onSubmitUbId = formData.get("selectedUbId");
+        
+        setUbicacionId(onSubmitUbId);
+        
+        setShowServices(true);
         //console.log(ubicacionId)
       }
 
-      const SaveButton = ({loading, className, children}) => {
+      const GoButton = ({loading, className, children}) => {
 
         if(loading){
           
@@ -188,7 +188,7 @@ export default function MyUserX () {
               
             <button  type="submit" id="submit"
                     className={className + 
-                      `m-1 p-1 rounded-md border border-white 
+                      `h-8 p-2 rounded-md border border-white 
                       
                       bg-gradient-to-b from-sky-400 to-sky-800 
                           hover:shadow-md hover:bg-sky-600 
@@ -197,7 +197,14 @@ export default function MyUserX () {
                     } 
                     disabled={loading} >
               
-              <span className="mx-1 text-white font-semibold text-sm">{children}</span>
+              <span className="text-white font-semibold text-sm">
+                {children}
+                <svg fill="#FFFFFF" width="12px" height="12px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    
+                      <path d="M0 13.024q0-2.624 1.024-5.056t2.784-4.16 4.16-2.752 5.056-1.056q2.656 0 5.056 1.056t4.16 2.752 2.784 4.16 1.024 5.056q0 3.616-1.984 6.816l7.072 7.040q0.864 0.896 0.864 2.144t-0.864 2.112-2.144 0.864-2.112-0.864l-7.040-7.040q-3.2 1.952-6.816 1.952-2.656 0-5.056-1.024t-4.16-2.784-2.784-4.128-1.024-5.088zM4 13.024q0 2.464 1.216 4.544t3.296 3.264 4.512 1.216q1.824 0 3.488-0.704t2.88-1.92 1.92-2.88 0.736-3.52-0.736-3.52-1.92-2.848-2.88-1.92-3.488-0.736q-2.432 0-4.512 1.216t-3.296 3.296-1.216 4.512z"></path>
+                </svg>
+              </span>
+              
               
               
               
@@ -209,6 +216,47 @@ export default function MyUserX () {
         }      
         
       
+      }
+
+      const SelectDrop = ({ubicaciones}) => {
+
+        const [selectedOption, setSelectedOption] = useState(''); // Declare a state variable...
+        // ...
+        const optionClassName = ``;
+        const selectClassName = `border border-slate-500 bg-neutral-50 rounded-md p-2 w-1/3 h-8 text-xs font-light`;
+
+        const handleChange = (event) =>{
+          
+                 
+          setSelectedOption(event.target.value);
+          console.log("option changed!")
+          console.log(event.target.value)
+          
+          
+        }
+
+        return (
+          <select
+                    name="selectedUbId"
+                    value={selectedOption} // ...force the select's value to match the state variable...
+                    onChange={e=> handleChange(e)} // ... and update the state variable on any change!
+                    className={selectClassName + ``}
+                  >
+                      <option value="0">Seleccione una ubicación</option>
+                    {
+          
+                      ubicaciones.map((ub) => (
+                        <option key={`ub-key-${ub.id}`} 
+                          value={ub.id} 
+                        >{ub.name}
+                        </option>
+          
+          
+                      ))  
+          
+                    }
+          </select>
+        );
       }
 
       return (
@@ -231,27 +279,12 @@ export default function MyUserX () {
   
                 
                 <form onSubmit={handleSubmit}>
-                  <select
-                    name="ubicacion"
-                    value={selectedOption} // ...force the select's value to match the state variable...
-                    onChange={e=> handleChange(e)} // ... and update the state variable on any change!
-                    className={selectClassName + ``}
-                  >
-                      <option value="0">Seleccione una ubicación</option>
-                    {
-          
-                      ubsContent.ubicaciones?.map((ub) => (
-                        <option key={`ub-key-${ub.id}`} 
-                          value={ub.id} 
-                        >{ub.name}
-                        </option>
-          
-          
-                      ))  
-          
-                    }
-                  </select>
-                  <SaveButton loading={loading}>Go</SaveButton>
+                  <SelectDrop ubicaciones={ubsContent?.ubicaciones}/>
+                  &nbsp;
+                  <GoButton loading={loading}>
+                    
+
+                  </GoButton>
                 </form>
                 
                 )}
@@ -265,7 +298,6 @@ export default function MyUserX () {
       
   }
 
-      
  
   const ShowServices=({ubicacionId})=>{   
     
@@ -337,70 +369,73 @@ export default function MyUserX () {
 
          
 
-    const FblButton = ({serviceId}) => {
-
-      function handleClick (){
       
-        console.log(serviceId);
-        setMessage(false);
-        setError(false);
-        setLoading(true);
-        //setServicesContent(''); 
-        setShowModal(true);
-        setServiceId(serviceId);
-        
-        
-        
-        
-      
-      }
-    
-      return (
-  
-  
-        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
-                onClick={handleClick}>📢
-          {/*<svg  className="w-4 h-4 " viewBox="0 0 512 512"> 
-    
-            <path className=" fill-green-400 " d="M256,0C114.625,0,0,114.625,0,256c0,141.374,114.625,256,256,256c141.374,0,256-114.626,256-256
-              C512,114.625,397.374,0,256,0z M351.062,258.898l-144,85.945c-1.031,0.626-2.344,0.657-3.406,0.031
-              c-1.031-0.594-1.687-1.702-1.687-2.937v-85.946v-85.946c0-1.218,0.656-2.343,1.687-2.938c1.062-0.609,2.375-0.578,3.406,0.031
-              l144,85.962c1.031,0.586,1.641,1.718,1.641,2.89C352.703,257.187,352.094,258.297,351.062,258.898z"/>
-  
-          </svg>*/}
-          
-          
-  
-        </button>
-  
-      );
-    }  
 
     function RenderList({listContent}){
   
+      let checkIconClass = `fill-lime-500`;
+
+      function handleLensClick (servId){
+        console.log('Lens button clicked !!!!!!');
+        console.log(servId);
+
+        setLoading(true);
+        
+        setMessage(false);
+        setError(false);
+        
+        //setServicesContent(''); 
+        setShowModal(true);
+        setServiceId(servId);
+        setShowServiceResult(true);
+      }
+
+      function handleActionClick (servId,uxId){
+        console.log('action button clicked !!!!!!');
+        console.log(servId);
+
+        setLoading(true);
+        
+        setMessage(false);
+        setError(false);
+        
+        //setServicesContent(''); 
+        setShowModal(true);
+        setServiceId(servId);
+        setUxId(uxId);
+        
+        setShowServiceAction(true);
+      }
     
       if(listContent){
     
         return(
-          <div className="mt-2 mb-4">
+          <div className="mb-2 overflow-x-auto">
                 
             <table id="eval-display" 
-              className="bg-white opacity-90 text-xs sm:text-sm shadow-md rounded-sm">
+              className="bg-white opacity-90 text-xs sm:text-sm shadow-md w-full  ">
                              
             
-                  <thead id="table-evals-display-head" 
-                          className="border border-b-zinc-300 " >
-                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold">
+                  <thead id="table-head" 
+                          className="border border-b-zinc-300  " >
+                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold ">
                       <td className="p-2"   >
-                        id#
+                        #
+                      </td>
+                      <td className="p-2"   >
+                        Fecha
                       </td>
                       <td className="p-2"   >
                         Ubicacion
                       </td>
                       <td className="p-2"  >
-                        Nombre</td> 
-                      
+                       Servicio</td> 
+                       <td className="p-2"  >
+                       Calif.</td> 
+                       
+                       <td className="p-2">Tarea</td>
                       <td className="p-2">Accion</td>
+                      
   
                     </tr>
   
@@ -411,22 +446,121 @@ export default function MyUserX () {
             
               
               {
-                listContent.map(row => (
+                listContent.map((row,index) => (
                   
-                  <tr className="" key={'tr-'+row.service_id} >
-                    <td className="p-2" id={'td-id'+row.service_id}   >
-                      { row.service_id  }
+                  <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+index+'-'+row.service_id} >
+                    <td className="p-2" id={'td-i-'+row.ux_id}   >
+                      { index+1  }
                     </td>
-                    <td className="p-2 " id={'td-date_inicio_planif'+row.service_id}   >
-                      { row.ubicacion_name+`[${row.ubicacion_id}]` }
+                    <td className="p-2 " id={'td-ux-date-created-'+row.ux_id}   >
+                      { row.ux_date_created  }
                     </td>
-                    <td className="p-2 " id={'td-verif_name'+row.id}   >
+                    <td className="p-2 " id={'td-ub-name-'+row.ux_id}   >
+                      { row.ubicacion_name }
+                    </td>
+                    <td className="p-2 " id={'td-serv-name-'+row.ux_id}   >
                       { row.service_name }
+                    </td>
+                    <td  id={'td-calif-'+row.ux_id} className={`p-2 relative group
+                      ${(row.ux_feedback_value === "3")? 
+                        (`bg-yellow-400`):(` `)}
+                        ${(row.ux_feedback_value === "2")?
+                          (`bg-orange-400`):(` `)}
+                          ${(row.ux_feedback_value === "1")? 
+                            (`bg-red-400`):(` `)}
+                    `}>
+                      
+                      {row.ux_feedback_value}
+                      
+                        <span id={'span-ux_comments-'+row.ux_id} 
+                          className={`absolute w-40 h-fit right-full sm:left-0 top-0 
+                                      p-2
+                                      transition delay-50 duration-200 ease-in-out
+                                      
+                                    text-xs font-light text-slate-700 bg-white
+                                    
+                                    rounded border border-slate-700
+                                    shadow-md
+                                     
+                                        ${row.ux_comment && 
+                                          (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
+                                        }
+                                    `} >
+                          { row.ux_comment } {row.ux_bad_ux_id + '-'+row.ux_bad_comment}
+                        </span>
+                        
+                      
+                      
                     </td> 
+                    <td className={``} id={'td-task-id'+row.ux_id}>
+                      {row.ux_is_action_taken && (
+
+                        <div className="relative group">
+                          <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                            <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
+                          </svg>
+                          <span id={'span-task-'+row.task_id} 
+                          className={`absolute w-40 h-fit  right-full sm:left-0 top-0 
+                                        p-2
+                                        transition delay-50 duration-200 ease-in-out
+                                          
+                                        text-xs font-light text-slate-700 bg-white
+                                        
+                                        rounded border border-slate-700
+                                        shadow-md
+                                        ${!row.ux_task_id && 
+                                          (` hidden `)
+                                        }
+                                        ${row.ux_task_id && 
+                                          (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
+                                        }
+                                    `} >
+                                          { row.task_task } <br/>
+                                          {row.task_description} <br/>
+                                          Asignada a:&nbsp;{row.user_firstname}&nbsp;{row.user_lastname}<br/>
+                                          Plazo:{row.task_due_date}<br/>
+                                          {row.task_is_complete &&
+                                                        (<span className="text-xs">
+                                                          Completada <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                                            <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
+                                                          </svg>
+                                                          Fecha Completada:
+
+                                                        </span>
+                                                          
+                                                        )
+                                                      }
+
+                          </span>
+                        
+                        </div>
+                        
+                        
+                      
+                      
+                        )
+                        
+                      
+                      }
+                      
+                    </td>
                     
-                    <td className="p-2">
-                      <FblButton serviceId={row.service_id}/>
-                    </td>    
+                    <td id={'td-action-btns-'+row.ux_id} className="">
+                      <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                        onClick={()=>handleLensClick(row.service_id,row.ux_id)}>🔍
+                      </button>&nbsp;
+                      {
+                        !row.ux_is_action_taken &&
+                          (
+                            <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                              onClick={()=>handleActionClick(row.service_id,row.ux_id)}>📢
+                            </button>
+                          )
+                        
+                      }
+                      
+                    </td>
+                    
                   
                   </tr> 
                   
@@ -500,7 +634,7 @@ export default function MyUserX () {
     return (
       
          
-      <div className="flex flex-col relative z-1">
+      <div className={`flex flex-col relative z-1  `}>
           
               
               {loading && (
@@ -515,9 +649,11 @@ export default function MyUserX () {
               )}
               {servicesContent && (   
               <>
-                <h6>Resumen de Ux:</h6>
+                <h5 className="text-slate-700 mt-2 mb-1">Ubicacion: {servicesContent.ubicacion.name+'[id:'+servicesContent.ubicacion.id+']'}</h5>
+                <h6 className="text-slate-700 mb-1">Resumen de Ux - este mes :</h6>
                 <RenderBarChart graphData={servicesContent.uxData} />
-                <RenderList listContent={servicesContent.services}/>
+                <h6 className="text-slate-700 mt-2">Últimos detractores:</h6>
+                <RenderList listContent={servicesContent.lastBadBatch}/>
               </>
               )}
             
@@ -528,68 +664,56 @@ export default function MyUserX () {
   
   }
 
-  function ServiceResult({serviceId}){   
+  const ServiceResult=({serviceId})=>{   
     
     const [loading, setLoading] = useState(false);
     //const [message, setMessage] = useState("");
     const [serviceContent, setServiceContent] = useState("");
     const [content, setContent] = useState("");
 
-
+    console.log(serviceId);
     let navigate = useNavigate();
   
     useEffect(() => {
 
       //this blocks the app from scrolling
       //document.body.style.overflow = "hidden";
-        
-      try { 
 
-        /*UserService.getService(serviceId).then(
-
-            (response) => {
-
-              console.log(response);
-              console.log(response?.data);
-              console.log(response?.data.service_ux_count_grouped);
-              setServiceContent(response.data);
-              //setAvgResult(response.data.service)
-              setMessage(response.data?.message);
-              
-              
-              
-              
-            
-            
-            },
-
-            (error) => {
-              const _content =
-                (error?.response && error?.response.data) ||
-                error?.message ||
-                error?.toString();
-              
-              setError(_content);
-              
-              
-            
-            }
+      function createOptions() {
           
-        )*/
+        return {
+                   
+          servId: serviceId,           
+        };
+      }
+      
+      const options = createOptions();
 
-        UserService.getService(serviceId).then(
+      if(!options){
+
+        setServiceContent("");
+        setError("no se recibieron todos los parametros.")
+        //setMessage("no se recibieron los parametros correctos.")
+        
+      } else {
+
+            
+
+        UserService.getService(options.servId).then(
 
           (response) => {
 
             console.log(response);
             console.log(response?.data);
             console.log(response?.data.service_ux_count_grouped);
-            setServiceContent(response.data);
+            setServiceContent(response?.data);
+            
             //setAvgResult(response.data.service)
-            setMessage(response.data?.message);
+            setMessage(response?.data.message);
             
-            
-            
+            setShowServiceResult(true);
+            setLoading(false);
+             
             
           
           
@@ -607,21 +731,12 @@ export default function MyUserX () {
           
           }
         
-      )
+        )
           
-        } catch (error) {
-          
-        }
+      }  
         
      
-      // Clean up the event listener when the component unmounts
-      return () => {
-        //this is the reset state of the scroll blocking above
-        //document.body.style.overflow = "scroll"
-
-        
-
-    };
+     
   
     }, [serviceId]);
 
@@ -671,7 +786,7 @@ export default function MyUserX () {
       
       
 
-      const cx = 100;
+      const cx = 80;
       const cy = 100;
       const iR = 50;
       const oR = 80;
@@ -824,7 +939,7 @@ export default function MyUserX () {
     
         return (
           <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2">
-            <PieChart width={200} height={200}>
+            <PieChart width={160} height={150}>
               <Pie
                 data={data}
                 cx="50%"
@@ -856,10 +971,7 @@ export default function MyUserX () {
     
     return (
       
-      
-      
-        
-      <div className="flex flex-col ">
+      <div className="flex flex-col mx-auto bg-gradient-to-br from-neutral-200 to-zinc-300 via-white w-11/12 rounded-md shadow-md border border-slate-700 p-2 overflow-x-auto ">
           
               <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Resultados de Ux </h1>
               <p className="text-sm md:text-md mb-0">Servicio: {serviceContent.service?.name} </p>
@@ -874,25 +986,25 @@ export default function MyUserX () {
                 </div>
 
               )}
-              {serviceContent && (   
-                <div className="mx-auto mt-2 flex flex-col">
-                  
-                  <p className={`mt-2 mb-0 text-center text-sm text-slate-700`}>
-                    Resultado de UX<br/>
-                    <span className="text-xs text-slate-500 m-0">(promedio de calificaciones)</span>
-                  </p>    
-                  <RenderAvgOdo result={serviceContent.service_ux_avg.avg_feedback_value}/>
-                  <p className={`mt-4 mb-0 text-center text-sm text-slate-700`}>
-                    Calificaciones recibidas<br/>
-                    <span className="text-xs text-slate-500 m-0">(numero y porcentaje por calificación)</span>
-                  </p> 
-                  <RenderPie groupedUxData={serviceContent.service_ux_count_grouped}/>
-                  
-                  
-                 
-
+              {serviceContent ? (   
+                <div className="mx-auto mt-2 flex flex-row ">
+                  <div className="flex-col">
+                    <p className={`text-center text-sm text-slate-700`}>
+                      Ux Promedio<br/>
+                      <span className="text-xs text-slate-500 m-0">(promedio de calificaciones - &nbsp;último mes)</span>
+                    </p>    
+                    <RenderAvgOdo result={serviceContent.service_ux_avg.avg_feedback_value}/>
+                  </div>
+                  <div className="">
+                    <p className={`text-center text-sm text-slate-700`}>
+                      Calificaciones recibidas<br/>
+                      <span className="text-xs text-slate-500 m-0">(calificaciones recibidas - &nbsp;último mes)</span>
+                    </p> 
+                    <RenderPie groupedUxData={serviceContent.service_ux_count_grouped}/>
+                  </div>         
                 </div>
-              )}
+
+              ): (`info no se cargo.`)}
             
                            
       </div>
@@ -901,116 +1013,124 @@ export default function MyUserX () {
   
   }
 
-  function FeedBackLive(){   
-    
-    
+  const ServiceAction=({serviceId,uxId})=>{   
     
     const [loading, setLoading] = useState(false);
-    //const [message, setMessage] = useState(false);
-    const [content, setContent] = useState('');//the whole data object returned by the api call
-    const [service, setService] = useState(false);//the service state (name, etc)
-    const [feedbackValue, setFeedbackValue] = useState("");//stores the user selection (THE feedback)
-    const [comments, setComments] = useState("");
+    //const [message, setMessage] = useState("");
+    const [serviceContent, setServiceContent] = useState("");
+    const [content, setContent] = useState("");
 
-    const [isBadUx, setIsBadUx] = useState(false);
+    const [obs, setObs] = useState("");
+    const [action, setAction] = useState('asign-task');
+    const [contact, setContact] = useState(null);
 
-    const [uxId, setUxId] = useState(false);
-
-    const [badUxId, setBadUxId] = useState(null);
-    const [badComments, setBadComments] = useState(null);
-    
-    const [alertCriterios, setAlertCriterios] = useState("");
-    //default values
-    const [alertMode, setAlertMode] = useState(true);
-    const [alertLevel, setAlertLevel] = useState(2);
-
+    let inputClass = `h-8 text-xs font-light float-right`;
+    let labelClass = `text-xs font-semibold`;
     
 
-    //const [badUxValue, setbadUxValue] = useState("");//stores the user selection after he gives bad feedback (example which options to show after a bad feedback)
+    console.log(serviceId);
     
-
-    //simple strings for the buttons, choose your own!
-    const emoji5 = `😄`;
-    const label5 = `Muy Satisfecho`;
-
-    const emoji4 = `🙂`;
-    const label4 = `Satisfecho`;
-
-    const emoji3 = `😐`;
-    const label3 = `Neutral`;
-
-    const emoji2 = `😠`;
-    const label2 = `Insatisfecho`;
-
-    const emoji1 = `🤬`;
-    const label1 = `Muy Insatisfecho`;    
-
-    const emojiClose = `❌`;
-    const labelClose = `Cancelar`;
-
-    const emojiSave = `✅`;
-    const labelSave = `Enviar`;
-
+    let navigate = useNavigate();
     
-   
-  
-    useEffect(() => {
+    const handleContact = (event) => {
+      setContact(event.target.value);
+      console.log('contacto cambiado a '+event.target.value)
+    }
+    const handleAction = (event) => {
+      console.log("se escogio la acción: ASignar Tarea ");
+      setAction(event.target.value);
+    }
 
-      //this blocks the app from scrolling
-      //document.body.style.overflow = "hidden";
-        
-      try { 
+    const handleSubmit = (event) => {
+      
+      event.preventDefault();
 
-        UserService.getService(serviceId).then(
+      setLoading(true);
+      
+      const form = event.target;
 
-            (response) => {
+      const formData = new FormData(form);
+      const values = [...formData.entries()];
+      const formElements = form.elements;
+      
+      const onSubmitUserId = formData.get("user_id");
+      const onSubmitTask = formData.get("task");
+      const onSubmitDescription = formData.get("description");
+      
+      if (!error) {
+                   
+        const data = {
 
-              setContent(response);
-              setService(response.data?.service);
-              setAlertCriterios(response.data?.alert_criterios);
-              setMessage(response.data?.message);
-              setAlertMode(response.data?.service.alert_mode);
-              setAlertLevel(response.data?.service.alert_value);
-              
-              console.log(response);
-              console.log(response.data?.alert_criterios);
-              console.log(response.data?.service.alert_mode);       
-              console.log(response.data?.service.alert_value);
-            
-            
-            },
+          //feedback_value: parseInt(formData.get("ux-feedback-value")),
+          //comments: formData.get("comments"),
+          //feedback_value: parseInt(onSubmitUxValue, 10),
+          user_id: onSubmitUserId,
+          task: "atencion-reclamo-urgente",
+          description: onSubmitDescription,
 
-            (error) => {
-              const _content =
-                (error?.response && error?.response.data) ||
-                error?.message ||
-                error?.toString();
-              
-              setError(_content);
-              
-              
-            
-            }
           
-        )
-          
-        } catch (error) {
-          
+
+
         }
-        
-     
-      // Clean up the event listener when the component unmounts
-      return () => {
-        //this is the reset state of the scroll blocking above
-        //document.body.style.overflow = "scroll"
 
-        
-
-    };
+        console.log(data);
+            
+        UserService.setTask(serviceId,uxId, data )
+            .then(
+              (response) => {
+              
   
-    }, []);
+                  setContent(response.data);
+                  
+                  if(response.status === 204){
+                    setError(error + response.statusText)
+                    CancelProcessing();
+                   
+                  }
+                  
+                  console.log(response);              
+                  //console.log(response.status);
+                  //console.log(response.statusText)
+    
+                  //console.log(response);              
+                  console.log(response.status);
+                  console.log(response.statusText)
+                  
+                  //if(response.data.message !== undefined){
+                  console.log(response.data?.message)
+                  setMessage(response.data?.message)
+                  //}
+                  
+                  
+                  //localStorage.setItem("cmx_task_set",true)
+                  setLoading(false);
+                  setShowModal(false);
+                  setShowServiceAction(false);
+                  
+                     
+                   
+  
+              })
+              .catch( 
+                (error) => {
+                  const resMessage =
+                    (error.response &&
+                      error.response.data &&
+                      error.response.data.message) ||
+                    error.message || error.statusText ||
+                    error.toString();
+                  //setMessage(resMessage);
+                  let errorMsg = 'No se pudo procesar la operacion: ';
+                  setError(errorMsg + resMessage)
+                  CancelProcessing();
+                }
+              );
+      }
+      
+      //console.log(ubicacionId)
+    }
 
-    const SaveButton = ({loading, className, children}) => {
+    const SaveActionButton = ({loading, className, children}) => {
 
       if(loading){
         
@@ -1028,24 +1148,31 @@ export default function MyUserX () {
 
         return (   
   
-            
-          <button  type="submit" id="submit"
-                  className={className + 
-                    `m-1 p-1 rounded-md border border-white 
-                    
-                    bg-gradient-to-b from-sky-400 to-sky-800 
-                        hover:shadow-md hover:bg-sky-600 
-                    transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110 duration-150
-                    `                    
-                  } 
-                  disabled={loading} >
-            
-            <span className="mx-1 text-white font-semibold text-sm">{children}</span>
-            
-            
-            
-    
-          </button>
+          <div className="text-center mt-2 ">  
+            <button  type="submit" id="submit"
+                    className={className + 
+                      `flex flex-row w-fit
+                      p-2 rounded-md border border-white 
+                      text-sm font-semibold text-white
+                      bg-gradient-to-b from-sky-400 to-sky-800 
+                      hover:shadow-md hover:bg-sky-600 
+                      transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110 duration-150
+                      `                    
+                    } 
+                    disabled={loading} >
+              <div className="flex flex-row">
+
+              <svg className={`fill-white mt-1`} height="16px" width="16px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                  <path d="M12.75116,7.3384,14,6.824l-.9144-2.2176-1.24884.51438A4.7393,4.7393,0,0,0,10.892,4.172l.51838-1.24642L9.19757,2.004,8.67839,3.2512a4.71535,4.71535,0,0,0-.67681-.04879,4.8031,4.8031,0,0,0-.66239.04643L6.82317,2l-2.21676.9144.51517,1.24884A4.74113,4.74113,0,0,0,4.172,5.108l-1.2472-.51844L2.00316,6.80243l1.24725.51918a4.81569,4.81569,0,0,0-.00242,1.34L2,9.176l.91356,2.2176,1.24883-.51438a4.823,4.823,0,0,0,.94477.94882l-.51839,1.2472,2.2144.92083.51844-1.24647a4.67338,4.67338,0,0,0,.67439.048,4.73749,4.73749,0,0,0,.66555-.04637L9.176,14l2.2176-.91361-.51438-1.24878a4.82623,4.82623,0,0,0,.94955-.94483l1.24563.51845.92161-2.2144-1.2472-.51844A4.729,4.729,0,0,0,12.75116,7.3384ZM11.69174,9.75607c0,.24367-.35128.50052-.95462.70306-.06913.02322-.14243.04485-.21787.06649-.0791.02264-.16136.04428-.2479.06484a9.89613,9.89613,0,0,1-2.27321.2421,9.88007,9.88007,0,0,1-2.27113-.2421c-.087-.02056-.16879-.0422-.24789-.06484-.07595-.02164-.1493-.04327-.21787-.067-.60335-.202-.95356-.45889-.95356-.70256V9.07936c.00789.008.02057.01426.03.02215a1.56682,1.56682,0,0,0,.22311.1609l.02006.01262A2.72481,2.72481,0,0,0,4.89,9.42434l.00631.00315c.02214.00947.04535.01842.06749.02744.03538.01318.07437.02529.11026.03741.06226.0227.125.04535.18987.06592.0227.00743.04327.01583.06749.02321.01161.00372.02586.00687.03905.01059.12344.03583.2537.06857.38925.09758.02952.00682.057.01318.08755.01949.144.0306.29432.05747.44779.08068.02953.00474.06012.00845.0897.01268.14186.02056.28587.038.434.05324l.07015.008c.16248.01476.32756.02687.49156.03532.03747.00158.07437.00265.11133.00473.16874.00738.33861.01217.50633.01217.16823,0,.337-.00479.50684-.01217L8.61523,9.899c.16508-.00845.33016-.02056.49315-.03532l.06857-.008c.14823-.01476.29325-.03268.43618-.05324.02952-.00423.06012-.00794.0902-.01268q.2302-.03481.44622-.08068c.03059-.00631.059-.01267.08862-.01949.13448-.029.26367-.06175.38762-.09657.01375-.00473.029-.00788.0422-.01211.02321-.00687.04327-.01527.06648-.0227.06592-.02057.1271-.04322.19037-.06592.03482-.01212.07386-.02423.10818-.03691.02315-.009.04636-.01791.06856-.02794l.00789-.00315A2.744,2.744,0,0,0,11.417,9.275c.00845-.00422.01476-.00946.02164-.01369a1.651,1.651,0,0,0,.222-.15927c.009-.00794.02164-.01476.0311-.02271Zm0-1.76058c0,.24367-.35128.50053-.95462.70307-.06913.02321-.14243.04485-.21787.06648-.0791.02265-.16136.04429-.2479.06485A9.89675,9.89675,0,0,1,7.99814,9.072,9.88068,9.88068,0,0,1,5.727,8.82989c-.087-.02056-.16879-.0422-.24789-.06485-.07595-.02163-.1493-.04327-.21787-.067-.60335-.202-.95356-.45889-.95356-.70256v-.6767c.00789.00789.02057.01426.03.02214a1.56588,1.56588,0,0,0,.22311.16085l.02006.01268A2.71639,2.71639,0,0,0,4.89,7.66371l.00631.00321c.02214.00946.04535.01842.06749.02738.03538.01318.07437.02479.11026.03746.06226.02271.125.04536.18987.06592.0227.00738.04327.01634.06749.02321l.03905.0111c.12344.03533.2537.0675.38925.097.02952.00637.057.01319.08755.01955.144.03059.29432.05747.44779.08119l.0897.01217c.14186.02056.28587.038.434.05324l.07015.00794c.16248.01527.32756.02688.49156.03533.03747.00158.07437.00315.11133.00529.16874.00682.33861.01155.50633.01155.16823,0,.337-.00473.50684-.01155.037-.00214.07335-.00371.11025-.00529.16508-.00845.33016-.02006.49315-.03533L9.177,8.09516c.14823-.01476.29325-.03268.43618-.05324.02952-.00423.06012-.00795.0902-.01217q.2302-.03558.44622-.08119c.03059-.00636.059-.01318.08862-.01955q.20172-.04428.38762-.09651c.01375-.00473.029-.00789.0422-.01211.02321-.00637.04327-.01533.06648-.02271.06592-.02056.1271-.04321.19037-.06592.03482-.01267.07386-.02428.10818-.0369.02315-.009.04636-.018.06856-.02794l.00789-.00321a2.73533,2.73533,0,0,0,.3075-.14925c.00845-.00422.01476-.00946.02164-.01369a1.65655,1.65655,0,0,0,.222-.15933c.009-.00789.02164-.0142.0311-.02265Zm-.95412-1.05012c-.07014.02372-.14242.04586-.21888.067-.0791.02265-.16141.04428-.24789.06484a9.89648,9.89648,0,0,1-2.2722.24159A9.88494,9.88494,0,0,1,5.728,7.0772c-.08648-.02056-.16874-.04219-.24734-.06434-.077-.02163-.1493-.04377-.21888-.06749-.60233-.20147-.95361-.45889-.95361-.70256,0-.509,1.51532-1.07542,3.69045-1.07542,2.17676,0,3.69366.56644,3.69366,1.07542C11.69231,6.48648,11.341,6.7439,10.73762,6.94537Z"/>
+              </svg>
+                
+                {children}
+
+              </div>
+              
+      
+            </button>
+          </div>
                 
         );
 
@@ -1054,894 +1181,219 @@ export default function MyUserX () {
     
     }
 
-    const CancelButton = ({className, children}) => {
+    const SelectDrop = ({ubicaciones}) => {
 
-      function handleCancel (){
-      
-        //setMessage('Evaluación cancelada por el usuario. Puede continuar más tarde desde él último criterio verificado.');
-        setError('Feedback cancelado por el usuario.')
-        console.log('cancelled by the user');
-        setLoading(false);
-        setContent(''); 
-        setServiceId(false);
-        //setInstance(false);
-        setShowModal(false);
-        //console.log(evalId)
-        //console.log(instance)
-        //console.log(showModal)
+      const [selectedOption, setSelectedOption] = useState(''); // Declare a state variable...
+      // ...
+      const optionClassName = ``;
+      const selectClassName = `border border-slate-500 bg-neutral-50 rounded-md p-2 w-1/3 h-8 text-xs font-light`;
+
+      const handleChange = (event) =>{
         
-      
+               
+        setSelectedOption(event.target.value);
+        console.log("option changed!")
+        console.log(event.target.value)
+        
+        
       }
-    
-      return (     
-  
-  
-        <button  
-                type="button"
-                className={className +
-                  `m-1 p-2 flex flex-row  
-                   rounded-md 
-                  hover:bg-white bg-zinc-50  border border-zinc-400 font-semibold
-                  
-                  `
-                } 
-                disabled={loading} onClick={handleCancel}>
-          
-          <span className="mx-1 text-zinc-400 text-xs font-thin hover:no-underline">{children}</span>
-            
-        </button>
-  
+
+      return (
+        <select
+                  name="selectedUbId"
+                  value={selectedOption} // ...force the select's value to match the state variable...
+                  onChange={e=> handleChange(e)} // ... and update the state variable on any change!
+                  className={selectClassName + ``}
+                >
+                    <option value="0">Seleccione una ubicación</option>
+                  {
+        
+                    ubicaciones.map((ub) => (
+                      <option key={`ub-key-${ub.id}`} 
+                        value={ub.id} 
+                      >{ub.name}
+                      </option>
+        
+        
+                    ))  
+        
+                  }
+        </select>
       );
-    } 
+    }
 
+    function CancelProcessing() {
+                 
+      setAction(null);
+      setContact("");
+      setLoading(false);
+      setServiceId(null);
+      setShowModal(false);
+      setShowServiceAction(false);
     
-
-    
-
-    const RenderInterface = () => { 
-   
-
-       //STATE
-       const [isRadio, setIsRadio] = useState(0);
-       const [isComments, setIsComments] = useState("");
-       const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 m-1 rounded-md flex flex-row items-center text-xl`;
-       const inputClassName = ` m-2 w-10 h-10`;
-       const [ready2Go, setReady2Go] = useState(false);
       
 
-      function CancelProcessing() {
-                  
-                  setFeedbackValue(null);
-                  setComments("");
-                  setLoading(false);
-                  setServiceId(null);
-                
-                  
+    }
+  
+  
+    useEffect(() => {
 
+      //this blocks the app from scrolling
+      //document.body.style.overflow = "hidden";
+
+      function createOptions() {
+          
+        return {
+                   
+          servId: serviceId,           
+        };
       }
       
+      const options = createOptions();
 
-      function handleSubmit(event) {
+      if(!options){
 
-        event.preventDefault();
-
-        setLoading(true);
-
-        const form = event.target;
-
-        const formData = new FormData(form);
-        const values = [...formData.entries()];
-        const formElements = form.elements;
+        setServiceContent("");
+        setError("no se recibieron todos los parametros.")
+        //setMessage("no se recibieron los parametros correctos.")
         
-        const onSubmitComments = formData.get("comments");
-        const onSubmitFeedbackValue = formData.get("ux-feedback-value");
-        const onSubmitBadUxId = formData.get("bad-ux-feedback-id");
-        const onSubmitBadComments = formData.get("bad-comments");
+      } else {
 
-        setFeedbackValue(onSubmitFeedbackValue);
-        setComments(onSubmitComments);
-        setBadUxId(onSubmitBadUxId);
-        setBadComments(onSubmitBadComments);
-                                
-        console.log(values);
-        
-        console.log(form);
-        
-        console.log(formElements);
-        
-        console.log(onSubmitComments);
-
-        console.log(onSubmitFeedbackValue);
-        console.log(onSubmitFeedbackValue <= alertLevel)
-        console.log(alertMode);
-        console.log(ready2Go);
-
-        if(onSubmitFeedbackValue <= alertLevel){
-          if(alertMode){            
-
-            console.log("alert mode is on");
-            setIsBadUx(true);
-            return setLoading (false);
-
-
-          } 
-        //setLoading (false);
-        } else {
-          console.log("we are ready to go");
-          setReady2Go(1);
-          console.log(ready2Go);
-          
-
-
-        }  //setReady2Go(true);
-
-          console.log(ready2Go);
-
-        
-
-          console.log("beginning API post call");
-          console.log(loading);
-
-          if (!error) {
-                      
-            const data = {
-  
-              //feedback_value: parseInt(formData.get("ux-feedback-value")),
-              //comments: formData.get("comments"),
-              //feedback_value: parseInt(onSubmitUxValue, 10),
-              feedback_value: onSubmitFeedbackValue,
-              comments: onSubmitComments,
-              bad_ux_id: badUxId,
-              bad_comments: badComments,
-  
-    
-            }
-  
-            console.log(data);
-                
-            UserService.setUx(serviceId, data )
-                .then(
-                  (response) => {
-                  
-                      console.log(response);
-                      
-                      if(response.status === 204){
-                        setError(error + response.statusText)
-                        CancelProcessing();
-                      
-                      }
-  
-                      setUxId(response.data?.ux_id);
-
-                      console.log(response.status);
-                      console.log(response.statusText)
-                      
-                      
-                      console.log(response.data?.message)
-                      
-                      setMessage(response.data?.message)
-                      
-                      setLoading (false);
-                      return setContent(response.data);
-      
-                  })
-                  .catch( 
-                    (error) => {
-                      const resMessage =
-                        (error.response &&
-                          error.response.data &&
-                          error.response.data.message) ||
-                        error.message || error.statusText ||
-                        error.toString();
-                      //setMessage(resMessage);
-                      let errorMsg = 'No se pudo procesar la operacion: ';
-                      setError(errorMsg + resMessage)
-                      CancelProcessing();
-                    }
-                );
-          }  
-
-        
-        
-      }     
-
-      
-
-      // HANDLE THE ONCHANGE HERE
-
-      const handleChange = (e) => {
-        // string passed in
-        // a string returned by default
-        console.log(e.currentTarget.value);
-        // add + to the event to make the value a number
-        setIsRadio(+e.currentTarget.value);
-      };
-
-      const handleComments = (e) => {
-        // string passed in
-        // a string returned by default
-        console.log(e.currentTarget.value);
-        // add + to the event to make the value a number
-        setIsComments(e.currentTarget.value);
-      };
-
-      
-       
-
-      /*const RadioButton = ({className, children, clave}) => {       
-        
-        const [isChecked, setIsChecked] = useState(false);
-        
-        const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 m-1 rounded-md flex flex-col items-center `;
-        const inputClassName = ` m-2 ` + className;
-        
-        const id = useId();
-        function handleCheck(e){
-
-          const value = e.target.value;
-          
-          setIsChecked(!isChecked);
-          
-          console.log('selected Check noted! value:'+value);
-          
-  
-          return setUxValue(value);
-  
-          
-  
-        }
-        
-          
-          
-          return (  
             
-            <div className="">
-              <label htmlFor={`ux-feedback-radio-`+id} className={`` + labelClassName}>    
-                <input type="radio"
-                      id={`ux-feedback-radio-`+id}
-                      name={`ux-feedback-value`}
-                      value={clave}
-                      
-                      className={
-                                          
-                        inputClassName + ` `
-    
-                      } 
-                      
-                      onChange={handleCheck}
-                    
-                    
-                      
-                         
-                />
-                
-                  {children}
-              </label> 
-              
-              
-            </div>   
-        
-          );
 
-        
-          
-        
-        
+        UserService.getService(options.servId).then(
 
-      }*/
+          (response) => {
 
-      /*const CommentsInput = ({className, children}) => {
-
-        const [comments, setComments] = useState("");
-        
-        const id = useId();
-
-        function handleChange(e){
-
-          const value = e.target.value;
-  
-          console.log(value);
-  
-          return setComments(value);
-  
-          
-  
-        }
-        
-
-        return (
-
-          <label htmlFor={`comments`+id} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">{children}:
-                    
-          <br/>  <textarea 
-              className={className + 
-                `text-sm font-thin 
-                border-zinc-800 
-                border rounded-md 
-                focus:shadow-sm 
-                focus:ring-slate-500 focus:ring-1 focus:outline-none
-                
-                
-              `}
-              name="comments" 
-              id="comments"
-              
-              
-              value={comments}
-              cols="64"
-              onChange={ handleChange }
+            console.log(response);
+            console.log(response?.data);
+            
+            setServiceContent(response?.data);
+            
+            //setAvgResult(response.data.service)
+            setMessage(response?.data.message);
+            
+            setShowServiceAction(true);
+            setLoading(false);
              
-                      
-                      
-            /> 
-          </label>
-        );
-      }*/
+            
+          
+          
+          },
 
+          (error) => {
+            const _content =
+              (error?.response && error?.response.data) ||
+              error?.message ||
+              error?.toString();
+            
+            setError(_content);
+            
+            
+          
+          }
+        
+        )
+          
+      }  
+        
+     
+     
+  
+    }, [serviceId]);
+
+    
+    return (
       
-    
-      return(
-    
-          <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
+      <div className="flex flex-col mx-auto bg-neutral-100 w-11/12 rounded-md shadow-md border border-slate-700 p-2 overflow-x-auto ">
+          
+              <h2 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Accion correctiva - mala calificacion  </h2>
+              <p className="text-sm md:text-md mb-0">Servicio: {serviceContent.service?.name} </p>
+              {loading && (
+                
+                <div className="flex">
+                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                  </svg>
+                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+                </div>
 
-            <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 text-wrap bg-opacity-50">
-                    <h2 className="m-1  text-center                       
-                        text-stone-500 text-xl md:text-4xl 
-                          font-black ">
-                          📢FeedBackLive!
-                    </h2>
-                    
-                    
-                    
-                    <h3 className="text-sm font-thin ">
-                      Por favor califique su experiencia con este servicio:<br/>
-                      <span className="text-zinc-500 font-extrathin  text-xs">Sevicio:
-                        <span className="bg-slate-200">
-                          {`${service.name}  [id: ${service.id}]`}
-                        </span>
-                        
-                      </span>. 
-                      
-                    </h3>
-                    
-                    
-                    <div className="container" id="options-holder">
+              )}
+              {serviceContent ? (   
+                <div className="mx-auto mt-2 w-full">
 
-                      
-                      <div className='flex flex-col sm:flex-row justify-evenly overflow-y-scroll'>
-                        
-                          <label htmlFor='radio1' className={labelClassName}>
-                            <input
-                              className={inputClassName}
-                              type='radio'
-                              id='radio1'
-                              name="ux-feedback-value"
-                              value='1'
-                              onChange={handleChange}
-                              checked={isRadio === 1}
-                            />
-                            <span className={(isRadio === 1) ? `animate-bounce`: ' '}>{emoji1}</span>{` `+label1}
-                          </label>
-                          <label htmlFor='radio2'
-                            className={labelClassName}>
-                            <input
-                              className={inputClassName}
-                              type='radio'
-                              id='radio2'
-                              name="ux-feedback-value"
-                              value='2'
-                              onChange={handleChange}
-                              checked={isRadio === 2}
-                            />
-                            <span className={(isRadio === 2)? `animate-bounce`: ' '}>{emoji2}</span>{` `+label2}
-                          </label>
-                          <label htmlFor='radio3' 
-                            className={labelClassName}>
-                            <input
-                              className={inputClassName}
-                              type='radio'
-                              id='radio3'
-                              name="ux-feedback-value"
-                              value='3'
-                              onChange={handleChange}
-                              checked={isRadio === 3}
-                            />
-                            <span className={(isRadio === 3)?`animate-bounce`:' '}>{emoji3}</span>{` `+label3}
-                          </label>
-                          <label htmlFor='radio4' 
-                          className={labelClassName}>
-                          <input
-                            className={inputClassName}
-                            type='radio'
-                            id='radio4'
-                            name="ux-feedback-value"
-                            value='4'
-                            onChange={handleChange}
-                            checked={isRadio === 4}
-                          />
-                          <span className={(isRadio === 4)?`animate-bounce`:' '}>{emoji4}</span>{` `+label4}
-                          </label>
-                          <label htmlFor='radio5' className={labelClassName}>
-                          <input
-                            className={inputClassName}
-                            type='radio'
-                            id='radio5'
-                            name="ux-feedback-value"
-                            value='5'
-                            onChange={handleChange}
-                            checked={isRadio === 5}
-                          />
-                          <span className={(isRadio === 5)?`animate-bounce`:' '}>{emoji5}</span>{` `+label5}
-                          </label>
-                        
-                      </div>  
-                        
-                        
-                        
-                    </div>
-                    <div className="mx-auto">
-                      
-                      
-                      <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                        {`Comentarios (opcional):`}
-                    
-                        <br/>  
-                        <textarea 
-                          className={ 
-                            `text-xs font-thin 
-                            border-zinc-800 
-                            border rounded-md 
-                            focus:shadow-sm 
-                            focus:ring-slate-500 focus:ring-1 focus:outline-none
-                            
-                            
-                          `}
-                          name="comments" 
-                          id="comments"
-                          
-                          cols="32"
-                          value={isComments}
-                          
-                          onChange={ handleComments }
-                        
-                                  
-                                  
-                        /> 
+                  <form onSubmit={handleSubmit} className="m-2 border border-slate-500 rounded-md shadow-lg bg-neutral-100 p-4">
+                    <div className="flex flex-col ">
+                      <label className={labelClass}>Accion:&nbsp;
+                        <select name="action" value={action} onChange={handleAction} className={inputClass}>
+                          <option value="none">Seleccione una acción</option>
+
+                          <option value="asignar-tarea">Asignar tarea</option>
+                        </select>
                       </label>
 
-
-                    </div>
-                    
-                    <div className=" flex justify-evenly my-2">
-                
-                      
-                        <>
-                          <SaveButton
-                            loading={loading} 
-                            className={`
-                              `}>{`${emojiSave} ${labelSave}`}
-                              
-                          </SaveButton>
+                      <label className={labelClass}>Responsable:&nbsp;
+                        <select name="user_id" value={contact} onChange={handleContact} className={inputClass}>
+                          <option value="none">Seleccione un contacto</option>
+                          {serviceContent.contacts.map((contact)=>(
+                              <option key={"opt-contacts-"+contact.id} value={contact.user_id}>{contact.firstname+" "+contact.lastname}</option>
+                            ))
                           
-                          <CancelButton 
-                            className=" ">
-                              
-                              {`${emojiClose} ${labelClose}`}
-                          </CancelButton>           
+                          }
+                        </select>
+                      </label>
+                      <label className={labelClass}>Tarea:&nbsp;
+                        <input type="text" className={inputClass} name="task" value="Atender reclamo UR" disabled/>
+                      </label>
+
+                      <label className={labelClass}>Observaciones:<br/>
+                        <textarea
+                          className={inputClass}
+                          name="description"
+                          cols="30"
                           
-                        </>
-                      
-                   
-              
-                    </div>
-
-                    
-                    
-                        
-            </div>   
-            {error && (
+                          value={obs}
+                          onChange={(e) => setObs(e.target.value)}
                           
-                          <div className="alert alert-danger " role="alert">
-                              {error}
-                          </div>
-                                  
-            )}      
-    
-            
-    
-    
-            
-          </form>
-        
-      );
-
-      
-  
-    }
-
-    const RenderBadUxInterface = () => { 
-   
-
-      //STATE
-      const [isRadio, setIsRadio] = useState(0);
-      const [isComments, setIsComments] = useState("");
-      
-      const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 m-1 rounded-md flex flex-row items-center text-xl`;
-      const inputClassName = ` m-2 w-10 h-10`;
-     
-
-     function CancelProcessing() {
-                 
-                 setFeedbackValue(null);
-                 setComments("");
-                 setLoading(false);
-                 setServiceId(null);
-               
-                 
-
-     }
-     
-
-     function handleSubmit(event) {
-
-       event.preventDefault();
-       setLoading(true);
-
-       const form = event.target;
-
-       const formData = new FormData(form);
-       const values = [...formData.entries()];
-       const formElements = form.elements;
-       
-       const onSubmitBadComments = formData.get("bad-comments");
-       const onSubmitBadUxId = formData.get("bad-ux-feedback-id");
-
-       setBadUxId(onSubmitBadUxId);
-       setBadComments(onSubmitBadComments);
-       
-       
-       console.log(values);
-       
-       console.log(form);
-       
-       console.log(formElements);
-       
-       console.log(onSubmitBadComments);
-
-       console.log(onSubmitBadUxId);
-       
-      
-
-       if (!error) {
-                   
-         const data = {
-
-           //feedback_value: parseInt(formData.get("ux-feedback-value")),
-           //comments: formData.get("comments"),
-           //feedback_value: parseInt(onSubmitUxValue, 10),
-           feedback_value: feedbackValue,
-           comments: comments,
-           bad_ux_id: onSubmitBadUxId,
-           bad_comments: onSubmitBadComments,
-
- 
-         }
-
-         console.log(data);
-             
-         UserService.setUx(serviceId, data )
-             .then(
-               (response) => {
-               
-   
-                   setContent(response.data);
-                   
-                   if(response.status === 204){
-                     setError(error + response.statusText)
-                     CancelProcessing();
-                    
-                   }
-                   
-                   console.log(response);              
-                   //console.log(response.status);
-                   //console.log(response.statusText)
-     
-                   //console.log(response);              
-                   console.log(response.status);
-                   console.log(response.statusText)
-                   
-                   //if(response.data.message !== undefined){
-                   console.log(response.data?.message)
-                   setMessage(response.data?.message)
-                   //}
-                   
-                   
-                   return content;
-   
-               })
-               .catch( 
-                 (error) => {
-                   const resMessage =
-                     (error.response &&
-                       error.response.data &&
-                       error.response.data.message) ||
-                     error.message || error.statusText ||
-                     error.toString();
-                   //setMessage(resMessage);
-                   let errorMsg = 'No se pudo procesar la operacion: ';
-                   setError(errorMsg + resMessage)
-                   CancelProcessing();
-                 }
-               );
-       }       
-       
-
-       
-       
-     }     
-
-     // HANDLE THE ONCHANGE HERE
-
-     const handleChange = (e) => {
-       // string passed in
-       // a string returned by default
-       console.log(e.currentTarget.value);
-       // add + to the event to make the value a number
-       setIsRadio(e.currentTarget.value);
-
-     };
-
-     const handleComments = (e) => {
-       // string passed in
-       // a string returned by default
-       console.log(e.currentTarget.value);
-       // add + to the event to make the value a number
-       setIsComments(e.currentTarget.value);
-     };
-
-     
-   
-     return(
-   
-         <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
-
-           <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 text-wrap bg-opacity-50">
-                   <h2 className="m-1  text-center                       
-                       text-stone-500 text-xl md:text-4xl 
-                         font-black ">
-                         📢FeedBackLive!
-                   </h2>
-                   
-                   
-                   
-                   <h3 className="text-sm font-thin ">
-                     Lamentamos que tu experiencia no haya sido positiva, podrías indicarnos por qué? Esto nos permitirá mejorar nuestro servicio!<br/>
-                     <span className="text-zinc-500 font-extrathin  text-xs">Servicio:
-                      <span className="bg-slate-200">  
-                        {`${service.name}  [id: ${service.id}]`}
-                      </span>
-                       
-                     </span>. 
-                     
-                   </h3>                   
-                                 
-                  <div className="container" id="bad-ux-options-holder">
-                    <div className='flex flex-col sm:flex-row justify-evenly overflow-y-scroll'>
-                        
-                        {alertCriterios.map((criterio, index) =>
-                        
-                          <label 
-                            key={criterio.id} htmlFor={'radio-'+criterio.id} className={labelClassName}>
-                              <input
-                                
-                                className={inputClassName}
-                                type='radio'
-                                id={'radio-'+criterio.id}
-                                name="bad-ux-feedback-id"
-                                value={criterio.id}
-                                onChange={handleChange}
-                                checked={isRadio === criterio.id}
-                              />
-                              <span className={(isRadio === criterio.id)?`animate-bounce`:' '}>{criterio.emoji}</span>{` `+criterio.label}
-                              
-                          </label>
-                        
-                        )}
-
-                    </div>
-                   </div>  
-                   
-                   <div className="mx-auto">
-                     {/*<CommentsInput className="">Comentarios (opcional)</CommentsInput>*/}
-                     <label htmlFor={`bad-comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                       {`Comentarios (opcional):`}
-                   
-                       <br/>  
-                       <textarea 
-                         className={ 
-                           `text-xs font-thin 
-                           border-zinc-800 
-                           border rounded-md 
-                           focus:shadow-sm 
-                           focus:ring-slate-500 focus:ring-1 focus:outline-none
-                           
-                           
-                         `}
-
-                         name="bad-comments" 
-                         id="bad-comments"
-                         
-                         cols="32"
-                         value={isComments}
-                         
-                         onChange={ handleComments }
-                       /> 
-                     </label>
-
-
-                   </div>
-                   
-                   <div className=" flex justify-evenly my-2">
-                     
-                       <>
-                         <SaveButton 
-                           className={`
-                             `}>{`${emojiSave} ${labelSave}`}
-                             
-                         </SaveButton>
-                         
-                         <CancelButton 
-                           className=" ">
-                             
-                             {`${emojiClose} ${labelClose}`}
-                         </CancelButton>           
-                         
-                       </>
-                     
-                     
-             
-                   </div>
-
-                   
-                   
-                       
-           </div>   
-           {error && (
-                         
-                         <div className="alert alert-danger " role="alert">
-                             {error}
-                         </div>
-                                 
-               )}      
-   
-           
-   
-   
-           
-         </form>
-       
-     );
-
-     
- 
-   }
-
-    const RenderFinal = ()=> { 
-   
-      
-      
-      
-      
-      return(
-  
-          
-        <>
-            <div className=" flex flex-col 
-                  sm:flex-row sm:justify-start 
-                  sm:w-fit sm:pl-12 my-2
-                  ">
-                    <p className="text-sm font-thin ">
-                      <span className="text-lime-500 font-bold text-lg">
-                        Gracias por su feedback.&nbsp;
-                        
-                          
-                      </span>.<br/>
-                      Servicio calificado:  {`${service.service_name} ${service.service_reference} [${service.service_id}]`}
-                    </p>
-                                             
-            </div>   
-                  
-    
-            <div className=" flex sm:pl-12 sm:w-8/12 justify-evenly sm:justify-start my-2">
-                
-                    
-                    <CancelButton 
-                      className=" ">
-                        {`${emojiClose} ${labelClose}`}
-                    </CancelButton>           
-                    
-                  
-              
-            </div>
-    
-        </>
-            
-          
-        
-      );
-
-
-      
-      
-  
-    }
-
-
-
-
-  
-    return (
-        
-        
-          <div className="w-full mx-auto p-1 ">
-              
-              
-              {content && (
-
-                <div id="eval-modal" 
-                    className="flex flex-col   
-                        bg-gradient-to-br from-white  to-zinc-200  
-                        z-50 relative
-                        rounded-lg shadow-lg
-                        border border-zinc-800
-                        overflow-hidden
-                        ">
-                          
-                      {message && (
-                        
-                          <div className="alert alert-info" role="alert">
-                            {message}
-                          </div>
-                        
-                      )}
-
-                  <Logo mainColor={"slate-600"}/>
-
-                  <div className="container p-2">
-                      
-                      
-                    
-                    <div className="z-50" >  
-                             
-                             
-                              {(serviceId) ? (
-
-                                !isBadUx ?( <RenderInterface />)
-                                
-                                : (<RenderBadUxInterface />)
-                                 
-                              ) : (
-
-                                <RenderFinal  />
-
-                              )}
-                    </div> 
-
-                    {<img src={logoUni} alt="logo Unilimpio" className="min-w-96 h-auto opacity-10 absolute bottom-0 left-1 -z-20" />}        
+                        />
+                      </label>
+                      <SaveActionButton>Procesar</SaveActionButton>
                                               
+                      
+                    </div>
 
-                  </div>
-            
-                              
+                  </form>        
                 </div>
-          
-            )}                 
-          </div>
-    );
+
+              ): (`info no se cargo.`)}
+            
+                           
+      </div>
  
+    );
+  
+  }
 
+  const CloseModalButton=()=>{
 
-  } 
+  function HandleClick(){
+    setShowServiceResult(false);
+    setShowServiceAction(false);
+    setShowModal(false);
+    setServiceId(null);
+    setUxId(null);
+  }
+
+  return(
+    <div id="div-closeModalButt" className="flex justify-end content-start">
+      <button id="closeModalButt" 
+        className="m-2 border border-neutral-300 bg-white text-slate-700 font-light text-xs p-2 rounded-md hover:bg-neutral-400 hover:text-white " 
+        onClick={HandleClick}>[X] Cerrar
+      </button>
+    </div>
+  );
+  }
 
   
  
@@ -1983,35 +1435,64 @@ export default function MyUserX () {
                   {user ? (
 
                     <>
-                      <UbicacionPicker  user={user}/>
+                      <div className={`${!showModal ? (` `):(` hidden `)}`}>
+                        <UbicacionPicker  user={user}/>
 
-                      {showServices &&(
+                        {showServices &&(
 
-                        <div className="">
-                          
-                          {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
-                          
-                          <ShowServices  ubicacionId={ubicacionId}/>
+                          <div className="">
+                            
+                            {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
+                            
+                            <ShowServices  ubicacionId={ubicacionId}/>
 
-                        </div>
+                          </div>
 
 
+                        )}
+{/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
+                        
+
+                      
+                      
+                      </div>
+
+                      {showServiceResult && (
+                        <div className="mx-auto">
+                          <div className={`absolute top-0 left-0 z-30 bg-slate-600 opacity-80 w-full h-full  ${showModal ? (`  `) : (` hidden `)}`}>
+
+                            
+                          </div>
+                        
+                          <div className={`absolute top-0 left-0 z-50 w-full mx-auto h-fit items-start  ${showModal ? (`  `) : (` hidden `)}`}>                      
+                            <CloseModalButton/>
+                            <ServiceResult serviceId={serviceId}/>
+                            
+
+                          </div>
+                        
+
+                      </div>
                       )}
+                      {showServiceAction && (
+                        <div className="mx-auto">
+                          <div className={`absolute top-0 left-0 z-30 bg-slate-600 opacity-80 w-full h-full  ${showModal ? (`  `) : (` hidden `)}`}>
 
-                      {showServiceResult &&(
+                            
+                          </div>
+                        
+                          <div className={`absolute top-0 left-0 z-50 w-full mx-auto h-fit items-start  ${showModal ? (`  `) : (` hidden `)}`}>                      
+                            <CloseModalButton/>
+                            <ServiceAction serviceId={serviceId} uxId={uxId}/>
+                            
 
-                        <div className="">
-                          
-                          {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
-                          
-                          <ServiceResult serviceId={serviceId}/>
+                          </div>
+                        
 
-                        </div>
-
-
+                      </div>
                       )}
-                    
-                    
+                      
+
                     </>
 
                   ) : (

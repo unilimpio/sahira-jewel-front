@@ -46,9 +46,9 @@ const getServicePub = (serviceId) => {
   })
 };
 
-const getService = (serviceId) => {
+const getService = (servId) => {
   return axios
-  .get(API_URL + "getService/" + serviceId, 
+  .get(API_URL + "getService/" + servId, 
     { headers: {"Authorization" : `Bearer ${user.token}`}})
   .catch(function (error) {
     if(error.status === 401){
@@ -173,6 +173,37 @@ const setUx = (serviceId, data) => {
     })
 };
 
+const setTask = (serviceId, uxId, data) => {
+  
+  
+
+  return axios
+    .post(API_URL + "setTask/" + serviceId + "/" + uxId, qs.stringify(data),
+      { headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        "Authorization" : `Bearer ${user.token}`
+        
+      } }
+      
+
+    )
+    .then((response) => {
+      /*
+      if (response.data.flag) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      */
+
+      return response;
+    })
+    .catch( (error) => {
+      
+
+      return error;
+    
+    })
+};
+
 const setUxPub = (serviceId, data) => {
   
   
@@ -255,6 +286,7 @@ const UserService = {
   getEvalState,
   setPunto,
   setUx,
+  setTask,
   setUxPub,
   setBadUx,
   getUbs,
