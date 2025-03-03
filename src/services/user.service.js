@@ -180,7 +180,7 @@ const setTask = (serviceId, uxId, data) => {
   return axios
     .post(API_URL + "setTask/" + serviceId + "/" + uxId, qs.stringify(data),
       { headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         "Authorization" : `Bearer ${user.token}`
         
       } }

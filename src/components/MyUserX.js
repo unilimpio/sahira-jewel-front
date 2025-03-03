@@ -1119,7 +1119,7 @@ export default function MyUserX () {
                       error.response.data.message) ||
                     error.message || error.statusText ||
                     error.toString();
-                  //setMessage(resMessage);
+                  setMessage(resMessage);
                   let errorMsg = 'No se pudo procesar la operacion: ';
                   setError(errorMsg + resMessage)
                   CancelProcessing();
