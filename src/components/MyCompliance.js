@@ -687,7 +687,7 @@ export default function MyCompliance () {
 
             criterio: parseInt(formData.get("criterio-verif")),
             obs: formData.get("obs"),
-  
+            
           }
           console.log(data);
               

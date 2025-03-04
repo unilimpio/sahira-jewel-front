@@ -3,8 +3,8 @@ import AuthService from "./auth.service";
 import qs from "qs";
 
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
-//const API_URL = "https://cmx.unilimpio.com/index.php/api/";
-const API_URL = "http://localhost:3000/api/";
+const API_URL = "https://cmx.unilimpio.com/index.php/api/";
+//const API_URL = "http://cmxbk/index.php/api/";
 
 const user = AuthService.getCurrentUser();
 
@@ -178,9 +178,9 @@ const setTask = (serviceId, uxId, data) => {
   
 
   return axios
-    .post(API_URL + "setTask/" + serviceId + "/" + uxId, qs.stringify(data),
+    .post(API_URL + "setTask/" + user.uId + "/"+serviceId + "/" + uxId, data,
       { headers: {
-        'Content-Type': 'application/json',
+        //'Content-Type': 'application/x-www-form-urlencoded',
         "Authorization" : `Bearer ${user.token}`
         
       } }

@@ -1064,7 +1064,7 @@ export default function MyUserX () {
           //feedback_value: parseInt(formData.get("ux-feedback-value")),
           //comments: formData.get("comments"),
           //feedback_value: parseInt(onSubmitUxValue, 10),
-          user_id: onSubmitUserId,
+          user_id: contact,
           task: "atencion-reclamo-urgente",
           description: onSubmitDescription,
 
