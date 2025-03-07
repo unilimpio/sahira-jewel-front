@@ -11,6 +11,7 @@ import UserIcon from "../template/icons/UserIcon"
 import LogoutIcon from "../template/icons/LogoutIcon"
 import LoginIcon from "../template/icons/LoginIcon"
 import SignupIcon from "../template/icons/SignupIcon"
+import TasksIcon from "./icons/TasksIcon";
 
 
 const NavBottom = ({isLoggedIn}) => {
@@ -40,7 +41,11 @@ const NavBottom = ({isLoggedIn}) => {
                     <UxIcon/>
                     UX
                   </Link>
-                  <Link to={"/profile"} className={` `+linkClass}>
+                  <Link to={"/mytasks"} className={` `+linkClass}>
+                    <TasksIcon/>
+                    Tasks
+                  </Link>
+                  <Link to={"/profile"} className={``+linkClass}>
                   <UserIcon/>
                     Mi Perfil
                   </Link>

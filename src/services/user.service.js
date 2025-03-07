@@ -34,6 +34,18 @@ const getEvalState = (evalId) => {
   })
 };
 
+const getTask = (taskId) => {
+  return axios
+  .get(API_URL + "getTask/" + taskId, 
+    { headers: {"Authorization" : `Bearer ${user.token}`}})
+  .catch(function (error) {
+    if(error.status === 401){
+      localStorage.removeItem("user");
+    }
+
+  })
+};
+
 const getServicePub = (serviceId) => {
   return axios
   .get(API_URL + "getServicePublic/" + serviceId, 
@@ -72,6 +84,21 @@ const getEvals = (uId) => {
   
   return axios
   .get(API_URL + "getEvals/" + uId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
+  .catch(function (error){
+    //if(error.status === 401){
+      localStorage.removeItem("user");
+      //console.log()
+      
+
+    //}
+  });
+  
+};
+
+const getTasks = (uId) => {
+  
+  return axios
+  .get(API_URL + "getTasks/" + uId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
   .catch(function (error){
     //if(error.status === 401){
       localStorage.removeItem("user");
@@ -204,6 +231,37 @@ const setTask = (serviceId, uxId, data) => {
     })
 };
 
+const updateTask = (taskId, data) => {
+  
+  
+
+  return axios
+    .post(API_URL + "updateTask/" + user.uId + "/"+taskId, data,
+      { headers: {
+        //'Content-Type': 'application/x-www-form-urlencoded',
+        "Authorization" : `Bearer ${user.token}`
+        
+      } }
+      
+
+    )
+    .then((response) => {
+      /*
+      if (response.data.flag) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      */
+
+      return response;
+    })
+    .catch( (error) => {
+      
+
+      return error;
+    
+    })
+};
+
 const setUxPub = (serviceId, data) => {
   
   
@@ -283,10 +341,13 @@ const getAdminBoard = () => {
 const UserService = {
   getPuntos,
   getEvals,
+  getTasks,
   getEvalState,
+  getTask,
   setPunto,
   setUx,
   setTask,
+  updateTask,
   setUxPub,
   setBadUx,
   getUbs,

@@ -38,7 +38,8 @@ export default function Home () {
                 <>
                   <p className="text-zinc-600">
                     Ver <Link to="/mycompliance" className="text-cyan-600 hover:text-slate-600">Mis evaluaciones internas</Link> disponibles.<br/>
-                    Ver <Link to="/myuserx" className="text-cyan-600 hover:text-slate-600">Mi experiencia de usuario</Link> de los servicios disponibles.
+                    Ver <Link to="/myuserx" className="text-cyan-600 hover:text-slate-600">Mi experiencia de usuario</Link> de los servicios disponibles.<br/>
+                    Ver <Link to="/mytasks" className="text-cyan-600 hover:text-slate-600">Mis Tareas</Link> asignadas a su usuario.
                   </p>
                 </>
               )

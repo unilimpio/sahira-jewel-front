@@ -965,10 +965,6 @@ export default function MyUserX () {
     
     }
 
-    
-    
-  
-    
     return (
       
       <div className="flex flex-col mx-auto bg-gradient-to-br from-neutral-200 to-zinc-300 via-white w-11/12 rounded-md shadow-md border border-slate-700 p-2 overflow-x-auto ">
@@ -1004,7 +1000,17 @@ export default function MyUserX () {
                   </div>         
                 </div>
 
-              ): (`info no se cargo.`)}
+              ) : (
+
+                <div className="flex">
+                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                  </svg>
+                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+                </div>
+
+              )}
             
                            
       </div>
@@ -1366,7 +1372,15 @@ export default function MyUserX () {
                   </form>        
                 </div>
 
-              ): (`info no se cargo.`)}
+              ): (
+                <div className="flex">
+                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                  </svg>
+                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+                </div>
+              )}
             
                            
       </div>
@@ -1442,7 +1456,7 @@ export default function MyUserX () {
 
                           <div className="">
                             
-                            {/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
+                            
                             
                             <ShowServices  ubicacionId={ubicacionId}/>
 
@@ -1450,7 +1464,7 @@ export default function MyUserX () {
 
 
                         )}
-{/*<div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-full "></div>*/}
+
                         
 
                       

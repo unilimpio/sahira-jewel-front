@@ -72,10 +72,13 @@ const Header = ({isLoggedIn}) => {
           
               <> 
                 <Link to={"/mycompliance"} className={` `+ linkClass}>
-                  My Compliance Mx
+                  My Compliance
                 </Link>
                 <Link to={"/myuserx"} className={` `+ linkClass}>
-                  My User Xp
+                  My UX
+                </Link>
+                <Link to={"/mytasks"} className={` `+ linkClass}>
+                  My Tasks
                 </Link>
 
                 <Link to={"/profile"} className={` `+ linkClass}>

@@ -14,7 +14,6 @@ import AuthService from "../services/auth.service";
 import logoUni from '../logo-unilimpio.svg';
 
 
-
 export default function MyCompliance () {
 
   const user = AuthService.getCurrentUser();
@@ -261,13 +260,9 @@ export default function MyCompliance () {
   
   }
 
-
   function EvalRun(){   
     
-    
-    
     const [instance, setInstance] = useState(false);
-    
     const [selectedCheck, setSelectedCheck] = useState("");
     const [loading, setLoading] = useState(false);
     //const [message, setMessage] = useState(false);
@@ -444,15 +439,10 @@ export default function MyCompliance () {
       );
     } 
 
-
     const RenderStart = ()=> { 
-   
-      
-      
 
       const options = createOptions();
       console.log(options);
-      
       
       function createOptions() {
         return {
@@ -485,7 +475,6 @@ export default function MyCompliance () {
                   //console.log(message);
 
       }
-      
 
       function handleSubmit() {
 
@@ -551,8 +540,6 @@ export default function MyCompliance () {
         
         
       }     
-    
-      
 
       return(
   
@@ -618,9 +605,6 @@ export default function MyCompliance () {
           </form>
         
       );
-
-      
-      
   
     }
 
@@ -1138,137 +1122,6 @@ export default function MyCompliance () {
   
     }
 
-
-
-
-/*
-    const RenderFinish = (content, selectedCheck, obs)=> { 
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-    
-        setMessage("");
-        //setContent(false);
-        setLoading(true);
-    
-        form.current.validateAll();
-    
-        if (checkBtn.current.context._errors.length === 0) {
-
-          UserService.setPunto(evalId, instance, selectedCheck, obs).then(
-            (response) => {
-              
-                  setEvalContent(response.data);
-                  
-                  console.log(response);              
-                  console.log(response.status);
-                  console.log(response.statusText)
-    
-                  console.log(response);              
-                  console.log(response.status);
-                  console.log(response.statusText)
-    
-                  if(response.data.message){
-                    console.log(response.data.message)
-                    setMessage(response.data.message)
-                  }
-            },
-            (error) => {
-              const resMessage =
-                (error.response &&
-                  error.response.data &&
-                  error.response.data.message) ||
-                error.message ||
-                error.toString();
-    
-              setLoading(false);
-              setMessage(resMessage);
-              setEvalContent(false);
-            }
-          );
-        } else {
-          setLoading(false);
-        }
-      };      
-
-      const CancelButton = () => {
-
-        function handleCancel (){
-        
-          setMessage("Process cancelled by the user");
-          console.log(message);
-          setLoading(false);
-          setEvalContent(''); 
-          setEvalId(false);
-          setInstance(false);
-          setShowModal(false);
-          
-        
-        }
-      
-        return (
-          
-    
-    
-          <button  
-                  className="m-2 p-2 flex flex-row  hover:underline rounded-md border border-zinc-600" 
-                  disabled={loading} onClick={handleCancel}>
-            
-            <span className="mx-2">[X] Cancelar</span>
-            
-            
-            
-    
-          </button>
-    
-        );
-      }       
-    
-      return(
-  
-        <Form onSubmit={handleSubmit} ref={form}>
-          <div className=" flex flex-col 
-                sm:flex-row sm:justify-start 
-                sm:w-fit sm:pl-12 my-2
-                ">
-                  <p className="text-sm">La evaluacion {evalContent.data.eval_id} ha concluido.</p>      
-          
-          </div>         
-  
-          <div className=" flex sm:pl-12 sm:w-8/12 justify-center sm:justify-start my-2">
-            
-              {loading && (
-              <button className="bg-slate-400 border-2 rounded-md py-2 w-[7rem] relative text-left" disabled={loading}>
-                <svg className="absolute left-1 animate-spin h-4 w-4 fill-white" viewBox="0 0 24 24">
-                  <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                  <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                </svg>
-                <span className="text-white ml-8">Loading</span>
-              </button>
-              )} 
-              {!loading && (
-                
-                  
-                  
-                  <CancelButton />
-                  
-                  
-                
-              
-              )}
-            
-          </div>
-  
-  
-          <CheckButton style={{ display: "none" }} ref={checkBtn}  className=""/>
-        </Form>
-      
-      );
-  
-    }
-*/
-//    if(content.data.instance_key === -1) {
-  
     return (
         
         <>
@@ -1385,11 +1238,8 @@ export default function MyCompliance () {
         </>
         
     );
- 
-
 
   } 
- 
   
   return (
     

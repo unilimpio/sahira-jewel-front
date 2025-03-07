@@ -15,7 +15,7 @@ import Home from "./components/Home";
 import MyCompliance from "./components/MyCompliance";
 import MyUserX from "./components/MyUserX";
 import UxSurvey from "./components/UxSurvey";
-
+import MyTasks from "./components/MyTasks";
 
 
 import Profile from "./components/Profile";
@@ -53,6 +53,7 @@ const App = () => {
             
             <Route path={"/mycompliance"} element={<MyCompliance />} />
             <Route path={"/myuserx"} element={<MyUserX />} />
+            <Route path={"/mytasks"} element={<MyTasks />} />
             
             <Route path={"/login"} element={<Login />} />
             <Route path={"/logout"} element={<Logout />} />
