@@ -319,7 +319,7 @@ export default function MyTasks () {
     //simple strings for the buttons, choose your own!
     const strSave = `✅ Aceptar y Continuar`;
     const strCancel = `❌ Cancelar`;
-    const strBack = `⤺ Regresar`;
+    const strBack = ` Regresar`;
 
   
     useEffect(() => {
@@ -469,13 +469,13 @@ export default function MyTasks () {
                 className={className +
                   `m-1 p-2 flex flex-row  
                    rounded-md 
-                  hover:bg-white bg-zinc-50 border border-zinc-400 font-semibold
-                  
+                  hover:bg-white bg-zinc-50 border border-zinc-400 
+                  text-slate-700 text-sm font-thin hover:no-underline
                   `
                 } 
                 disabled={loading} onClick={handleClick}>
           
-          <span className="mx-1 text-slate-700 text-sm font-thin hover:no-underline">{strBack}</span>
+          <span className="   text-2xl -my-2 mx-1 ">⤺</span>{strBack}
             
         </button>
   
@@ -715,7 +715,15 @@ export default function MyTasks () {
                     <div className="mx-auto">
                       
                       <ObsInput className="" obsInitial={task.task_obs ? (`${task.task_obs}`) : ``} isView={isView}/>
+                      {
+                        isView && (
+                          
+                          <span className="-mt-4 font font-extralight text-xs italic float-right">{`actualizado el :${task.task_obs ? (`${task.task_date_updated}`) : ``}`}</span>
 
+                        )
+
+
+                      }
 
                     </div>
                         
@@ -775,13 +783,13 @@ export default function MyTasks () {
     return (
         
         <>
-          <div className="w-11/12 mx-auto p-2 ">
+          <div className="flex w-11/12 h-fit self-center mx-auto p-2  ">
               
               
               {content ? (
 
                 <div id="taskView-modal" 
-                    className="  my-2 flex flex-col   
+                    className="mx-auto  my-2 flex flex-col   
                         bg-gradient-to-br from-white  to-zinc-200  
                         z-50 relative
                         rounded-md shadow-md 

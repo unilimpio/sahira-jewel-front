@@ -5,10 +5,6 @@ import { useNavigate } from "react-router";
 
 import { useSearchParams } from "react-router";
 
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
 
@@ -39,10 +35,6 @@ export default function UxSurvey () {
   
     const [showModal, setShowModal] = useState(false);
 
-
-  //const user = AuthService.getCurrentUser();
-  //const [user, setUser] = useState(AuthService.getCurrentUser());
-
     const [searchParams, setSearchParams] = useSearchParams();
   
     const [serviceId, setServiceId] = useState(searchParams.get("sID"));    
@@ -68,8 +60,6 @@ export default function UxSurvey () {
     const [alertMode, setAlertMode] = useState(true);
     const [alertLevel, setAlertLevel] = useState(2);
 
-    const [conn, setConn] = useState(false);
-    const [name, setName] = useState('');
 
     const [location, setLocation] = useState(null);
     const [ip, setIp] = useState(null);
@@ -78,7 +68,6 @@ export default function UxSurvey () {
 
     const [isComplete, setIsComplete] = useState(false);
 
-    
 
     const emojiClose = `❌`;
     const labelClose = `Cancelar`;
@@ -90,8 +79,6 @@ export default function UxSurvey () {
 
     console.log(prevInstance);
     console.log(prevInstance?.accessDate);
-
-    
 
     function formatElapsedTime(elapsedtime, timeunit, base) {
       let time = base ? (elapsedtime / timeunit) % base : elapsedtime / timeunit;
@@ -394,336 +381,8 @@ export default function UxSurvey () {
     );
   } 
 
-  /*
-  const Start = ()=> { 
-
-       
-    const TermsForm = () => {
-
-      const [error, setError] = useState(false);
-      const [message, setMessage] = useState(false);
-      const [accept, setAccept] = useState(false);
-
-      let navigate = useNavigate();
-
-      function userLoc () {
-
-      
-      
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(success, error);
-         } else {
-           console.log("Geolocation not supported");
-         }
-      
-      
-
-      function success(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-        console.log(` ${latitude}, ${longitude}`);
-        //setLocation({ latitude, longitude });
-        return `Latitude: ${latitude}, Longitude: ${longitude}`;
-            
-      }
-      
-      function error() {
-        console.log("Unable to retrieve your location");
-        return null;
-      }
-
-     
-      return;
-      }
-
-      function Checkbox({ id, defaultChecked = false, children }) {
-        
-        const [checked, setChecked] = useState(defaultChecked);
-        
-        const labelClassname=`mx-2 text-sm  text-slate-700`;   
-        const inputClassname=`w-8 h-8`; 
-      
-        const onChange = event => {
-          //event.persist();
-
-          const value = event.target.checked
-          setChecked(!checked);
-          setAccept(value);
-          console.log("the checkbox has been checked!");
-          console.log(value);
-          
-        };
-
-        console.log(checked);
-        console.log(accept);
   
-         
-        
-        return (
-          <div className="flex flex-row justify-center">
-            <input id={id} type="checkbox" onChange={onChange} checked={checked} className={inputClassname} />
-            <label htmlFor={id} className={labelClassname}>
-              {children}
-            </label>
-          </div>
-        );
-      
-      }
-
-      const handleAccept = (e) => {
-      
-        console.log("the terms have been accepted, starting survey...")
-        
-        e.preventDefault();
-
-        if(!accept){
-          setError(true);
-          setMessage("Debe aceptar los términos de uso para continuar.");
-        }
-        
-        if(!error){
-
-          setMessage("");
-          setLoading(true);
-    
-          
-          
-          
-          UserService.getIp().then(
-  
-            (response) => {
-              console.log(response.data)
-              setIp(response.data.IPv4);
-              
-            },
-    
-            (error) => {
-    
-              console.log("unable to get IP information:"+error);
-    
-            }
-  
-  
-          )
-          
-          setLocation(userLoc());
-            
-          console.log("el acceso ha sido validado!");
-        
-          localStorage.setItem("cs_uxsurvey_session", JSON.stringify({"serviceId":serviceId,"accessDate":Date.now()}));
-          localStorage.setItem("cs_uxsurvey_verified", true);
-          localStorage.setItem("cs_uxsurvey_complete", false);
-
-          setService(content.service);
-
-          setContent(content);
-            //setContent(response);  
-          setLoading(false); 
-            //navigate(0);
-
-          
-
-
-         /* UserService.getServicePub(serviceId).then(
-    
-              (response) => {               
-                             
-                
-                console.log(response);
-                console.log(response.data?.alert_criterios);
-                console.log(response.data?.service.alert_mode);       
-                console.log(response.data?.service.alert_value);
-                console.log(response.data?.service.code_verifier);
-                console.log(code);
-    
-                console.log(code === response.data?.service.code_verifier);
-                
-                if(code === response.data?.service.code_verifier){
-
-                  setVerified(code === response.data?.service.code_verifier);
-                  console.log("el acceso ha sido validado!");
-              
-                  localStorage.setItem("cs_uxsurvey_session", JSON.stringify({"serviceId":serviceId,"accessDate":new Date(8.64e15).toString()}));
-                  localStorage.setItem("cs_uxsurvey_verified", true);
-                  localStorage.setItem("cs_uxsurvey_complete", false);
-
-                  setService(response.data?.service);
-
-                  setAlertCriterios(response.data?.alert_criterios);                
-                  setAlertMode(response.data?.service.alert_mode);
-                  setAlertLevel(response.data?.service.alert_value);
-                
-                  setMessage(response.data?.message);
-                  //setContent(response);  
-                  setLoading(false); 
-                  //navigate(0);
-
-                }
-                
-                   
-                
-              },
-    
-              (error) => {
-    
-                console.log(error);
-                const _content =
-                  (error?.response && error?.response.data) ||
-                  error?.message ||
-                  error?.toString();
-                
-                setError(_content);
-              }
-  
-            
-          )*/
-  
-                   
-
-          
-          /*navigate(0);
-
-        }
-                
-        
-        
-        
-        
-      }
-
-      return(
-
-        
-        <form onSubmit={handleAccept} className="">
-          <div className="p-2 border border-slate-700 bg-neutral-100 rounded-md shadow-md">
-            <div className=" flex flex-col my-2  justify-center">
-  
-                <p className="text-sm text-slate-700 text-center">Para continuar, acepte nuestros términos y condiciones de uso.</p>
-                
-                <Checkbox id="accept" defaultChecked={true}>Acepto los términos de uso </Checkbox> 
-                <div className={!error ? (` hidden`) : (` `)} role="alert">
-                  <span className="alert alert-danger">{message}</span>
-                </div> 
-              
-                
-            </div>
-
-            <div className=" flex justify-center my-2">
-              
-            <>
-                            <SaveButton
-                              loading={loading} 
-                              className={`
-                                `}>{`${emojiSave} Aceptar`}
-                                
-                            </SaveButton>
-                            
-                            <CancelButton 
-                              className=" ">
-                                
-                                {`${emojiClose} ${labelClose}`}
-                            </CancelButton>           
-                            
-                          </>
-              
-            </div>
-  
-          </div>  
-        </form>
-            
-          
-        
-      );
-      
-
-    }
-
-    return(
-      
-      <TermsForm/>
-    
-    );
-  }*/
-
   const FeedBackLive = ({service, isVerified, isComplete}) => {   
-    
-   /* useEffect(() => {
-
-      //this blocks the app from scrolling
-      //document.body.style.overflow = "hidden";
-        
-      try { 
-  
-        
-        UserService.getService(serviceId).then(
-  
-            (response) => {
-  
-              
-              setService(response.data?.service);              
-              
-              console.log(response);
-              console.log(response.data?.alert_criterios);
-              console.log(response.data?.service.alert_mode);       
-              console.log(response.data?.service.alert_value);
-              console.log(response.data?.service.code_verifier);
-              console.log(code);
-  
-              console.log(code === response.data?.service.code_verifier);
-  
-             if(code === response.data?.service.code_verifier){
-                
-                setAlertCriterios(response.data?.alert_criterios);                
-                setAlertMode(response.data?.service.alert_mode);
-                setAlertLevel(response.data?.service.alert_value);
-                
-                setMessage(response.data?.message);
-                setContent(response);
-                localStorage.setItem("cleanSmart_session", JSON.stringify(response.data));
-              
-              } else {
-  
-                setError(true);
-                setErrorMessage("no se pudo validar el link utilizado.");
-                console.log(errorMessage);
-  
-              }
-            },
-  
-            (error) => {
-  
-              console.log(error);
-              const _content =
-                (error?.response && error?.response.data) ||
-                error?.message ||
-                error?.toString();
-              
-              setError(_content);
-              
-              
-            
-            }
-          
-        )
-          
-      } catch (error) {
-          
-      }
-        
-     
-      // Clean up the event listener when the component unmounts
-      return () => {
-        //this is the reset state of the scroll blocking above
-        //document.body.style.overflow = "scroll"
-  
-        //setServiceId(false);
-  
-      };
-  
-    }, []);*/
-    
-    //const [badUxValue, setbadUxValue] = useState("");//stores the user selection after he gives bad feedback (example which options to show after a bad feedback)
     
 
     //simple strings for the buttons, choose your own!
@@ -742,9 +401,6 @@ export default function UxSurvey () {
     const emoji1 = `🤬`;
     const label1 = `Muy Insatisfecho`;    
 
-   
-    
-    
 
     const RenderInterface = () => { 
    
@@ -888,7 +544,6 @@ export default function UxSurvey () {
         
       }     
 
-      
 
       // HANDLE THE ONCHANGE HERE
 
@@ -1551,11 +1206,4 @@ export default function UxSurvey () {
   }
 
   
-
-  
-
-  
-  
-
-
 
