@@ -59,8 +59,10 @@ export default function UxSurvey () {
     //default values
     const [alertMode, setAlertMode] = useState(true);
     const [alertLevel, setAlertLevel] = useState(2);
-
-
+    
+    const [scaleType, setScaleType] = useState('like-dislike')
+    const [accounConfigs, setAccountConfigs] = useState(false)
+    
     const [location, setLocation] = useState(null);
     const [ip, setIp] = useState(null);
 
@@ -177,6 +179,8 @@ export default function UxSurvey () {
               setAlertCriterios(response?.data?.alert_criterios);                
               setAlertMode(response?.data?.service.alert_mode);
               setAlertLevel(response?.data?.service.alert_value);
+              
+              setScaleType(response?.data?.account_configs?.scale_type);
                 
                 
               setMessage(response.data?.message); 
@@ -399,8 +403,19 @@ export default function UxSurvey () {
     const label2 = `Insatisfecho`;
 
     const emoji1 = `🤬`;
-    const label1 = `Muy Insatisfecho`;    
+    const label1 = `Muy Insatisfecho`;
+    
+    const emojiLike = `👍🏼`;
+    const labelLike = `Me agrada`;
 
+    const emojiNotLike = `👎🏼`;
+    const labelNotLike = `Me desagrada`;
+
+    const emojiSatisfied = `🙂`;
+    const labelSatisfied = `Satisfecho`;
+
+    const emojiNotSatisfied = `😠`;
+    const labelNotSatisfied = `Insatisfecho`;
 
     const RenderInterface = () => { 
    
@@ -563,9 +578,9 @@ export default function UxSurvey () {
         setIsComments(e.currentTarget.value);
       };
 
-      
-    
-      return(
+      if (scaleType === '5-points'){
+
+        return(
     
           <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
 
@@ -628,15 +643,15 @@ export default function UxSurvey () {
                           <span className={(isRadio === 4)?`animate-bounce`:' '}>{emoji4}</span>{` `+label4}
                           </label>
                           <label htmlFor='radio5' className={labelClassName}>
-                          <input
-                            className={inputClassName}
-                            type='radio'
-                            id='radio5'
-                            name="ux-feedback-value"
-                            value='5'
-                            onChange={handleChange}
-                            checked={isRadio === 5}
-                          />
+                            <input
+                              className={inputClassName}
+                              type='radio'
+                              id='radio5'
+                              name="ux-feedback-value"
+                              value='5'
+                              onChange={handleChange}
+                              checked={isRadio === 5}
+                            />
                           <span className={(isRadio === 5)?`animate-bounce`:' '}>{emoji5}</span>{` `+label5}
                           </label>
                         
@@ -717,7 +732,249 @@ export default function UxSurvey () {
             
           </form>
         
-      );
+        );
+
+      } else if( scaleType === 'like-dislike' ){
+
+        return(
+    
+          <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
+
+            <div className="flex flex-col ">                  
+                     
+                    
+                    <div className="container" id="options-holder">
+                      
+                      <div className='flex flex-col sm:flex-row justify-evenly '>
+                        
+                          <label htmlFor='radio1' className={labelClassName}>
+                            <input
+                              className={inputClassName}
+                              type='radio'
+                              id='radio1'
+                              name="ux-feedback-value"
+                              value='1'
+                              onChange={handleChange}
+                              checked={isRadio === 1}
+                            />
+                            <span className={(isRadio === 1) ? `animate-bounce`: ' '}>{emojiLike}</span>{` `+labelLike}
+                          </label>
+                          <label htmlFor='radio2'
+                            className={labelClassName}>
+                            <input
+                              className={inputClassName}
+                              type='radio'
+                              id='radio2'
+                              name="ux-feedback-value"
+                              value='0'
+                              onChange={handleChange}
+                              checked={isRadio === 0}
+                            />
+                            <span className={(isRadio === 2)? `animate-bounce`: ' '}>{emojiNotLike}</span>{` `+labelNotLike}
+                          </label>
+                          
+                        
+                      </div>  
+                        
+                    </div>
+                    <div className="w-10/12 mx-auto">
+                      
+                      
+                      <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
+                        {`Comentarios (opcional):`}
+                    
+                        <br/>  
+                        <textarea 
+                          className={ 
+                            `w-full text-xs font-thin 
+                            border-zinc-800 
+                            border rounded-md 
+                            focus:shadow-sm 
+                            focus:ring-slate-500 focus:ring-1 focus:outline-none
+                            
+                            
+                          `}
+                          name="comments" 
+                          id="comments"
+                          
+                          cols="32"
+                          value={isComments}
+                          
+                          onChange={ handleComments }
+                        
+                                  
+                                  
+                        /> 
+                      </label>
+
+
+                    </div>
+                    
+                    <div className=" flex justify-evenly my-2">
+                
+                      
+                        <>
+                          <SaveButton
+                            loading={loading} 
+                            className={`
+                              `}>{`${emojiSave} ${labelSave}`}
+                              
+                          </SaveButton>
+                          
+                          <CancelButton 
+                            className=" ">
+                              
+                              {`${emojiClose} ${labelClose}`}
+                          </CancelButton>           
+                          
+                        </>
+                      
+                   
+              
+                    </div>
+
+                    
+                    
+                        
+            </div>   
+            {error && (
+                          
+                          <div className="alert alert-danger " role="alert">
+                              {error}
+                          </div>
+                                  
+            )}      
+    
+            
+    
+    
+            
+          </form>
+        
+        );
+
+      } else if ( scaleType === 'satis-disatis'){
+
+        return(
+    
+          <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
+
+            <div className="flex flex-col ">                  
+                     
+                    
+                    <div className="container" id="options-holder">
+                      
+                      <div className='flex flex-col sm:flex-row justify-evenly '>
+                        
+                          <label htmlFor='radio1' className={labelClassName}>
+                            <input
+                              className={inputClassName}
+                              type='radio'
+                              id='radio1'
+                              name="ux-feedback-value"
+                              value='1'
+                              onChange={handleChange}
+                              checked={isRadio === 1}
+                            />
+                            <span className={(isRadio === 1) ? `animate-bounce`: ' '}>{emojiSatisfied}</span>{` `+labelLike}
+                          </label>
+                          <label htmlFor='radio2'
+                            className={labelClassName}>
+                            <input
+                              className={inputClassName}
+                              type='radio'
+                              id='radio2'
+                              name="ux-feedback-value"
+                              value='0'
+                              onChange={handleChange}
+                              checked={isRadio === 0}
+                            />
+                            <span className={(isRadio === 2)? `animate-bounce`: ' '}>{emojiNotSatisfied}</span>{` `+labelNotSatisfied}
+                          </label>
+                          
+                        
+                      </div>  
+                        
+                    </div>
+                    <div className="w-10/12 mx-auto">
+                      
+                      
+                      <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
+                        {`Comentarios (opcional):`}
+                    
+                        <br/>  
+                        <textarea 
+                          className={ 
+                            `w-full text-xs font-thin 
+                            border-zinc-800 
+                            border rounded-md 
+                            focus:shadow-sm 
+                            focus:ring-slate-500 focus:ring-1 focus:outline-none
+                            
+                            
+                          `}
+                          name="comments" 
+                          id="comments"
+                          
+                          cols="32"
+                          value={isComments}
+                          
+                          onChange={ handleComments }
+                        
+                                  
+                                  
+                        /> 
+                      </label>
+
+
+                    </div>
+                    
+                    <div className=" flex justify-evenly my-2">
+                
+                      
+                        <>
+                          <SaveButton
+                            loading={loading} 
+                            className={`
+                              `}>{`${emojiSave} ${labelSave}`}
+                              
+                          </SaveButton>
+                          
+                          <CancelButton 
+                            className=" ">
+                              
+                              {`${emojiClose} ${labelClose}`}
+                          </CancelButton>           
+                          
+                        </>
+                      
+                   
+              
+                    </div>
+
+                    
+                    
+                        
+            </div>   
+            {error && (
+                          
+                          <div className="alert alert-danger " role="alert">
+                              {error}
+                          </div>
+                                  
+            )}      
+    
+            
+    
+    
+            
+          </form>
+        
+        );
+
+      }
+    
+      
 
       
   
@@ -1145,7 +1402,7 @@ export default function UxSurvey () {
   
           <div className="">
                 
-            <p>No se pudo autenticar la solicitud. Acceso denegado.</p>   
+            <p>No se pudo autenticar el QR escaneado.</p>   
             
   
           </div>
@@ -1190,7 +1447,7 @@ export default function UxSurvey () {
           <main className="">
                 
                 
-            <FeedBackLive service={service} isVerified={verified} isComplete={isComplete}/>
+            <FeedBackLive service={service} isVerified={verified} isComplete={isComplete} scale={scaleType}/>
                 
   
           </main>
