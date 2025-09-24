@@ -36,7 +36,7 @@ const AlertBox = ({message, type = 'info'}) => {
                 `
                   
                   hover:text-zinc-400
-                  text-zinc-300
+                  text-white
                 `
               } 
               
@@ -61,7 +61,7 @@ if(type === 'info' && isVisible){
       <div className={`alert alert-info `} 
         role="alert">
           <div className={`flex flex-row justify-between`}>
-            {message} <CloseButton />
+            <span className="text-xs"> {message}</span> <CloseButton />
           </div>
       </div>
     </div>
@@ -70,6 +70,7 @@ if(type === 'info' && isVisible){
   );
 
 }
+
 if(type === 'error' && isVisible){
 
   return (
@@ -78,7 +79,7 @@ if(type === 'error' && isVisible){
       <div className={`alert alert-danger`} 
         role="alert">
           <div className={`flex flex-row justify-between`}>
-            {message} <CloseButton />
+            <span className="text-xs" >{message}</span> <CloseButton />
             </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router";
+import React from "react";
+import {  Link, NavLink } from "react-router";
+ //import { NavLink } from 'react-router-dom';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 //import logo from "./logo_clean_verify.png"
@@ -15,40 +16,41 @@ import TasksIcon from "./icons/TasksIcon";
 
 
 const NavBottom = ({isLoggedIn}) => {
-
-  const linkClass = `m-1 hover:text-slate-800 text-white text-center`;
+  //HERE YOU CAN CHANGE THE ICONS AND LINKS COLORS AND HOVERS
+const linkClass = `m-1 hover:text-slate-600 focus:text-slate-400 text-blue-500 text-center drop-shadow-sm`;
+const linkClassActive = `m-1  text-slate-400 text-center drop-shadow-md`;
 
   return (
        
       <nav id="responsive-bottom-nav" 
-            className="w-full content-start h-20 bg-gradient-to-b from-slate-500 to-slate-800 md:hidden fixed bottom-0 left-0 z-20 px-4">
+            className="w-full mt-4 mb-3 content-start h-20 bg-gradient-to-b from-neutral-200 to-neutral-200 via-white  md:hidden fixed bottom-2 left-0 z-30 px-4 shadow-lg">
 
           <div className="flex flex-row justify-between font-light text-xs ">
             
-              <Link to={"/home"} className={` `+linkClass}>
+              <NavLink to={"/home"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                 <HomeIcon/>
                 Home
-              </Link>
+              </NavLink>
             
               {isLoggedIn ? (
             
                 <>
-                  <Link to={"/mycompliance"} className={` `+linkClass}>
+                  <NavLink to={"/mycompliance"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                     <ComplianceIcon/>
                     Compliance
-                  </Link>
-                  <Link to={"/myuserx"} className={` `+linkClass}>
+                  </NavLink>
+                  <NavLink to={"/myuserx"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                     <UxIcon/>
                     UX
-                  </Link>
-                  <Link to={"/mytasks"} className={` `+linkClass}>
+                  </NavLink>
+                  <NavLink to={"/mytasks"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                     <TasksIcon/>
                     Tasks
-                  </Link>
-                  <Link to={"/profile"} className={``+linkClass}>
+                  </NavLink>
+                  <NavLink to={"/profile"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                   <UserIcon/>
                     Mi Perfil
-                  </Link>
+                  </NavLink>
                 
                   {/*
                   <li className="nav-item">
@@ -77,10 +79,7 @@ const NavBottom = ({isLoggedIn}) => {
                 
 
                 
-                  <Link to={"/register"} className={` `+linkClass}>
-                    <SignupIcon/>
-                    Sign Up
-                  </Link>
+                  
               
                 </>
               )}

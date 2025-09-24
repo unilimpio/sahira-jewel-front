@@ -13,10 +13,6 @@ import Logo from "../Logo";
 
 
 
-import logoUni from '../../../logo-unilimpio.svg';
-
-
-
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
@@ -43,7 +39,7 @@ const Header = ({isLoggedIn}) => {
       <header  
         className={
           `
-          flex sticky top-1 z-20
+          flex sticky top-0 z-20
           place-content-between
           bg-gradient-to-tl from-sky-600 to-white border 
           rounded-t-md 
@@ -110,9 +106,6 @@ const Header = ({isLoggedIn}) => {
               
 
               
-                <Link to={"/register"} className={` `+ linkClass}>
-                  Sign Up
-                </Link>
             
               </>
             )}
@@ -120,14 +113,9 @@ const Header = ({isLoggedIn}) => {
           
         
         </nav>
-        <div className="flex flex-col w-12 h-12">
-          <span className="text-white text-xs font-thin mb-1">
-            por:
-          </span>
-          <img src={logoUni} alt="logo Unilimpio" className="  z-30 mr-2" />
-        </div>
         
-      </header>
+        
+      </header> 
     
      
   );

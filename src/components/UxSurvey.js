@@ -58,10 +58,10 @@ export default function UxSurvey () {
     const [alertCriterios, setAlertCriterios] = useState(null);
     //default values
     const [alertMode, setAlertMode] = useState(true);
-    const [alertLevel, setAlertLevel] = useState(2);
+    const [alertLevel, setAlertLevel] = useState(false);
     
     const [scaleType, setScaleType] = useState('like-dislike')
-    const [accounConfigs, setAccountConfigs] = useState(false)
+    const [accountConfigs, setAccountConfigs] = useState(false)
     
     const [location, setLocation] = useState(null);
     const [ip, setIp] = useState(null);
@@ -178,11 +178,14 @@ export default function UxSurvey () {
               
               setAlertCriterios(response?.data?.alert_criterios);                
               setAlertMode(response?.data?.service.alert_mode);
+              
               setAlertLevel(response?.data?.service.alert_value);
               
               setScaleType(response?.data?.account_configs?.scale_type);
-                
-                
+              setAccountConfigs(response?.data?.account_configs);  
+              
+
+
               setMessage(response.data?.message); 
               console.log(response);
               console.log(response.data?.alert_criterios);
@@ -386,7 +389,7 @@ export default function UxSurvey () {
   } 
 
   
-  const FeedBackLive = ({service, isVerified, isComplete}) => {   
+  const FeedBackLive = ({service, isVerified, isComplete, scale}) => {   
     
 
     //simple strings for the buttons, choose your own!
@@ -422,7 +425,7 @@ export default function UxSurvey () {
       let navigate = useNavigate();
        //STATE
        const [isRadio, setIsRadio] = useState(0);
-       const [isComments, setIsComments] = useState("");
+       
        const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 m-1 rounded-md flex flex-row sm:flex-col items-center text-lg`;
        const inputClassName = ` m-2 w-8 h-8`;
       
@@ -451,13 +454,14 @@ export default function UxSurvey () {
         const values = [...formData.entries()];
         const formElements = form.elements;
         
-        const onSubmitComments = formData.get("comments");
+        //const onSubmitComments = formData.get("comments");
+
         const onSubmitFeedbackValue = formData.get("ux-feedback-value");
         const onSubmitBadUxId = formData.get("bad-ux-feedback-id");
         const onSubmitBadComments = formData.get("bad-comments");
 
         setFeedbackValue(onSubmitFeedbackValue);
-        setComments(onSubmitComments);
+        //setComments(onSubmitComments);
         setBadUxId(onSubmitBadUxId);
         setBadComments(onSubmitBadComments);
                                 
@@ -467,26 +471,48 @@ export default function UxSurvey () {
         
         console.log(formElements);
         
-        console.log(onSubmitComments);
+       // console.log(onSubmitComments);
 
         console.log(onSubmitFeedbackValue);
         console.log(onSubmitFeedbackValue <= alertLevel)
         console.log(alertMode);
 
-        if(onSubmitFeedbackValue <= alertLevel){
-          if(alertMode){            
+        if(scaleType === '5-points'){
 
-            console.log("alert mode is on");
+          if(onSubmitFeedbackValue <= alertLevel){
+          
             setIsBadUx(true);
-            return setLoading (false);
+            
+            if(alertMode){            
+
+              //TODO: here the app should send some kind of alert, an sms, or at least an email to the registered supervisor user of the org account
+              console.log("alert mode is on");
+              
+            } 
 
 
-          } 
-        //setLoading (false);
+          }
+
         } else {
-          console.log("we are ready to go");
+          //all other scales are more lieka pass/no pass so they can be modeled similarly, we will assign 1/-1 to represent these events
+          
+          if(onSubmitFeedbackValue < 0){
 
-        }  
+            setIsBadUx(true);
+            
+            if(alertMode){            
+
+              //TODO: here the app should send some kind of alert, an sms, or at least an email to the registered supervisor user of the org account
+              console.log("alert mode is on");
+              
+            } 
+            
+          }
+
+        }
+        
+        //setLoading (false);
+         
 
 
           console.log("beginning API post call");
@@ -500,7 +526,7 @@ export default function UxSurvey () {
               //comments: formData.get("comments"),
               //feedback_value: parseInt(onSubmitUxValue, 10),
               feedback_value: onSubmitFeedbackValue,
-              comments: onSubmitComments,
+             // comments: onSubmitComments,
               bad_ux_id: badUxId,
               bad_comments: badComments,
   
@@ -570,15 +596,9 @@ export default function UxSurvey () {
         setIsRadio(+e.currentTarget.value);
       };
 
-      const handleComments = (e) => {
-        // string passed in
-        // a string returned by default
-        console.log(e.currentTarget.value);
-        // add + to the event to make the value a number
-        setIsComments(e.currentTarget.value);
-      };
+      
 
-      if (scaleType === '5-points'){
+      if (scale === '5-points'){
 
         return(
     
@@ -658,38 +678,7 @@ export default function UxSurvey () {
                       </div>  
                         
                     </div>
-                    <div className="w-10/12 mx-auto">
-                      
-                      
-                      <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                        {`Comentarios (opcional):`}
                     
-                        <br/>  
-                        <textarea 
-                          className={ 
-                            `w-full text-xs font-thin 
-                            border-zinc-800 
-                            border rounded-md 
-                            focus:shadow-sm 
-                            focus:ring-slate-500 focus:ring-1 focus:outline-none
-                            
-                            
-                          `}
-                          name="comments" 
-                          id="comments"
-                          
-                          cols="32"
-                          value={isComments}
-                          
-                          onChange={ handleComments }
-                        
-                                  
-                                  
-                        /> 
-                      </label>
-
-
-                    </div>
                     
                     <div className=" flex justify-evenly my-2">
                 
@@ -734,7 +723,7 @@ export default function UxSurvey () {
         
         );
 
-      } else if( scaleType === 'like-dislike' ){
+      } else if( scale === 'like-dislike' ){
 
         return(
     
@@ -777,38 +766,7 @@ export default function UxSurvey () {
                       </div>  
                         
                     </div>
-                    <div className="w-10/12 mx-auto">
-                      
-                      
-                      <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                        {`Comentarios (opcional):`}
                     
-                        <br/>  
-                        <textarea 
-                          className={ 
-                            `w-full text-xs font-thin 
-                            border-zinc-800 
-                            border rounded-md 
-                            focus:shadow-sm 
-                            focus:ring-slate-500 focus:ring-1 focus:outline-none
-                            
-                            
-                          `}
-                          name="comments" 
-                          id="comments"
-                          
-                          cols="32"
-                          value={isComments}
-                          
-                          onChange={ handleComments }
-                        
-                                  
-                                  
-                        /> 
-                      </label>
-
-
-                    </div>
                     
                     <div className=" flex justify-evenly my-2">
                 
@@ -853,7 +811,7 @@ export default function UxSurvey () {
         
         );
 
-      } else if ( scaleType === 'satis-disatis'){
+      } else if ( scale === 'satis-disatis'){
 
         return(
     
@@ -896,38 +854,7 @@ export default function UxSurvey () {
                       </div>  
                         
                     </div>
-                    <div className="w-10/12 mx-auto">
-                      
-                      
-                      <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                        {`Comentarios (opcional):`}
                     
-                        <br/>  
-                        <textarea 
-                          className={ 
-                            `w-full text-xs font-thin 
-                            border-zinc-800 
-                            border rounded-md 
-                            focus:shadow-sm 
-                            focus:ring-slate-500 focus:ring-1 focus:outline-none
-                            
-                            
-                          `}
-                          name="comments" 
-                          id="comments"
-                          
-                          cols="32"
-                          value={isComments}
-                          
-                          onChange={ handleComments }
-                        
-                                  
-                                  
-                        /> 
-                      </label>
-
-
-                    </div>
                     
                     <div className=" flex justify-evenly my-2">
                 
@@ -1237,28 +1164,236 @@ export default function UxSurvey () {
 
     const Final = ()=> { 
       
+      const [isComments, setIsComments] = useState("");
+
+      function CancelProcessing() {
+                  
+                  setFeedbackValue(null);
+                  setComments("");
+                  setLoading(false);
+                  setServiceId(null);
+                
+                  
+
+      }
+      
+
+      function handleSubmit(event) {
+
+       // event.preventDefault();
+
+        setLoading(true);
+
+        const form = event.target;
+
+        const formData = new FormData(form);
+        const values = [...formData.entries()];
+        const formElements = form.elements;
+        
+        const onSubmitComments = formData.get("comments");
+        const onSubmitFeedbackValue = formData.get("ux-feedback-value");
+        const onSubmitBadUxId = formData.get("bad-ux-feedback-id");
+        const onSubmitBadComments = formData.get("bad-comments");
+
+        setFeedbackValue(onSubmitFeedbackValue);
+        setComments(onSubmitComments);
+        setBadUxId(onSubmitBadUxId);
+        setBadComments(onSubmitBadComments);
+                                
+        console.log(values);
+        
+        console.log(form);
+        
+        console.log(formElements);
+        
+        console.log(onSubmitComments);
+
+        console.log(onSubmitFeedbackValue);
+        console.log(onSubmitFeedbackValue <= alertLevel)
+        console.log(alertMode);
+
+        if(onSubmitFeedbackValue <= alertLevel){
+          if(alertMode){            
+
+            console.log("alert mode is on");
+            setIsBadUx(true);
+            return setLoading (false);
+
+
+          } 
+        //setLoading (false);
+        } else {
+          console.log("we are ready to go");
+
+        }  
+
+
+          console.log("beginning API post call");
+          console.log(loading);
+
+          if (!error) {
+                      
+            const data = {
+  
+              //feedback_value: parseInt(formData.get("ux-feedback-value")),
+              //comments: formData.get("comments"),
+              //feedback_value: parseInt(onSubmitUxValue, 10),
+              feedback_value: onSubmitFeedbackValue,
+              comments: onSubmitComments,
+              bad_ux_id: badUxId,
+              bad_comments: badComments,
+  
+    
+            }
+  
+            console.log(data);
+                
+            UserService.setUxPub(serviceId, data )
+                .then(
+                  (response) => {
+                  
+                      console.log(response);
+                      
+                      if(response.status === 204){
+                        setError(error + response.statusText)
+                        CancelProcessing();
+                      
+                      }
+  
+                      setUxId(response.data?.ux_id);
+
+                      console.log(response.status);
+                      console.log(response.statusText)
+                      
+                      
+                      console.log(response.data?.message)
+                      
+                      setMessage(response.data?.message)
+                      
+                      
+                      setIsComplete(true);
+                      localStorage.setItem("cs_uxsurvey_complete",true)
+                      
+                      setLoading (false);
+                      
+      
+                  })
+                  .catch( 
+                    (error) => {
+                      const resMessage =
+                        (error.response &&
+                          error.response.data &&
+                          error.response.data.message) ||
+                        error.message || error.statusText ||
+                        error.toString();
+                      //setMessage(resMessage);
+                      let errorMsg = 'No se pudo procesar la operacion: ';
+                      setError(errorMsg + resMessage)
+                      CancelProcessing();
+                    }
+                );
+          }  
+
+        
+        
+      } 
+
+
+      const handleComments = (e) => {
+        // string passed in
+        // a string returned by default
+        console.log(e.currentTarget.value);
+        // add + to the event to make the value a number
+        setIsComments(e.currentTarget.value);
+      };
+
+
       return(
   
           
         <div className="h-full">
             <div className=" flex flex-col 
                   sm:flex-row sm:justify-start 
-                  sm:w-fit sm:pl-12 my-2 p-2
+                  sm:w-fit sm:pl-12 my-4 p-2
                   border-1 border-neutral-500 bg-neutral-100 rounded-md shadow-md
                   ">
-                    <h1 className="text-3xl font-extrabold text-lime-500">Gracias!</h1>
-                    <p className="text-sm font-thin m-1 ">
-                      <span className="font-bold text-md text-sky-700">
-                        
-                        Apreciamos tu retroalimentación. Será utilizada para mejorar nuestros servicios. 
+                    <div className="p-4" >
+                      <h1 className="text-3xl font-extrabold text-lime-500">Gracias!</h1>
+
+                      <p className="text-sm font-thin m-1 ">
+                        Haz calificado:&nbsp; 
+                        {service && (
+                          <>{`${service.name} ${service.referencia} [${service.id}]`}</>
+                        )}
+                        <br/>
+                        <span className="font-bold text-md text-sky-700">
                           
-                      </span>
-                      <br/>
-                      {service && (
-                        <>Servicio calificado:  {`${service.name} ${service.referencia} [${service.id}]`}</>
-                      )}
+                          Apreciamos tu retroalimentación. Será utilizada para mejorar nuestros servicios. 
+                            
+                        </span>
+                        
+                        
+                        
+                      </p>
+                    </div>
+                    <div className="p-4">
                       
-                    </p>
+                      <p className="text-sm font-thin m-1 text-md text-sky-700">Tienes un minuto? puedes dejar un comentario mas detallado en el espacio debajo, tu informacion sera muy apreciada para nuestros esfuerzos de mejora continua:</p>
+                      
+                      <label htmlFor={`comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
+                        {`Comentarios (opcional):`}
+                    
+                        <br/>  
+                        <textarea 
+                          className={ 
+                            `w-5/6 h-28 text-xs font-thin 
+                            border-zinc-800 
+                            border rounded-md 
+                            focus:shadow-sm 
+                            focus:ring-slate-500 focus:ring-1 focus:outline-none
+                            
+                            
+                          `}
+                          name="comments" 
+                          id="comments"
+                          
+                          cols="32"
+                          value={isComments}
+                          
+                          onChange={ handleComments }
+                        
+                                  
+                                  
+                        /> 
+                      </label>
+
+                      <div className=" flex justify-evenly my-2">
+                
+                      
+                        <>
+                          <SaveButton
+                            loading={loading} 
+                            className={`
+                              `}>{`${emojiSave} ${labelSave}`}
+                              
+                          </SaveButton>
+                          
+                          <CancelButton 
+                            className=" ">
+                              
+                              {`${emojiClose} ${labelClose}`}
+                          </CancelButton>           
+                          
+                        </>
+                      
+                   
+              
+                    </div>  
+
+
+                    </div>
+                    
+                    
                                              
             </div>   
                   
@@ -1266,7 +1401,7 @@ export default function UxSurvey () {
             <div className=" flex sm:pl-12 sm:w-8/12 justify-evenly sm:justify-start my-2">
                 
                     
-                    &nbsp;        
+                     &nbsp;  
                     
                   
               

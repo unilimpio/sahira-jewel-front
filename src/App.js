@@ -44,9 +44,7 @@ const App = () => {
     
       
     
-      <div id="routes" className=" 
-        h-screen  bg-gradient-to-br from-neutral-200 via-white to-neutral-300
-        z-10" >
+      <div id="routes" className=" " >
           <Routes>
             <Route path={"/"} element={<Home />} />
             <Route path={"/home"} element={<Home />} />

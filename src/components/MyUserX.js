@@ -56,7 +56,7 @@ export default function MyUserX () {
 
   const [loading, setLoading] = useState(true);
 
-  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
+  const wrapperClass = `w-full h-full p-4 mb-2 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
 
   const [user, setUser]  = useState(AuthService.getCurrentUser());
   //const [user, setUser] = useState(AuthService.getCurrentUser());
@@ -257,6 +257,7 @@ export default function MyUserX () {
                     }
           </select>
         );
+        
       }
 
       return (
@@ -264,7 +265,7 @@ export default function MyUserX () {
                   
         <div className="flex flex-col relative z-1">
             
-                <p className="text-sm md:text-md mb-0">Estas son las ubicaciones habilitadas para su organización ({user.uId}): </p>
+                <p className="text-xs md:text-md mb-0 py-2">Estas son las ubicaciones habilitadas para su organización ({user.uId}): </p>
                 {loading && (
                   <div className="flex">
                     <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
@@ -355,6 +356,14 @@ export default function MyUserX () {
                     setServicesContent(_content);
                     setError(true);
                     
+                    if(error){
+
+                      if (_content.error === 401){
+
+                        return <Navigate to='/login'/>
+                      }
+
+                    }
                   
                   }
                 
@@ -410,15 +419,15 @@ export default function MyUserX () {
       if(listContent){
     
         return(
-          <div className="mb-2 overflow-x-auto">
+          <div className="mb-2 h-64 overflow-y-auto">
                 
             <table id="eval-display" 
-              className="bg-white opacity-90 text-xs sm:text-sm shadow-md w-full  ">
+              className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
                              
             
                   <thead id="table-head" 
-                          className="border border-b-zinc-300  " >
-                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold ">
+                          className="border border-b-zinc-300 " >
+                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
                       <td className="p-2"   >
                         #
                       </td>
@@ -596,7 +605,7 @@ export default function MyUserX () {
       if(graphData){
     
         return (
-          <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2">
+          <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2 overflow-auto text-[8px]">
             <ComposedChart
               layout="horizontal"
               width={300}
@@ -1419,7 +1428,7 @@ export default function MyUserX () {
           className={`  `+wrapperClass}>
           
         
-          <div className={`flex flex-col h-max
+          <div className={`flex flex-col 
                       
                       
                       

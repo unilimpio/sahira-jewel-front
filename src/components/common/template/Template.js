@@ -56,16 +56,17 @@ const Template = ({children}) => {
 
   return (
     
-  <div className="xl:container mx-auto p-2 ">
+  <div className="lg:container  mx-auto ">
 
     <Header isLoggedIn={isLoggedIn}/>
 
-    <div id="main" className="md:bg-white bg-inherit">
+    <div id="main" className="bg-white dark:bg-slate-900 p-4 md:p-12 lg:p-18 mb-20">
       {children}
     </div>
+
     <NavBottom isLoggedIn={isLoggedIn}/>
     <Footer />
-  
+    
   </div>
     
      

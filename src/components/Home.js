@@ -11,7 +11,7 @@ export default function Home () {
   
   const navigate = useNavigate();
 
-  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
+  const wrapperClass = `w-full h-full p-4 mb-4 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
 
   const user = AuthService.getCurrentUser();  
 

@@ -4,7 +4,7 @@ import Template from "./common/template/Template";
 
 const Profile = () => {
   
-  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
+  const wrapperClass = `w-full h-full p-4 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
 
   const currentUser = AuthService.getCurrentUser();
 
@@ -15,12 +15,21 @@ const Profile = () => {
           <h4 className="text-zinc-600">
             Profile
           </h4>
+          
+           <img
+            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            alt="profile-img"
+            className="w-20 sm:w-32 rounded-full opacity-75 z-10 float-right "
+            /> 
         
         <p>
-          <strong>Id:</strong> {currentUser.uId}
+          <strong className="text-secondary">Id:</strong> {currentUser.uId}
         </p>
         <p>
-          <strong>Email:</strong> {currentUser.email}
+          <strong className="text-secondary">Email:</strong> {currentUser.email}
+        </p>
+        <p className="text-xs text-secondary">
+          Valoramos mucho tu privacidad, por eso intentamos manter la cantidad de datos personales que recolectamos al minimo.
         </p>
         {/*
         <strong>Authorities:</strong>

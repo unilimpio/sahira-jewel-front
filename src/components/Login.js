@@ -1,8 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
+
 import Template from "./common/template/Template";
 
 
@@ -19,8 +17,9 @@ const required = (value) => {
 };
 
 const Login = () => {
-  const form = useRef();
-  const checkBtn = useRef();
+  
+  
+  
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,15 +38,21 @@ const Login = () => {
     setPassword(password);
   };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const handleLogin = (event) => {
+
+    event.preventDefault();
 
     setMessage("");
     setLoading(true);
 
-    form.current.validateAll();
+    const form = event.target;
 
-    if (checkBtn.current.context._errors.length === 0) {
+    const formData = new FormData(form);
+
+    const onSubmitEmail = formData.get("email");
+    const onSubmitPassword = formData.get("password");
+
+    if (onSubmitEmail && onSubmitPassword) {
       AuthService.login(email, password).then(
         () => {
           navigate("/home");
@@ -58,15 +63,31 @@ const Login = () => {
             (error.response &&
               error.response.data &&
               error.response.data.message) ||
-            error.message ||
-            error.toString();
+            error.message
+          
+          console.log(resMessage)
+          
+          const haystack = resMessage.toString();
+          
+          console.log(haystack)
+          
+          const needle = '401'
 
-          setLoading(false);
-          setMessage(resMessage);
+          const index = haystack.indexof(needle)
+          
+          if(index !== -1){
+            setMessage('Oopps...esto es extrano. El usuario no ha sido reconocido, Revise las credenciales ingresadas y vuelva a intentar.');
+
+          } else {
+
+            setMessage(resMessage) 
+          }
+          
         }
       );
     } else {
       setLoading(false);
+      
     }
   };
 
@@ -89,33 +110,33 @@ const Login = () => {
           </div>
        
 
-          <Form onSubmit={handleLogin} ref={form}>
+          <form onSubmit={handleLogin} >
             <div className=" flex flex-col sm:flex-row  sm:justify-start sm:w-fit sm:pl-12 my-2">
               
                 <label htmlFor="email" className="mx-2">Email:</label>
               
               
-                <Input
+                <input
                   type="text"
                   className="text-lg rounded-md border border-zinc-600 h-10 p-3 "
                   name="email"
                   autoComplete="email"
                   value={email}
                   onChange={onChangeEmail}
-                  validations={[required]}
+                   
                 />
             </div>
 
             <div className="flex flex-col sm:flex-row sm:pl-12 justify-center sm:justify-start my-2">
               <label htmlFor="password" className="mx-2">Password:</label>
-              <Input
+              <input
                 type="password"
                 className=" rounded-md border border-zinc-600 h-10 p-3"
                 autoComplete="current-password"
                 name="password"
                 value={password}
                 onChange={onChangePassword}
-                validations={[required]}
+                
               />
             </div>
 
@@ -145,8 +166,8 @@ const Login = () => {
                 </div>
               </div>
             )}
-            <CheckButton style={{ display: "none" }} ref={checkBtn}  className=""/>
-          </Form>
+            
+          </form>
      
         </div>
       </div>

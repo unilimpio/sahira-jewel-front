@@ -5,6 +5,8 @@ import Logo from "./common/Logo";
 
 
 import Template from "./common/template/Template";
+import AlertBox from "./common/template/AlertBox";
+
 
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
@@ -29,7 +31,7 @@ export default function MyTasks () {
 
   const [error, setError] = useState(false);
 
-  const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
+  const wrapperClass = `w-full h-full p-4 mb-4 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
 
 
   
@@ -200,23 +202,23 @@ export default function MyTasks () {
           <div className="mt-2 mb-4">
                 
             <table id="eval-display" 
-              className="bg-white opacity-90 text-xs sm:text-sm shadow-md rounded-sm">
+              className="bg-white opacity-90 text-[10px] sm:text-sm shadow-md rounded-sm">
                              
             
                   <thead id="table-evals-display-head" 
                           className="border border-b-zinc-300 " >
                     <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold">
-                      <td className="p-2"   >
+                      <td className="p-1"   >
                         id#
                       </td>
-                      <td className="p-2"   >
+                      <td className="p-1"   >
                         Fecha Plazo:
                       </td>
-                      <td className="p-2"  >
+                      <td className="p-1"  >
                         Tarea
                       </td> 
-                      <td className="p-2">Status</td>
-                      <td className="p-2">Accion</td>
+                      <td className="p-1">Status</td>
+                      <td className="p-1">Accion</td>
   
                     </tr>
   
@@ -687,7 +689,7 @@ export default function MyTasks () {
     
       return(
     
-          <form id="taskView" onSubmit={handleSubmit}  className="container w-1/2 mx-auto">
+          <form id="taskView" onSubmit={handleSubmit}  className="container mx-auto">
 
             <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 text-wrap ">
                     <h3 className="text-sm font-thin bg-slate-200">
@@ -869,19 +871,14 @@ export default function MyTasks () {
           <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Mis Tareas</h1>
 
               {message && (
-                <div className="form-group">
-                  <div className="alert alert-info" role="alert">
-                    {message}
-                  </div>
-                </div>
-              )}
+                  
+                  <AlertBox message={message} type="info"/>
+                 
+                )}
               {error && (
-                <div className="form-group">
-                  <div className="alert alert-danger" role="alert">
-                    {error}
-                  </div>
-                </div>
-              )}
+                  <AlertBox message={error} type="error"/>
+                  
+                )}
             
                 {user &&
 
