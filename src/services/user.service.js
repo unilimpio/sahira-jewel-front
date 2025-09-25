@@ -130,12 +130,10 @@ const getUbs = (uId) => {
   return axios
   .get(API_URL + "getUbs/" + uId, { headers: {"Authorization" : `Bearer ${user.token}`} } )
   .catch(function (error){
-    //if(error.status === 401){
+    if(error.status === '401'){
       localStorage.removeItem("user");
       //console.log()
-      
-
-    //}
+    }
   });
   
 };

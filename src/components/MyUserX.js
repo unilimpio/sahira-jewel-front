@@ -23,11 +23,9 @@ import {
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
 
-//import RenderPuntosForm from "./Puntos"
 
-import logoUni from '../logo-unilimpio.svg';
 
-import Logo from "./common/Logo";
+
 
 
 
@@ -39,30 +37,25 @@ export default function MyUserX () {
   const [ubicacionId, setUbicacionId] = useState(null);
   const [serviceId, setServiceId] = useState(null);
   const [uxId, setUxId] = useState(null);
-
-  
-  
-  const [content, setContent] = useState(null);
   
   const [showModal, setShowModal] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [showServiceResult, setShowServiceResult] = useState(false);
   const [showServiceAction, setShowServiceAction] = useState(false);
+  const [showUxSurvey, setShowUxSurvey] = useState(false);
 
 
   const [message, setMessage] = useState(false);
 
   const [error, setError] = useState(false);
+  const [info, setInfo] = useState(false);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const wrapperClass = `w-full h-full p-4 mb-2 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
 
   const [user, setUser]  = useState(AuthService.getCurrentUser());
-  //const [user, setUser] = useState(AuthService.getCurrentUser());
-  console.log(ubicacionId);
-  console.log(serviceId);
-  console.log(uxId);
+ 
   
   //const [message, setMessage] = useState("");
  
@@ -71,8 +64,6 @@ export default function MyUserX () {
   const UbicacionPicker=({user}) => {
 
       
-      
-
       const [ubsContent, setUbsContent] = useState(false);
       
 
@@ -92,9 +83,10 @@ export default function MyUserX () {
         
         const options = createOptions();
         
-        if(!options.uId){
-          setUbsContent("");
-          setError("no se recibieron los parametros correctos.")
+        if(!options.uId || options.uId === null){
+          setUbsContent(false);
+          setError(true)
+          setMessage('Los parametros recibidos no son los correctos, no se puede continuar.')
           //setMessage("no se recibieron los parametros correctos.")
           
         } else {
@@ -103,8 +95,6 @@ export default function MyUserX () {
     
                 (response) => {
     
-               
-                  
                     setUbsContent(response?.data);
                     //setContent(response?.data);
                     setLoading(false);
@@ -129,9 +119,10 @@ export default function MyUserX () {
                     error?.message ||
                     error?.toString();
                   
-                  setUbsContent(_content);
+                  setUbsContent(false);
                   //setContent(_content);
                   setError(true);
+                  setMessage(_content)
                   
                 
                 }
@@ -145,9 +136,6 @@ export default function MyUserX () {
       },[user]);
     
       
-      
-      
-
       const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -156,36 +144,30 @@ export default function MyUserX () {
         const form = event.target;
 
         const formData = new FormData(form);
-        const values = [...formData.entries()];
-        const formElements = form.elements;
+        
         
         const onSubmitUbId = formData.get("selectedUbId");
         
-        setUbicacionId(onSubmitUbId);
+        if(onSubmitUbId){
+
+          setUbicacionId(onSubmitUbId);
+          setShowServices(true);
+
+        } else {
+
+          setUbicacionId(false)
+          setShowServices(false)
+        }
+          
         
-        setShowServices(true);
+        
         //console.log(ubicacionId)
       }
 
-      const GoButton = ({loading, className, children}) => {
+      const GoButton = ({className}) => {
 
-        if(loading){
-          
           return (   
-            <button className={className + ` bg-slate-600 border-1 border-white  rounded-md m-1 p-1 relative text-left`} disabled={loading}>
-              <svg className="absolute left-1 animate-spin h-6 w-6 fill-white" viewBox="0 0 24 24">
-                <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-              </svg>
-              <span className="text-white ml-8">Loading</span>
-            </button>   
-          );
-        
-        } else {
-  
-          return (   
-    
-              
+     
             <button  type="submit" id="submit"
                     className={className + 
                       `h-8 p-2 rounded-md border border-white 
@@ -198,24 +180,18 @@ export default function MyUserX () {
                     disabled={loading} >
               
               <span className="text-white font-semibold text-sm">
-                {children}
+                
                 <svg fill="#FFFFFF" width="12px" height="12px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     
                       <path d="M0 13.024q0-2.624 1.024-5.056t2.784-4.16 4.16-2.752 5.056-1.056q2.656 0 5.056 1.056t4.16 2.752 2.784 4.16 1.024 5.056q0 3.616-1.984 6.816l7.072 7.040q0.864 0.896 0.864 2.144t-0.864 2.112-2.144 0.864-2.112-0.864l-7.040-7.040q-3.2 1.952-6.816 1.952-2.656 0-5.056-1.024t-4.16-2.784-2.784-4.128-1.024-5.088zM4 13.024q0 2.464 1.216 4.544t3.296 3.264 4.512 1.216q1.824 0 3.488-0.704t2.88-1.92 1.92-2.88 0.736-3.52-0.736-3.52-1.92-2.848-2.88-1.92-3.488-0.736q-2.432 0-4.512 1.216t-3.296 3.296-1.216 4.512z"></path>
                 </svg>
               </span>
               
-              
-              
-              
-      
+                    
             </button>
                   
           );
-  
-        }      
         
-      
       }
 
       const SelectDrop = ({ubicaciones}) => {
@@ -242,7 +218,7 @@ export default function MyUserX () {
                     onChange={e=> handleChange(e)} // ... and update the state variable on any change!
                     className={selectClassName + ``}
                   >
-                      <option value="0">Seleccione una ubicación</option>
+                      <option value="">Seleccione una ubicación</option>
                     {
           
                       ubicaciones.map((ub) => (
@@ -266,36 +242,28 @@ export default function MyUserX () {
         <div className="flex flex-col relative z-1">
             
                 <p className="text-xs md:text-md mb-0 py-2">Estas son las ubicaciones habilitadas para su organización ({user.uId}): </p>
-                {loading && (
-                  <div className="flex">
-                    <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
-                      <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                      <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                    </svg>
-                    <span className="text-slate-700 font-extralight ml-2">Loading...</span>
-                  </div>
-  
-                )}
+                
                 {ubsContent && (   
   
                 
                 <form onSubmit={handleSubmit}>
+                  
                   <SelectDrop ubicaciones={ubsContent?.ubicaciones}/>
                   &nbsp;
-                  <GoButton loading={loading}>
+                  <GoButton />
                     
 
-                  </GoButton>
+                  
                 </form>
                 
                 )}
+                
               
                             
         </div>
   
       );
-
-      
+  
       
   }
 
@@ -319,14 +287,16 @@ export default function MyUserX () {
           
           const options = createOptions();
 
-          if(!options){
-            setServicesContent("");
-            setError("no se recibieron todos los parametros.")
+          if(!options || options.ubId === undefined){
+            setServicesContent(false);
+            setError(true)
+            setMessage('No se recibieron los parametros adecuados para continuar. Por favor contacte el administrador.')
             //setMessage("no se recibieron los parametros correctos.")
             
           } else {
+            //setLoading(true)
     
-              UserService.getServices(options.ubId).then(
+            UserService.getServices(options.ubId).then(
     
                   (response) => {
     
@@ -356,18 +326,11 @@ export default function MyUserX () {
                     setServicesContent(_content);
                     setError(true);
                     
-                    if(error){
-
-                      if (_content.error === 401){
-
-                        return <Navigate to='/login'/>
-                      }
-
-                    }
+                    setLoading(false)
                   
                   }
                 
-              )
+            )
     
             
           }
@@ -375,12 +338,9 @@ export default function MyUserX () {
          
 
       },[ubicacionId]); 
-
-         
-
       
 
-    function RenderList({listContent}){
+    function RenderDetractorList({detractorListContent}){
   
       let checkIconClass = `fill-lime-500`;
 
@@ -416,7 +376,7 @@ export default function MyUserX () {
         setShowServiceAction(true);
       }
     
-      if(listContent){
+      if(detractorListContent){
     
         return(
           <div className="mb-2 h-64 overflow-y-auto">
@@ -455,7 +415,7 @@ export default function MyUserX () {
             
               
               {
-                listContent.map((row,index) => (
+                detractorListContent.map((row,index) => (
                   
                   <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+index+'-'+row.service_id} >
                     <td className="p-2" id={'td-i-'+row.ux_id}   >
@@ -596,6 +556,146 @@ export default function MyUserX () {
     
     }
 
+    function RenderServicesList({servicesListContent}){
+  
+      
+
+      function handleLensClick (servId){
+        console.log('Lens button clicked !!!!!!');
+        console.log(servId);
+
+        setLoading(true);
+        
+        setMessage(false);
+        setError(false);
+        
+        //setServicesContent(''); 
+        setShowModal(true);
+        setServiceId(servId);
+        setShowServiceResult(true);
+      }
+
+      function handleActionClick (servId,uxId){
+        console.log('action button clicked !!!!!!');
+        console.log(servId);
+
+        setLoading(true);
+        
+        setMessage(false);
+        setError(false);
+        
+        //setServicesContent(''); 
+        setShowModal(true);
+        setServiceId(servId);
+        setUxId(uxId);
+        
+        return Navigate
+      }
+    
+      if(servicesListContent){
+    
+        return(
+          <div className="mb-2 h-64 overflow-y-auto">
+                
+            <table id="services-list-display" 
+              className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
+                             
+            
+                  <thead id="table-head" 
+                          className="border border-b-zinc-300 " >
+                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
+                      <td className="p-2"   >
+                        #id
+                      </td>
+                      <td className="p-2"   >
+                        Nombre
+                      </td>
+                      
+                      <td className="p-2"  >
+                       Ux avg. </td> 
+                        
+                       
+                       
+                      <td className="p-2">Accion</td>
+                      
+  
+                    </tr>
+  
+  
+  
+                  </thead>
+                  <tbody className="text-zinc-600 ">
+            
+              
+              {
+                servicesListContent.map((row,index) => (
+                  
+                  <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+index+'-'+row.service_id} >
+                    <td className="p-2" id={'td-i-'+row.service_id}   >
+                      { row.service_id  }
+                    </td>
+                    <td className="p-2 " id={'td-ux-date-created-'+row.service_id}   >
+                      { row.service_name  }
+                    </td>
+                    
+                    
+                    <td  id={'td-avg-'+row.service_id} 
+                        className={`p-2 ` 
+                           
+                          }>
+                      
+                      {row.avg_ux_value}
+                      
+                      
+                    </td> 
+                    
+                    
+                    <td id={'td-action-btns-'+row.ux_id} className="">
+                      <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                        onClick={()=>handleLensClick(row.service_id,row.ux_id)}>🔍
+                      </button>&nbsp;
+                      {
+                        !row.ux_is_action_taken &&
+                          (
+                            <>
+                            <a href={'http://localhost:3000/uxsurvey?sID='+row.service_id+'&c='+row.code_verifier} target="_blank" rel="noreferrer">
+                              <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                                >📢
+                              </button>
+                            </a>
+                            </>
+                        )
+                        
+                      }
+                      
+                    </td>
+                    
+                  
+                  </tr> 
+                  
+            
+                ))
+              }
+              </tbody>
+              </table>
+            
+            
+          </div>
+        );
+    
+      } else {
+    
+        return(
+          
+            <p>no se pudo cargar la info</p>
+          
+    
+        );
+    
+      }
+    
+    }
+
     function RenderBarChart({graphData}){
   
       console.log(graphData);
@@ -643,45 +743,37 @@ export default function MyUserX () {
     return (
       
          
-      <div className={`flex flex-col relative z-1  `}>
-          
-              
-              {loading && (
-                <div className="flex">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
-                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                  </svg>
-                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
-                </div>
-
-              )}
-              {servicesContent && (   
-              <>
-                <h5 className="text-slate-700 mt-2 mb-1">Ubicacion: {servicesContent.ubicacion.name+'[id:'+servicesContent.ubicacion.id+']'}</h5>
-                <h6 className="text-slate-700 mb-1">Resumen de Ux - este mes :</h6>
-                <RenderBarChart graphData={servicesContent.uxData} />
-                <h6 className="text-slate-700 mt-2">Últimos detractores:</h6>
-                <RenderList listContent={servicesContent.lastBadBatch}/>
-              </>
-              )}
-            
-                           
-      </div>
+        <div className={`flex flex-col relative z-1  `}>
+                            
+                
+                {servicesContent && (   
+                <>
+                  <h5 className="text-slate-700 mt-2 mb-1">Ubicacion: {servicesContent?.ubicacion?.name+'[id:'+servicesContent?.ubicacion?.id+']'}</h5>
+                  <h6 className="text-slate-700 mb-1">Resumen de Ux - este mes :</h6>
+                  <RenderBarChart graphData={servicesContent?.uxData} />
+                  <h6 className="text-slate-700 mt-2">Maestro de servicios:</h6>
+                  <RenderServicesList servicesListContent={servicesContent?.servicesList}/>
+                  <h6 className="text-slate-700 mt-2">Últimos detractores:</h6>
+                  <RenderDetractorList detractorListContent={servicesContent?.lastBadBatch}/>
+                </>
+                )}
+                                            
+        </div>
  
     );
-  
+    
+
   }
 
   const ServiceResult=({serviceId})=>{   
     
-    const [loading, setLoading] = useState(false);
+    //const [loading, setLoading] = useState(false);
     //const [message, setMessage] = useState("");
-    const [serviceContent, setServiceContent] = useState("");
-    const [content, setContent] = useState("");
+    const [serviceContent, setServiceContent] = useState(false);
+    
 
     console.log(serviceId);
-    let navigate = useNavigate();
+    
   
     useEffect(() => {
 
@@ -700,13 +792,14 @@ export default function MyUserX () {
 
       if(!options){
 
-        setServiceContent("");
-        setError("no se recibieron todos los parametros.")
-        //setMessage("no se recibieron los parametros correctos.")
+        setServiceContent(false);
+        setError(true)
+        setMessage("no se recibieron los parametros correctos.")
         
       } else {
 
-            
+           
+        //setLoading(true)
 
         UserService.getService(options.servId).then(
 
@@ -980,17 +1073,7 @@ export default function MyUserX () {
           
               <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Resultados de Ux </h1>
               <p className="text-sm md:text-md mb-0">Servicio: {serviceContent.service?.name} </p>
-              {loading && (
-                
-                <div className="flex">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
-                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                  </svg>
-                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
-                </div>
-
-              )}
+              
               {serviceContent ? (   
                 <div className="mx-auto mt-2 flex flex-row ">
                   <div className="flex-col">
@@ -1012,7 +1095,7 @@ export default function MyUserX () {
               ) : (
 
                 <div className="flex">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-8 w-8 fill-slate-600" viewBox="0 0 24 24">
                     <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
                     <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
                   </svg>
@@ -1418,9 +1501,7 @@ export default function MyUserX () {
   );
   }
 
-  
- 
-  
+    
   return (
     
       <Template>
@@ -1436,7 +1517,7 @@ export default function MyUserX () {
             
             <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Mi Experiencia de Usuario</h1>
 
-                {message && (
+                {info && (
                   
                   <AlertBox message={message} type="info"/>
                   /*<div className="form-group">
@@ -1447,7 +1528,7 @@ export default function MyUserX () {
                 )}
                 
                 {error && (
-                  <AlertBox message={error} type="error"/>
+                  <AlertBox message={message} type="error"/>
                   /*<div className="form-group">
                     <div className="alert alert-danger" role="alert">
                       {error}
@@ -1459,14 +1540,14 @@ export default function MyUserX () {
 
                     <>
                       <div className={`${!showModal ? (` `):(` hidden `)}`}>
+                        
                         <UbicacionPicker  user={user}/>
 
                         {showServices &&(
 
                           <div className="">
                             
-                            
-                            
+                                                        
                             <ShowServices  ubicacionId={ubicacionId}/>
 
                           </div>
@@ -1475,11 +1556,11 @@ export default function MyUserX () {
                         )}
 
                         
-
+                        
                       
                       
                       </div>
-
+                      
                       {showServiceResult && (
                         <div className="mx-auto">
                           <div className={`absolute top-0 left-0 z-30 bg-slate-600 opacity-80 w-full h-full  ${showModal ? (`  `) : (` hidden `)}`}>
@@ -1515,6 +1596,16 @@ export default function MyUserX () {
                       </div>
                       )}
                       
+                      {loading && (
+                          <div className="flex">
+                            <svg className="animate-spin h-10 w-10 fill-slate-600" viewBox="0 0 24 24">
+                              <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                              <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                            </svg>
+                            <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+                          </div>
+  
+                      )}
 
                     </>
 
@@ -1529,8 +1620,6 @@ export default function MyUserX () {
           </div>   
           
           
-
-        
               
         </div>
 

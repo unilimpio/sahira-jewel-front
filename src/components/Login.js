@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
 import Template from "./common/template/Template";
@@ -6,15 +6,7 @@ import Template from "./common/template/Template";
 
 import AuthService from "../services/auth.service";
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="invalid-feedback d-block">
-        This field is required!
-      </div>
-    );
-  }
-};
+
 
 const Login = () => {
   
@@ -24,6 +16,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false)
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
@@ -53,42 +46,82 @@ const Login = () => {
     const onSubmitPassword = formData.get("password");
 
     if (onSubmitEmail && onSubmitPassword) {
-      AuthService.login(email, password).then(
-        () => {
-          navigate("/home");
-          window.location.reload();
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message
-          
-          console.log(resMessage)
-          
-          const haystack = resMessage.toString();
-          
-          console.log(haystack)
-          
-          const needle = '401'
 
-          const index = haystack.indexof(needle)
-          
-          if(index !== -1){
-            setMessage('Oopps...esto es extrano. El usuario no ha sido reconocido, Revise las credenciales ingresadas y vuelva a intentar.');
+      if(onSubmitEmail.indexOf('.com') !== -1 && onSubmitEmail.indexOf('@') !== -1 ){
+        
+        
+        const regexSpecial = /[!\@#$\*]/;
+        const regexNum = /[0-9]/g;
+        const regexMayus = /[A-Z]/g;
+        const regexMinus = /[a-z]/g;
+        const regexLenght = /^[A-Za-z0-9!\@#$\*]{8,}$/
+        const verifSpecial = onSubmitPassword.match(regexSpecial);
+        const verifNum = onSubmitPassword.match(regexNum);
+        const verifMayus = onSubmitPassword.match(regexMayus);
+        const verifMinus = onSubmitPassword.match(regexMinus);
+        const verifLenght = onSubmitPassword.match(regexLenght);
+       
 
-          } else {
+        console.log(verifLenght);
+        console.log(verifSpecial);
+        console.log(verifNum);
+        console.log(verifMayus);
+        console.log(verifMinus);
 
-            setMessage(resMessage) 
-          }
-          
+        // Expected output: Array ["T", "I"]  
+        if(verifLenght && verifSpecial && verifNum && verifMayus && verifMinus ){
+
+            AuthService.login(email, password).then(
+                  () => {
+                    navigate("/home");
+                    window.location.reload();
+                  },
+                  (error) => {
+                    setError(true)
+                    const resMessage =
+                      (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                      error.message ||
+                      error.toString();
+                      console.log(resMessage)
+                    
+                    if(resMessage.indexOf('401') !== -1){
+                    
+                      setMessage('Oopps...esto es extrano. El usuario no ha sido reconocido, Revise las credenciales ingresadas y vuelva a intentar.');
+
+                    } else {
+
+                      setMessage(resMessage) 
+                    }
+                    
+                  }
+            );
+
+        } else {
+
+          setError(true);
+          setMessage('La contrasena ingresada no es valida. Por favor verifique y vuelva a intentar.')
+
         }
-      );
+
+
+      } else {
+
+        setError(true);
+        setMessage('EL correo ingresado parece ser invalido. Por favor verifique y vuelva a intentar.')
+      
+      }
+
+      
     } else {
-      setLoading(false);
+      
+      setError(true)
+      setMessage('Por favor ingrese su correo y contrasena para continuar.')
+
       
     }
+    setLoading(false);
   };
 
   const wrapperClass = `w-full mx-auto border border-slate-600 p-2 rounded-b-lg md:rounded-b-none bg-white shadow-md`;
