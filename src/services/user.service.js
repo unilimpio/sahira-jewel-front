@@ -291,6 +291,37 @@ const setUxPub = (serviceId, data) => {
     })
 };
 
+const setUxComm = (uxId, data) => {
+  
+  
+
+  return axios
+    .post(API_URL + "setUxComm/" + uxId , data,
+      { headers: {
+        //'Content-Type': 'application/x-www-form-urlencoded',
+        
+        
+      } }
+      
+
+    )
+    .then((response) => {
+      /*
+      if (response.data.flag) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+      */
+
+      return response;
+    })
+    .catch( (error) => {
+      
+
+      return error;
+    
+    })
+};
+
 const setBadUx = (serviceId, uxId, data) => {
   
   
@@ -322,6 +353,21 @@ const setBadUx = (serviceId, uxId, data) => {
     })
 };
 
+const getWeatherInfo = (location) => {
+  
+  return axios
+  .get('http://api.weatherapi.com/v1/forecast.json?q=' + location + '&days=3&lang=es&key=65a40346f3f74a788b8181738252509', 
+    { headers: {}})
+  .catch(function (error) {
+    
+
+  })
+  
+
+  
+  
+};
+
 
 /*
 const getUserBoard = () => {
@@ -347,12 +393,14 @@ const UserService = {
   setTask,
   updateTask,
   setUxPub,
+  setUxComm,
   setBadUx,
   getUbs,
   getServices,
   getService,
   getServicePub,
   getIp,
+  getWeatherInfo,
   //getUserBoard,
   //getModeratorBoard,
   //getAdminBoard,
