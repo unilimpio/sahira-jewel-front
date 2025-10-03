@@ -658,7 +658,7 @@ export default function MyUserX () {
                         !row.ux_is_action_taken &&
                           (
                             <>
-                            <a href={'http://localhost:3000/uxsurvey?sID='+row.service_id+'&c='+row.code_verifier} target="_blank" rel="noreferrer">
+                            <a href={'/uxsurvey?sID='+row.service_id+'&c='+row.code_verifier} target="_blank" rel="noreferrer">
                               <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
                                 >📢
                               </button>
