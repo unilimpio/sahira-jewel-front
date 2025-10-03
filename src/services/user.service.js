@@ -3,8 +3,8 @@ import AuthService from "./auth.service";
 import qs from "qs";
 
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
-//const API_URL = "https://cmx.unilimpio.com/index.php/api/";
-const API_URL = "http://cmxbk/index.php/api/";
+const API_URL = "https://cmx.unilimpio.com/index.php/api/";
+//const API_URL = "http://cmxbk/index.php/api/";
 
 const user = AuthService.getCurrentUser();
 
@@ -356,7 +356,7 @@ const setBadUx = (serviceId, uxId, data) => {
 const getWeatherInfo = (location) => {
   
   return axios
-  .get('http://api.weatherapi.com/v1/forecast.json?q=' + location + '&days=3&lang=es&key=65a40346f3f74a788b8181738252509', 
+  .get('https://api.weatherapi.com/v1/forecast.json?q=' + location + '&days=3&lang=es&key=65a40346f3f74a788b8181738252509', 
     { headers: {}})
   .catch(function (error) {
     
