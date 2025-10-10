@@ -6,9 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../../App.css";
 import CityBackground from "./CityBackground";
 import CitySunny from "./CitySunny";
-import CityNight from "./CityBackground";
+import CityNight from "./CityNight";
 import CityCloudy from "./CityBackground";
-import CityRainy from "./CityBackground";
+import CityRainy from "./CityRainy";
 import CityStorm from "./CityBackground";
 
 import UserService from "../../../services/user.service";
@@ -19,6 +19,9 @@ import UserService from "../../../services/user.service";
 const WeatherReport = ({className, location}) => {
 
   const [weatherInfo,setWeatherInfo] = useState(false);
+  //const [haystack, setHaystack] = useState(false);
+  const [isRain, setIsRain] = useState(false);
+  
   const [error,setError] = useState(false);
   const [message,setMessage] = useState(false);
   
@@ -33,6 +36,14 @@ const WeatherReport = ({className, location}) => {
           console.log(response?.data)
           setWeatherInfo(response?.data)
           //setMessage(response?.message)
+          const haystack = response?.data?.current?.condition?.text;
+
+          console.log(haystack)
+          console.log(haystack.includes('rain'))
+          if (haystack.includes('rain') || haystack.includes('lluvia') || haystack.includes('precipitaciones') ||  haystack.includes('Lluvia')){
+            
+            setIsRain(true);
+          }
 
         },
         (error)=>{
@@ -56,21 +67,21 @@ const WeatherReport = ({className, location}) => {
 
   return (
                        
-        <div className="fixed top-0 right-0  text-[8px] text-right w-1/4 sm:w-1/6 flex flex-col m-2 rounded-lg border border-slate-400">
+        <div className="fixed top-0 right-0  w-1/4 sm:w-fit flex flex-col m-2 rounded-lg border border-slate-400">
           {
             weatherInfo ? (
-              <>
-                <span>{weatherInfo?.location?.name + ', ' + weatherInfo?.location?.region+', ' + weatherInfo?.location?.country}</span>
-                
-                <p className="m-0 p-0"><strong>Temp. Actual: </strong>{weatherInfo?.current?.temp_c} °C - {weatherInfo.current.is_day ? <>Dia</> : <>Noche</> }</p>
-                <p className="m-0 p-0"><strong>Clima Hoy: </strong>
+              <div className={!weatherInfo.current.is_day ? ('text-white'):('')}>
+                <p className="text-[9px] text-right">
+                  {weatherInfo?.location?.name + ', ' + weatherInfo?.location?.region+', ' + weatherInfo?.location?.country}<br/>
+                  <strong>Fecha y Hora Local: </strong>{weatherInfo?.location?.localtime }<br/>
+                  <strong>Clima Hoy: </strong>
                   <img className="w-5 float-right" alt={`forecast for today is ${weatherInfo?.current?.condition.text}`} src={weatherInfo?.current?.condition.icon}/>
-                  
+                  {weatherInfo?.current?.temp_c} °C - {weatherInfo.current.is_day ? ('Dia') : ('Noche') }<br/>
+                 
+                  <strong>Humedad: </strong>{weatherInfo?.current?.humidity}<br/>
                 </p>
-                <p className=""><strong>Humedad: </strong>{weatherInfo?.current?.humidity}</p>
                 
-                
-              </>
+              </div>
             ):(
 
               
@@ -84,17 +95,25 @@ const WeatherReport = ({className, location}) => {
           }
           
           { 
-            weatherInfo?.current?.condition?.code === 1000 && !weatherInfo.location.isDay ?(
+            weatherInfo?.current?.condition?.code === 1000 && weatherInfo.location.isDay &&(
 
               <CitySunny/>
 
-            ): (
-
-              <CityBackground/>
-
             )
-
           }
+          {
+             weatherInfo?.current?.condition?.code === 1000 && !weatherInfo.location.isDay &&(
+              <CityNight/>
+             )
+          }
+          {
+            
+             weatherInfo?.current?.condition?.code !== 1000 && isRain &&(
+              <CityRainy isNight={!weatherInfo.current.is_day}/>
+             )
+          }
+              
+
           
             
 

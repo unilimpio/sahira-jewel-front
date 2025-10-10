@@ -6,17 +6,20 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 
-function DelayedNav({url,sID,c}) {
+function DelayedNav({secs = 5,url,sID,c,active = true}) {
   
   
     const navigate = useNavigate();  
-    const [seconds, setSeconds] = useState(5); // Initialize with 5 seconds
+    const [seconds, setSeconds] = useState(secs); // Initialize with 5 seconds
   
     useEffect(() => {
       // Exit if the countdown has finished
       if (seconds === 0) {
         //return navigate(url+'sID='+sID+'&c='+c)
-        window.location.reload()
+        if(active){
+          window.location.reload()
+        }
+        
       }
   
       // Set up an interval to decrement the seconds every second
