@@ -40,7 +40,7 @@ const WeatherReport = ({className, location}) => {
 
           console.log(haystack)
           console.log(haystack.includes('rain'))
-          if (haystack.includes('rain') || haystack.includes('lluvia') || haystack.includes('precipitaciones') ||  haystack.includes('Lluvia')){
+          if ( haystack.includes('rain') || haystack.includes('lluvia') || haystack.includes('precipitaciones') ||  haystack.includes('Lluvia') ||  haystack.includes('Llovizna')  ){
             
             setIsRain(true);
           }

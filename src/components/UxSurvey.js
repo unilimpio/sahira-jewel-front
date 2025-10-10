@@ -1919,15 +1919,17 @@ export default function UxSurvey () {
                   border-1 border-neutral-500 bg-neutral-100 bg-opacity-30 rounded-md shadow-md
                   ">
                     <div className="p-4" >
-                      <h1 className="text-3xl font-extrabold text-lime-500">Gracias!</h1>
+                      <h1 className="text-3xl font-extrabold text-lime-300">Gracias!</h1>
 
                       <p className="text-sm font-thin m-1 ">
                         Haz calificado:&nbsp; 
+                        <span className="bg-white text-xs">
                         {service && (
                           <>{`${service.service_name}[${service.service_id}] - ${service.ubicacion_description} `}</>
                         )}
+                        </span>
                         <br/>
-                        <span className="font-bold text-md text-sky-700">
+                        <span className="font-bold text-md text-sky-600">
                           
                           Apreciamos tu retroalimentación. Será utilizada para mejorar nuestros servicios. 
                             

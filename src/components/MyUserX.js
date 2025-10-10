@@ -42,7 +42,7 @@ export default function MyUserX () {
   const [showServices, setShowServices] = useState(false);
   const [showServiceResult, setShowServiceResult] = useState(false);
   const [showServiceAction, setShowServiceAction] = useState(false);
-  const [showUxSurvey, setShowUxSurvey] = useState(false);
+ 
 
 
   const [message, setMessage] = useState(false);
@@ -340,7 +340,7 @@ export default function MyUserX () {
       },[ubicacionId]); 
       
 
-    function RenderDetractorList({detractorListContent}){
+    function RenderDetractorList({detractorListContent, scale}){
   
       let checkIconClass = `fill-lime-500`;
 
@@ -377,171 +377,345 @@ export default function MyUserX () {
       }
     
       if(detractorListContent){
-    
-        return(
-          <div className="mb-2 h-64 overflow-y-auto">
-                
-            <table id="eval-display" 
-              className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
-                             
-            
-                  <thead id="table-head" 
-                          className="border border-b-zinc-300 " >
-                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
-                      <td className="p-2"   >
-                        #
-                      </td>
-                      <td className="p-2"   >
-                        Fecha
-                      </td>
-                      <td className="p-2"   >
-                        Ubicacion
-                      </td>
-                      <td className="p-2"  >
-                       Servicio</td> 
-                       <td className="p-2"  >
-                       Calif.</td> 
-                       
-                       <td className="p-2">Tarea</td>
-                      <td className="p-2">Accion</td>
-                      
-  
-                    </tr>
-  
-  
-  
-                  </thead>
-                  <tbody className="text-zinc-600 ">
-            
-              
-              {
-                detractorListContent.map((row,index) => (
-                  
-                  <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+index+'-'+row.service_id} >
-                    <td className="p-2" id={'td-i-'+row.ux_id}   >
-                      { index+1  }
-                    </td>
-                    <td className="p-2 " id={'td-ux-date-created-'+row.ux_id}   >
-                      { row.ux_date_created  }
-                    </td>
-                    <td className="p-2 " id={'td-ub-name-'+row.ux_id}   >
-                      { row.ubicacion_name }
-                    </td>
-                    <td className="p-2 " id={'td-serv-name-'+row.ux_id}   >
-                      { row.service_name }
-                    </td>
-                    <td  id={'td-calif-'+row.ux_id} className={`p-2 relative group
-                      ${(row.ux_feedback_value === "3")? 
-                        (`bg-yellow-400`):(` `)}
-                        ${(row.ux_feedback_value === "2")?
-                          (`bg-orange-400`):(` `)}
-                          ${(row.ux_feedback_value === "1")? 
-                            (`bg-red-400`):(` `)}
-                    `}>
-                      
-                      {row.ux_feedback_value}
-                      
-                        <span id={'span-ux_comments-'+row.ux_id} 
-                          className={`absolute w-40 h-fit right-full sm:left-0 top-0 
-                                      p-2
-                                      transition delay-50 duration-200 ease-in-out
-                                      
-                                    text-xs font-light text-slate-700 bg-white
-                                    
-                                    rounded border border-slate-700
-                                    shadow-md
-                                     
-                                        ${row.ux_comment && 
-                                          (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
-                                        }
-                                    `} >
-                          { row.ux_comment } {row.ux_bad_ux_id + '-'+row.ux_bad_comment}
-                        </span>
-                        
-                      
-                      
-                    </td> 
-                    <td className={``} id={'td-task-id'+row.ux_id}>
-                      {row.ux_is_action_taken && (
+        
+        
+        if(scale === '5-points'){
 
-                        <div className="relative group">
-                          <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                            <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
-                          </svg>
-                          <span id={'span-task-'+row.task_id} 
-                          className={`absolute w-40 h-fit  right-full sm:left-0 top-0 
+          return(
+            <div className="mb-2 h-64 overflow-y-auto">
+                  
+              <table id="eval-display" 
+                className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
+                              
+              
+                    <thead id="table-head" 
+                            className="border border-b-zinc-300 " >
+                      <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
+                        <td className="p-2"   >
+                          #
+                        </td>
+                        <td className="p-2"   >
+                          Fecha
+                        </td>
+                        <td className="p-2"   >
+                          Ubicacion
+                        </td>
+                        <td className="p-2"  >
+                        Servicio</td> 
+                        <td className="p-2"  >
+                        Calif.</td> 
+                        <td className="p-2"  >
+                        Causa</td> 
+                        
+                        <td className="p-2">Tarea</td>
+                        <td className="p-2">Accion</td>
+                        
+    
+                      </tr>
+    
+    
+    
+                    </thead>
+                    <tbody className="text-zinc-600 ">
+              
+                
+                {
+                  detractorListContent.map((row,index) => (
+                    
+                    <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+index+'-'+row.service_id} >
+                      <td className="p-2" id={'td-i-'+row.ux_id}   >
+                        { index+1  }
+                      </td>
+                      <td className="p-2 " id={'td-ux-date-created-'+row.ux_id}   >
+                        { row.ux_date_created  }
+                      </td>
+                      <td className="p-2 " id={'td-ub-name-'+row.ux_id}   >
+                        { row.ubicacion_name }
+                      </td>
+                      <td className="p-2 " id={'td-serv-name-'+row.ux_id}   >
+                        { row.service_name }
+                      </td>
+                      <td  id={'td-calif-'+row.ux_id} className={`p-2 relative group
+                        ${(row.ux_feedback_value === "3")? 
+                          (`bg-yellow-400`):(` `)}
+                          ${(row.ux_feedback_value === "2")?
+                            (`bg-orange-400`):(` `)}
+                            ${(row.ux_feedback_value === "1")? 
+                              (`bg-red-400`):(` `)}
+                      `}>
+                        
+                        {row.ux_feedback_value}
+                        
+                          <span id={'span-ux_comments-'+row.ux_id} 
+                            className={`absolute w-40 h-fit right-full sm:left-0 top-0 
                                         p-2
                                         transition delay-50 duration-200 ease-in-out
-                                          
-                                        text-xs font-light text-slate-700 bg-white
                                         
-                                        rounded border border-slate-700
-                                        shadow-md
-                                        ${!row.ux_task_id && 
-                                          (` hidden `)
-                                        }
-                                        ${row.ux_task_id && 
-                                          (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
-                                        }
-                                    `} >
-                                          { row.task_task } <br/>
-                                          {row.task_description} <br/>
-                                          Asignada a:&nbsp;{row.user_firstname}&nbsp;{row.user_lastname}<br/>
-                                          Plazo:{row.task_due_date}<br/>
-                                          {row.task_is_complete &&
-                                                        (<span className="text-xs">
-                                                          Completada <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                                            <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
-                                                          </svg>
-                                                          Fecha Completada:
-
-                                                        </span>
-                                                          
-                                                        )
-                                                      }
-
+                                      text-xs font-light text-slate-700 bg-white
+                                      
+                                      rounded border border-slate-700
+                                      shadow-md
+                                      
+                                          ${row.ux_comment && 
+                                            (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
+                                          }
+                                      `} >
+                            { row.ux_comment } {row.ux_bad_ux_id + '-'+row.ux_bad_comment}
                           </span>
+                          
+                      </td> 
+                       <td className="p-2 " id={'td-bad-ux-'+row.ux_id+'-'+index}   >
+                        { row.ux_bad_ux_id } - { row.ux_bad_ux_label }
+                      </td>                   
+
+
+                      <td className={``} id={'td-task-id'+row.ux_id}>
+                        {row.ux_is_action_taken && (
+
+                          <div className="relative group">
+                            <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                              <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
+                            </svg>
+                            <span id={'span-task-'+row.task_id} 
+                            className={`absolute w-40 h-fit  right-full sm:left-0 top-0 
+                                          p-2
+                                          transition delay-50 duration-200 ease-in-out
+                                            
+                                          text-xs font-light text-slate-700 bg-white
+                                          
+                                          rounded border border-slate-700
+                                          shadow-md
+                                          ${!row.ux_task_id && 
+                                            (` hidden `)
+                                          }
+                                          ${row.ux_task_id && 
+                                            (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
+                                          }
+                                      `} >
+                                            { row.task_task } <br/>
+                                            {row.task_description} <br/>
+                                            Asignada a:&nbsp;{row.user_firstname}&nbsp;{row.user_lastname}<br/>
+                                            Plazo:{row.task_due_date}<br/>
+                                            {row.task_is_complete &&
+                                                          (<span className="text-xs">
+                                                            Completada <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                                              <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
+                                                            </svg>
+                                                            Fecha Completada:
+
+                                                          </span>
+                                                            
+                                                          )
+                                                        }
+
+                            </span>
+                          
+                          </div>
+                          
+                          
                         
-                        </div>
                         
-                        
-                      
-                      
-                        )
-                        
-                      
-                      }
-                      
-                    </td>
-                    
-                    <td id={'td-action-btns-'+row.ux_id} className="">
-                      <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
-                        onClick={()=>handleLensClick(row.service_id,row.ux_id)}>🔍
-                      </button>&nbsp;
-                      {
-                        !row.ux_is_action_taken &&
-                          (
-                            <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
-                              onClick={()=>handleActionClick(row.service_id,row.ux_id)}>📢
-                            </button>
                           )
+                          
                         
-                      }
+                        }
+                        
+                      </td>
                       
-                    </td>
+                      <td id={'td-action-btns-'+row.ux_id} className="">
+                        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                          onClick={()=>handleLensClick(row.service_id,row.ux_id)}>🔍
+                        </button>&nbsp;
+                        {
+                          !row.ux_is_action_taken &&
+                            (
+                              <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                                onClick={()=>handleActionClick(row.service_id,row.ux_id)}>📢
+                              </button>
+                            )
+                          
+                        }
+                        
+                      </td>
+                      
                     
-                  
-                  </tr> 
-                  
-            
-                ))
-              }
-              </tbody>
+                    </tr> 
+                    
+              
+                  ))
+                }
+                    </tbody>
               </table>
-            
-            
-          </div>
-        );
+              
+              
+            </div>
+          );
+
+        } else {
+
+
+          return(
+            <div className="mb-2 h-max-64 overflow-y-auto">
+                  
+              <table id="detractors-list" 
+                className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
+                              
+              
+                    <thead id="table-head" 
+                            className="border border-b-zinc-300 " >
+                      <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
+                        <td className="p-2"   >#</td>
+                        <td className="p-2"   >Fecha</td>
+                        <td className="p-2"   >Ubicacion</td>
+                        <td className="p-2"  >Servicio</td> 
+                        <td className="p-2"  >Calif.</td>
+                        <td className="p-2"  >Causa</td> 
+                        
+                        <td className="p-2">Tarea</td>
+                        <td className="p-2">Accion(es)</td>
+                        
+    
+                      </tr>
+    
+    
+    
+                    </thead>
+                    <tbody className="text-zinc-600 ">
+              
+                
+                {
+                  detractorListContent.map((row,index) => (
+                    
+                    <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+index+'-'+row.service_id} >
+                      <td className="p-2" id={'td-i-'+row.ux_id}   >
+                        { index+1  }
+                      </td>
+                      <td className="p-2 " id={'td-ux-date-created-'+row.ux_id}   >
+                        { row.ux_date_created  }
+                      </td>
+                      <td className="p-2 " id={'td-ub-name-'+row.ux_id}   >
+                        { row.ubicacion_name }
+                      </td>
+                      <td className="p-2 " id={'td-serv-name-'+row.ux_id}   >
+                        { row.service_name }
+                      </td>
+                      <td  id={'td-calif-'+row.ux_id} className={`p-2 relative group
+                        
+                            ${(row.ux_feedback_value === "0")? 
+                              (`bg-red-400`):(` `)}
+                      `}>
+                        
+                        {row.ux_feedback_value}
+                        
+                          <span id={'span-ux_comments-'+row.ux_id} 
+                            className={`absolute w-40 h-fit right-full sm:left-0 top-0 
+                                        p-2
+                                        transition delay-50 duration-200 ease-in-out
+                                        
+                                      text-xs font-light text-slate-700 bg-white
+                                      
+                                      rounded border border-slate-700
+                                      shadow-md
+                                      
+                                          ${row.ux_comment && 
+                                            (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
+                                          }
+                                      `} >
+                            { row.ux_comment } {row.ux_bad_ux_id + '-'+row.ux_bad_comment}
+                          </span>
+                          
+                      </td>
+
+                      <td className="p-2 " id={'td-ux-bad-ux-id-'+row.ux_id+'-'+index}   >
+                        { row.ux_bad_ux_id } - { row.ux_bad_ux_label }
+                      </td>
+
+                      <td className={``} id={'td-task-id'+row.ux_id}>
+                        {row.ux_is_action_taken && (
+
+                          <div className="relative group">
+                            <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                              <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
+                            </svg>
+                            <span id={'span-task-'+row.task_id} 
+                            className={`absolute w-40 h-fit  right-full sm:left-0 top-0 
+                                          p-2
+                                          transition delay-50 duration-200 ease-in-out
+                                            
+                                          text-xs font-light text-slate-700 bg-white
+                                          
+                                          rounded border border-slate-700
+                                          shadow-md
+                                          ${!row.ux_task_id && 
+                                            (` hidden `)
+                                          }
+                                          ${row.ux_task_id && 
+                                            (` opacity-0 -z-50 group-hover:opacity-100 group-hover:z-50 `)
+                                          }
+                                      `} >
+                                            { row.task_task } <br/>
+                                            {row.task_description} <br/>
+                                            Asignada a:&nbsp;{row.user_firstname}&nbsp;{row.user_lastname}<br/>
+                                            Plazo:{row.task_due_date}<br/>
+                                            {row.task_is_complete &&
+                                                          (<span className="text-xs">
+                                                            Completada <svg className={checkIconClass} height="16px" width="16px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                                              <path className="cls-1" d="M13,5.28671,6.18205,12,3,8.86709l1.36346-1.343,1.87517,1.8462L11.69312,4Z"/>
+                                                            </svg>
+                                                            Fecha Completada:
+
+                                                          </span>
+                                                            
+                                                          )
+                                                        }
+
+                            </span>
+                          
+                          </div>
+                          
+                          
+                        
+                        
+                          )
+                          
+                        
+                        }
+                        
+                      </td>
+                      
+                      <td id={'td-action-btns-'+row.ux_id} className="">
+                        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                          onClick={()=>handleLensClick(row.service_id,row.ux_id)}>🔍
+                        </button>&nbsp;
+                        {
+                          !row.ux_is_action_taken &&
+                            (
+                              <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+                                onClick={()=>handleActionClick(row.service_id,row.ux_id)}>📢
+                              </button>
+                            )
+                          
+                        }
+                        
+                      </td>
+                      
+                    
+                    </tr> 
+                    
+              
+                  ))
+                }
+                    </tbody>
+              </table>
+              
+              
+            </div>
+          );
+
+      }
+        
+
+
     
       } else {
     
@@ -595,7 +769,7 @@ export default function MyUserX () {
       if(servicesListContent){
     
         return(
-          <div className="mb-2 h-64 overflow-y-auto">
+          <div className="mb-1 h-max-64 overflow-y-auto">
                 
             <table id="services-list-display" 
               className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
@@ -696,45 +870,95 @@ export default function MyUserX () {
     
     }
 
-    function RenderBarChart({graphData}){
+    function RenderBarChart({graphData, graphDataBin, scale}){
   
       console.log(graphData);
-      const data = graphData;
+      let data = null;
       
+      if(scale === '5-points'){
         
-      if(graphData){
-    
-        return (
-          <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2 overflow-auto text-[8px]">
-            <ComposedChart
-              layout="horizontal"
-              width={300}
-              height={300}
-              data={data}
-              margin={{
-                top: 20,
-                right: 5,
-                bottom: 20,
-                left: 5,
-            }}
-          >
-              <CartesianGrid stroke="#f5f5f5" />
-              <YAxis type="number" domain={[0, 10]} allowDataOverflow allowDecimals label={{ value: '# Calificaciones', angle: -90, position: 'insideLeft' }}/>
-              <XAxis dataKey="name" type="category" scale="band" />
-              <Tooltip />
-              <Legend />
+        data = graphData;
+
+      } else {
+
+        data = graphDataBin;
+
+      }
+
+
+        
+      if(data){
+
+        if(scale === '5-points'){
+
+            return (
+              <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2 overflow-auto text-[8px]">
+                <ComposedChart
+                  layout="horizontal"
+                  width={300}
+                  height={300}
+                  data={data}
+                  margin={{
+                    top: 20,
+                    right: 5,
+                    bottom: 20,
+                    left: 5,
+                }}
+              >
+                  <CartesianGrid stroke="#f5f5f5" />
+                  <YAxis type="number" domain={[0, 10]} allowDataOverflow allowDecimals label={{ value: '# Calificaciones', angle: -90, position: 'insideLeft' }}/>
+                  <XAxis dataKey="name" type="category" scale="band" />
+                  <Tooltip />
+                  <Legend />
+                  
+                  <Bar dataKey="1" barSize={10} fill="#F93827" />
+                  <Bar dataKey="2" barSize={10} fill="#FF9D23" />
+                  <Bar dataKey="3" barSize={10} fill="#FFD65A" />
+                  <Bar dataKey="4" barSize={10} fill="#D3EE98" />
+                  <Bar dataKey="5" barSize={10} fill="#A0D683" />
+                  <Line dataKey="Average" stroke="#41B3A2" />
+                </ComposedChart>
+                
+              </div>
               
-              <Bar dataKey="1" barSize={10} fill="#F93827" />
-              <Bar dataKey="2" barSize={10} fill="#FF9D23" />
-              <Bar dataKey="3" barSize={10} fill="#FFD65A" />
-              <Bar dataKey="4" barSize={10} fill="#D3EE98" />
-              <Bar dataKey="5" barSize={10} fill="#A0D683" />
-              <Line dataKey="Average" stroke="#41B3A2" />
-            </ComposedChart>
+            );
+
+        } else {
+
+
+            return (
+              <div className="bg-neutral-100 border border-slate-700 rounded-md mb-2 overflow-auto text-[8px]">
+                <ComposedChart
+                  layout="horizontal"
+                  width={300}
+                  height={300}
+                  data={data}
+                  margin={{
+                    top: 20,
+                    right: 5,
+                    bottom: 20,
+                    left: 5,
+                }}
+              >
+                  <CartesianGrid stroke="#f5f5f5" />
+                  <YAxis type="number" domain={[0, 10]} allowDataOverflow allowDecimals label={{ value: '# Calificaciones', angle: -90, position: 'insideLeft' }}/>
+                  <XAxis dataKey="name" type="category" scale="band" />
+                  <Tooltip />
+                  <Legend />
+                  
+                  <Bar dataKey="0" barSize={10} fill="#F93827" />
+                 
+                  <Bar dataKey="1" barSize={10} fill="#A0D683" />
+                  <Line dataKey="Average" stroke="#41B3A2" />
+                </ComposedChart>
+                
+              </div>
+              
+            );
+
+        }
+    
             
-          </div>
-          
-        );
     
       } 
     
@@ -750,11 +974,18 @@ export default function MyUserX () {
                 <>
                   <h5 className="text-slate-700 mt-2 mb-1">Ubicacion: {servicesContent?.ubicacion?.name+'[id:'+servicesContent?.ubicacion?.id+']'}</h5>
                   <h6 className="text-slate-700 mb-1">Resumen de Ux - este mes :</h6>
-                  <RenderBarChart graphData={servicesContent?.uxData} />
+                  <RenderBarChart graphData={servicesContent?.uxData} graphDataBin={servicesContent?.uxDataBin} scale={servicesContent?.configs?.scale_type}/>
                   <h6 className="text-slate-700 mt-2">Maestro de servicios:</h6>
                   <RenderServicesList servicesListContent={servicesContent?.servicesList}/>
                   <h6 className="text-slate-700 mt-2">Últimos detractores:</h6>
-                  <RenderDetractorList detractorListContent={servicesContent?.lastBadBatch}/>
+                  {servicesContent?.configs?.scale_type === '5-points'? (
+                      <RenderDetractorList detractorListContent={servicesContent?.lastBadBatch} scale={servicesContent?.configs?.scale_type}/>
+                  ) : (
+                      <RenderDetractorList detractorListContent={servicesContent?.lastBadBatchBin} scale={servicesContent?.configs?.scale_type}/>
+                  )
+                  }
+                  
+                  
                 </>
                 )}
                                             
