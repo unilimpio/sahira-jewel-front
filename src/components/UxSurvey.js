@@ -1,12 +1,12 @@
 import React, { useState, useEffect} from "react";
 
-import { Link, Navigate} from "react-router";
+
 import { useNavigate } from "react-router";
 
 import { useSearchParams } from "react-router";
 
 import UserService from "../services/user.service";
-import AuthService from "../services/auth.service";
+
 
 //import RenderPuntosForm from "./Puntos"
 
@@ -14,11 +14,11 @@ import logoUni from '../logo-unilimpio.svg';
 
 import Logo from "./common/LogoUx";
 import WeatherReport from "./common/template/WeatherReport";
-import CityBackground from "./common/template/CityBackground";
-import { use } from "react";
+
 
 import DelayedNav from "./common/DelayedNav";
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 
 export default function UxSurvey () {
@@ -81,7 +81,7 @@ export default function UxSurvey () {
     const [comments, setComments] = useState("");
 
     const [isBadUx, setIsBadUx] = useState(false);
-    const [badUxOther, setBadUxOther] = useState('vacio');
+    
     const [showBadUxModal, setShowBadUxModal] = useState(false)
 
     const [uxId, setUxId] = useState(false);
@@ -154,6 +154,8 @@ export default function UxSurvey () {
    
       return;
     }
+
+    
 
     useEffect(() => {
       
@@ -532,8 +534,12 @@ export default function UxSurvey () {
                                 rounded-md flex flex-row sm:flex-col items-center text-lg 
                                 transition delay-150 duration-300 ease-in-out visited:-translate-y-5
                                 `;
-       const inputClassName = `transition delay-150 duration-300 ease-in-out hover:scale-110 focus:-translate-y-5`;
+       const inputClassName = `transition delay-150 duration-300 ease-in-out hover:scale-110 focus:-translate-y-5 `;
+
+       const buttonClassName = `transition delay-100 duration-500 ease-in-out hover:scale-110 focus:-translate-y-8 focus:opacity-5`;
       
+
+       const [badUxOther, setBadUxOther] = useState('');
 
       function CancelProcessing() {
                   
@@ -551,14 +557,15 @@ export default function UxSurvey () {
 
       }
       
-      const sleep = ms => new Promise(r => setTimeout(r, ms));  
+      
 
         
-      function handleSubmit(event) {
+      async function handleSubmit(event) {
 
+        
         event.preventDefault();
 
-        
+        await sleep(500);
         // Access the submitter element
         const submitter = event.nativeEvent.submitter;
 
@@ -644,19 +651,27 @@ export default function UxSurvey () {
 
       }
 
-      function handleSubmitBadUx(event) {
+      async function handleSubmitBadUx(event) {
 
         event.preventDefault();
 
-        const onSubmitBadComments = null;
+        await sleep(500);
+
+        //const onSubmitBadComments = null;
         
         // Access the submitter element
         const submitter = event.nativeEvent.submitter;
 
+        const form = event.target;
+        //console.log(form)
+        const formData = new FormData(form);
+        //console.log(formData)
+        const onSubmitBadComments = formData.get("bad-ux-other");
+        //console.log(onSubmitBadComments)
         // Get the value from the submitter
         const buttonValue = submitter.value;
 
-        console.log(buttonValue)
+        //console.log(buttonValue)
         //lets prepare the data and the fields that will be send via API
         //these depend wether the user pressed a button that triggers BadUx mode
 
@@ -667,14 +682,9 @@ export default function UxSurvey () {
         setBadUxId(buttonValue);
           // Perform further actions with the buttonValue
 
-        if(buttonValue === 9999){
+        if(buttonValue === '9999'){
 
-              const form = event.target;
-
-              const formData = new FormData(form);
-              const onSubmitBadComments = formData.get("bad-ux-other");
               setBadComments(onSubmitBadComments)
-
 
         }
             
@@ -684,7 +694,7 @@ export default function UxSurvey () {
               //comments: formData.get("comments"),
               //feedback_value: parseInt(onSubmitUxValue, 10),
               feedback_value: 0,
-              bad_comments: onSubmitBadComments || null,
+              bad_comments: onSubmitBadComments,
               bad_ux_id: buttonValue,
             //  comments: comments,
   
@@ -835,21 +845,31 @@ export default function UxSurvey () {
         setIsRadio(+event.currentTarget.value);
       };
 
-      const handleClickOk = (event) => {
+      const handleClickOk = async (event) => {
         // string passed in
         // a string returned by default
-        console.log(event.currentTarget.value);
+        //await sleep(3000);
+        //console.log(event.currentTarget.value);
         console.log("user clicked the OK button");
+        //await sleep(10000);
+        
+        //const handleButtonClick = async () => {
+        //  setMessage('Pausing for 2 seconds...');
+        //  await sleep(2000); // Pause execution for 2000 milliseconds (2 seconds)
+        //  setMessage('After the pause!');
+        //};
         // add + to the event to make the value a number
         //setFeedbackValue(+event.currentTarget.value);
        
         
       };
 
-      const handleClickNotok = (event) => {
+      const handleClickNotok = async (event) => {
+
+        await sleep(500);
         // string passed in
         // a string returned by default
-        console.log(event.currentTarget.value);
+        //console.log(event.currentTarget.value);
         // add + to the event to make the value a number
         //setFeedbackValue(+event.currentTarget.value);
         console.log("user clicked the NOT OK button!...activating badUx mode")
@@ -867,18 +887,16 @@ export default function UxSurvey () {
         
       };
 
-      
-      
 
-      const handleBadUxOther = (event) => {
+      function handleBadUxOther (event)  {
        // string passed in
        //event.preventDefault()//
        // a string returned by default
-       console.log(event.currentTarget.value);
+       //console.log(event.currentTarget.value);
        
        // add + to the event to make the value a number
-       setBadUxOther(event.currentTarget.value);
-       console.log(badUxOther)
+       setBadUxOther(event.target.value);
+       //console.log(badUxOther)
        
       };
 
@@ -1107,8 +1125,7 @@ export default function UxSurvey () {
         return(
     
           <div className="">
-            <div className="flex bg-neutral-100 bg-opacity-50 rounded-md shadow-md
-                  ">
+            <div className="flex bg-neutral-100 bg-opacity-50 rounded-md shadow-md">
                     <div className={isBadUx ? 'hidden' : 'p-4'} >
                       <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
 
@@ -1116,9 +1133,9 @@ export default function UxSurvey () {
                                 
                               <div className="relative " >
                                 
-                                <div className={isBadUx ? 'hidden' : ''} id="ux-options-holder" >
+                                <div className="" id="ux-options-holder" >
                                   <div className="flex w-full mx-auto">
-                                    <p className="text-sm font-thin mb-0">
+                                    <p className="text-sm font-thin -mt-4">
                                           Por favor califique su experiencia con este servicio:<br/>
                                           <span className="bg-white  shadow-sm p-1text-zinc-500 font-extrathin  text-xs ">&nbsp;
                                               {`${service?.service_name}  [id: ${service?.service_id}].`}
@@ -1129,12 +1146,12 @@ export default function UxSurvey () {
                                     
                                       
                                       <button
-                                          className={inputClassName}
+                                          className={buttonClassName}
                                           type='submit'
                                         
                                           
                                           value='1'
-                                          
+                                          onClick={handleClickOk}
                                           
                                         >
                                         <p className="text-xs" ><span className={` text-8xl `}>{emojiLike}</span><br/>
@@ -1143,7 +1160,7 @@ export default function UxSurvey () {
                                       </button>
                                       
                                       <button
-                                          className={inputClassName}
+                                          className={buttonClassName}
                                           type='button'
                                           
                                         
@@ -1160,103 +1177,8 @@ export default function UxSurvey () {
                                       
                                   </div>
                                 </div>
-                                  
-
-                                <div className={isBadUx ? '' : 'hidden'} id="bad-ux-options-holder">
-                                        <p className="text-red-400 text-sm">Lamentamos que no estes satisfecho, por favor dinos cual fue la razon?</p>
-                                          <div className='flex flex-col sm:grid sm:grid-cols-3 '>
-                                              
-                                              {alertCriterios && (
-                                                alertCriterios.map((criterio, index) =>
-                                              
-                                                  
-                                                  <button
-                                                        key={"button-bad-ux-"+index+criterio.id}
-                                                        className={inputClassName}
-                                                        type='submit'
-                                                        id={'button-bad-ux-'+criterio.id}
-                                                        
-                                                        value={criterio.id}
-                                                        onChange={handleClickBadUx}
-                                                        
-                                                  >
-                                                      <p className="text-xs font-thin" ><span className={(isRadio === criterio.id)?`text-6xl `:'text-6xl '}>{criterio.emoji}</span><br/>
-                                                        {` `+criterio.label}
-                                                      </p>
-                                                    
-                                                  </button>
-                                              
-                                                ))}
-
-                                                <label htmlFor={`bad-ux-other`} className="text-slate-700 border text-xs font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                                                  {`Otro:`}         
-                                  
-                                                    <textarea 
-                                                      className={
-                                                        `w-full text-xs font-thin 
-                                                        border-zinc-800 
-                                                        border rounded-md 
-                                                        focus:shadow-sm 
-                                                        focus:ring-slate-500 focus:ring-1 focus:outline-none
-                                                        
-                                                        
-                                                      `}
-
-                                                      name="bad-ux-other" 
-                                                      id="bad-ux-other"
-                                                      
-                                                      cols="32"
-                                                      value={isBadUxOther}
-                                                      
-                                                      onChange={ handleBadUxOther }
-                                                    /> 
-                                                    <div className="flex justify-end">
-                                                      <button value="9999" type="submit" 
-                                                        className="border border-slate-400 bg-neutral text-slate-600 
-                                                                    m-0 p-1 rounded-md
-                                                                    text-[8px]
                                                                     
-                                                                  ">
-                                                          Enviar
-                                                      </button> 
-                                                    </div>
-                                                </label> 
-                                                
-                                          </div>
-                                </div>  
-                                
-                              
-                                    
                               </div>
-                                
-                                
-                              <div className=" flex justify-evenly my-2">
-                            
-                                  {
-            /*
-            <>
-                                      <SaveButton
-                                        loading={loading} 
-                                        className={`
-                                          `}>{`${emojiSave} ${labelSave}`}
-                                          
-                                      </SaveButton>
-                                      
-                                      <CancelButton 
-                                        className=" ">
-                                          
-                                          {`${emojiClose} ${labelClose}`}
-                                      </CancelButton>           
-                                      
-                                    </>
-            */
-                                  }
-                                    
-                                  
-                              
-                          
-                              </div>
-
                                 
                                 
                                     
@@ -1275,6 +1197,8 @@ export default function UxSurvey () {
                         
                       </form>
                     </div>
+
+
                     <div className={isBadUx ? 'p-4' : 'hidden'} >
                       <form id="ux-feedback-form" onSubmit={handleSubmitBadUx}  className="">
 
@@ -1285,14 +1209,14 @@ export default function UxSurvey () {
                                 <div className="" id="ux-options-holder" >
                                   <div className="flex w-full mx-auto">
                                     <p className="text-xs font-thin mb-0 -mt-4">
-                                          Haz calificado:<br/>
+                                          Haz calificado:&nbsp;
                                           <span className="bg-white  shadow-sm p-1text-zinc-500 font-extrathin  text-xs ">&nbsp;
                                               {`${service?.service_name}  [id: ${service?.service_id}].`}
                                           </span> 
                                     </p>
                                   </div>
                                   <div className={isBadUx ? '' : 'hidden'} id="bad-ux-options">
-                                        <p className="text-red-400 text-sm">Lamentamos que no estes satisfecho, por favor dinos cual fue la razon?</p>
+                                        <p className="text-red-600 bg-red-300 text-sm">Lamentamos que no estes satisfecho, por favor dinos cual fue la razon?</p>
                                           <div className='flex flex-col sm:grid sm:grid-cols-3 '>
                                               
                                               {alertCriterios && (
@@ -1301,7 +1225,7 @@ export default function UxSurvey () {
                                                   
                                                   <button
                                                         key={"button-bad-ux-"+index+criterio.id}
-                                                        className={inputClassName}
+                                                        className={buttonClassName}
                                                         type='submit'
                                                         id={'button-bad-ux-'+criterio.id}
                                                         
@@ -1507,261 +1431,7 @@ export default function UxSurvey () {
   
     }
 
-    const RenderBadUxInterface = () => { 
-   
-      let navigate = useNavigate();
-
-      //STATE
-      const [isRadio, setIsRadio] = useState(0);
-      const [isComments, setIsComments] = useState("");
-      
-      const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 m-1 rounded-md flex flex-row items-center text-xl`;
-      const inputClassName = ` m-2 w-10 h-10`;
-     
-
-      function CancelProcessing() {
-                  
-                  setFeedbackValue(null);
-                  setComments("");
-                  setLoading(false);
-                  setServiceId(null);
-                
-                  
-
-      }
-      
-
-      function handleSubmit(event) {
-
-        event.preventDefault();
-        setLoading(true);
-
-        const form = event.target;
-
-        const formData = new FormData(form);
-        const values = [...formData.entries()];
-        const formElements = form.elements;
-        
-        const onSubmitBadComments = formData.get("bad-comments");
-        const onSubmitBadUxId = formData.get("bad-ux-feedback-id");
-
-        setBadUxId(onSubmitBadUxId);
-        setBadComments(onSubmitBadComments);
-        
-        
-        console.log(values);
-        
-        console.log(form);
-        
-        console.log(formElements);
-        
-        console.log(onSubmitBadComments);
-
-        console.log(onSubmitBadUxId);
-        
-        
-
-        if (!error) {
-                    
-          const data = {
-
-            //feedback_value: parseInt(formData.get("ux-feedback-value")),
-            //comments: formData.get("comments"),
-            //feedback_value: parseInt(onSubmitUxValue, 10),
-            feedback_value: feedbackValue,
-            comments: comments,
-            bad_ux_id: onSubmitBadUxId,
-            bad_comments: onSubmitBadComments,
-
-  
-          }
-
-          console.log(data);
-              
-          UserService.setUxPub(serviceId, data )
-              .then(
-                (response) => {
-                
     
-                    setContent(response.data);
-                    
-                    if(response.status === 204){
-                      setError(error + response.statusText)
-                      CancelProcessing();
-                      
-                    }
-                    
-                    console.log(response);              
-                    //console.log(response.status);
-                    //console.log(response.statusText)
-      
-                    //console.log(response);              
-                    console.log(response.status);
-                    console.log(response.statusText)
-                    
-                    //if(response.data.message !== undefined){
-                    console.log(response.data?.message)
-                    setMessage(response.data?.message)
-                    //}
-                    
-                    setIsComplete(true);
-                    localStorage.setItem("cs_uxsurvey_complete",true)
-                    setLoading(false);
-                    
-                    
-                        
-                      
-    
-                })
-                .catch( 
-                  (error) => {
-                    const resMessage =
-                      (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                      error.message || error.statusText ||
-                      error.toString();
-                    //setMessage(resMessage);
-                    let errorMsg = 'No se pudo procesar la operacion: ';
-                    setError(errorMsg + resMessage)
-                    CancelProcessing();
-                  }
-                );
-        }       
-        
-
-        
-        
-      }     
-
-      // HANDLE THE ONCHANGE HERE
-
-      const handleChange = (e) => {
-        // string passed in
-        // a string returned by default
-        console.log(e.currentTarget.value);
-        // add + to the event to make the value a number
-        setIsRadio(e.currentTarget.value);
-
-      };
-
-      const handleComments = (e) => {
-        // string passed in
-        // a string returned by default
-        console.log(e.currentTarget.value);
-        // add + to the event to make the value a number
-        setIsComments(e.currentTarget.value);
-      };
-
-     
-   
-      return(
-   
-         <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
-                                 
-                  <div className="container flex-col" id="bad-ux-options-holder">
-                    <p className="text-red-400">Lamentamos que tu experiencia no haya sido positiva, podrías indicarnos por qué? Esto nos permitirá mejorar nuestro servicio!</p>
-                    <div className='flex flex-col sm:flex-row justify-evenly overflow-y-scroll'>
-                        
-                        {alertCriterios && (
-                          alertCriterios.map((criterio, index) =>
-                        
-                            <label 
-                              key={criterio.id} htmlFor={'radio-'+criterio.id} className={labelClassName}>
-                                <input
-                                
-                                  className={inputClassName}
-                                  type='radio'
-                                  id={'radio-'+criterio.id}
-                                  name="bad-ux-feedback-id"
-                                  value={criterio.id}
-                                  onChange={handleChange}
-                                  checked={isRadio === criterio.id}
-                                />
-                                <span className={(isRadio === criterio.id)?`animate-bounce`:' '}>{criterio.emoji}</span>{` `+criterio.label}
-                              
-                            </label>
-                        
-                          ))}
-
-                    </div>
-                  </div>  
-                   
-                   <div className="mx-auto">
-                     {/*<CommentsInput className="">Comentarios (opcional)</CommentsInput>*/}
-                     <label htmlFor={`bad-comments`} className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                       {`Otro:`}         
-                       
-                       <textarea 
-                         className={
-                           `w-full text-xs font-thin 
-                           border-zinc-800 
-                           border rounded-md 
-                           focus:shadow-sm 
-                           focus:ring-slate-500 focus:ring-1 focus:outline-none
-                           
-                           
-                         `}
-
-                         name="bad-comments" 
-                         id="bad-comments"
-                         
-                         cols="32"
-                         value={isComments}
-                         
-                         onChange={ handleComments }
-                       /> 
-                     </label>
-                     <div className=" flex justify-evenly my-2">
-                     
-                       <>
-                         <SaveButton 
-                           className={`
-                             `}>{`${emojiSave} ${labelSave}`}
-                             
-                         </SaveButton>
-                         
-                         <CancelButton 
-                           className=" ">
-                             
-                             {`${emojiClose} ${labelClose}`}
-                         </CancelButton>           
-                         
-                       </>
-                     
-                     
-             
-                   </div>
-
-
-                   </div>
-                   
-                   
-
-                   
-                   
-                       
-            
-           {error && (
-                         
-                         <div className="alert alert-danger " role="alert">
-                             {error}
-                         </div>
-                                 
-               )}      
-   
-           
-   
-   
-           
-         </form>
-       
-     );
-
-     
- 
-    }
-
     const Final = ()=> { 
       
       const [isComments, setIsComments] = useState("");
