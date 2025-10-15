@@ -219,9 +219,9 @@ export default function UxSurvey () {
               
               
               setAlertCriterios(response?.data?.alert_criterios);                
-              setAlertMode(response?.data?.service.alert_mode);
+              //setAlertMode(response?.data?.service.alert_mode);
               
-              setAlertLevel(response?.data?.service.alert_value);
+              //setAlertLevel(response?.data?.service.alert_value);
               
               setScaleType(response?.data?.account_configs?.scale_type);
               setAccountConfigs(response?.data?.account_configs);  
@@ -745,7 +745,7 @@ export default function UxSurvey () {
         console.log(alertMode);
 
         //lets handle the alert system whic is triggered by the submision of a feedback value
-        if(alertMode){   
+        /*if(alertMode){   
           if(scaleType === '5-points'){
 
             if(buttonValue <= alertLevel){
@@ -772,7 +772,7 @@ export default function UxSurvey () {
               
           }
 
-        }
+        }*/
         
         
         setLoading (true);
