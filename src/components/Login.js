@@ -50,7 +50,7 @@ const Login = () => {
       if(onSubmitEmail.indexOf('.com') !== -1 && onSubmitEmail.indexOf('@') !== -1 ){
         
         
-        const regexSpecial = /[!\@#$\*]/;
+        const regexSpecial = /[!@#$*.+]/;
         const regexNum = /[0-9]/g;
         const regexMayus = /[A-Z]/g;
         const regexMinus = /[a-z]/g;
