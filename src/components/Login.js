@@ -69,8 +69,8 @@ const Login = () => {
         console.log(verifMinus);
 
         // Expected output: Array ["T", "I"]  
-        if(verifLenght && verifSpecial && verifNum && verifMayus && verifMinus ){
-
+        //if(verifLenght && verifSpecial && verifNum && verifMayus && verifMinus ){
+        if(onSubmitPassword !== null ){
             AuthService.login(email, password).then(
                   () => {
                     navigate("/home");

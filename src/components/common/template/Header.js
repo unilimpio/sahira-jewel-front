@@ -10,13 +10,16 @@ import AuthService from "../../../services/auth.service";
 
 import Logo from "../Logo";
 
-
+const BACK = "https://cmx.unilimpio.com/";
+//const BACK = "http://cmxbk/";
 
 
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
 
+
+const user = AuthService.getCurrentUser();
 
 const Header = ({isLoggedIn}) => {
   //const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -43,7 +46,9 @@ const Header = ({isLoggedIn}) => {
           place-content-between
           bg-gradient-to-tl from-sky-600 to-white border 
           rounded-t-md 
-          border-slate-800`
+          border-slate-800
+          
+          `
           
         }
         
@@ -113,6 +118,23 @@ const Header = ({isLoggedIn}) => {
           
         
         </nav>
+        {user && 
+          parseInt(user?.confs?.show_org_logo_frontend, 10) ? (
+            <div className="absolute top-0 right-0 w-fit flex-col p-1 mb-0 content-start justify-items-end">
+              <p className="text-[8px] text-slate-700 mb-0">
+                <span className="">By:</span>
+                <img src={BACK+`assets/images/`+user.org_logo} 
+                    alt="Licencia de uso otorgada a" 
+                    className="max-w-16 max-h-10 m-0 float-right"
+                />
+              </p>
+                
+              
+
+            </div>
+          ):('')
+          
+        }
         
         
       </header> 

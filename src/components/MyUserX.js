@@ -33,7 +33,7 @@ import AuthService from "../services/auth.service";
 
 export default function MyUserX () {
 
-  
+  const navigate = useNavigate();
   const [ubicacionId, setUbicacionId] = useState(null);
   const [serviceId, setServiceId] = useState(null);
   const [uxId, setUxId] = useState(null);
@@ -268,7 +268,7 @@ export default function MyUserX () {
   }
 
  
-  const ShowServices=({ubicacionId})=>{   
+  const ShowUbicacion=({ubicacionId})=>{   
     
     
     //const [message, setMessage] = useState("");
@@ -276,6 +276,10 @@ export default function MyUserX () {
   
       useEffect(()=>{
 
+        if(!user){
+                    
+          navigate('/login');
+        }
         
           function createOptions() {
           
@@ -327,6 +331,12 @@ export default function MyUserX () {
                     setError(true);
                     
                     setLoading(false)
+
+                    if(_content.indexOf('401') !== -1){
+                      localStorage.removeItem("user");
+                      
+                      window.location.reload()
+                    }   
                   
                   }
                 
@@ -555,7 +565,7 @@ export default function MyUserX () {
 
 
           return(
-            <div className="mb-2 h-max-64 overflow-y-auto">
+            <div className="mb-2 max-h-48 overflow-y-auto">
                   
               <table id="detractors-list" 
                 className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
@@ -972,8 +982,8 @@ export default function MyUserX () {
                 
                 {servicesContent && (   
                 <>
-                  <h5 className="text-slate-700 mt-2 mb-1">Ubicacion: {servicesContent?.ubicacion?.name+'[id:'+servicesContent?.ubicacion?.id+']'}</h5>
-                  <h6 className="text-slate-700 mb-1">Resumen de Ux - este mes :</h6>
+                  <h5 className="text-slate-700 mt-2 mb-1">{servicesContent?.ubicacion?.name}<span className="text-[9px] text-neutral-600">{'[id:'+servicesContent?.ubicacion?.id+']'}</span></h5>
+                  <h6 className="text-slate-700 mb-1">Resultados de UX - mes actual :</h6>
                   <RenderBarChart graphData={servicesContent?.uxData} graphDataBin={servicesContent?.uxDataBin} scale={servicesContent?.configs?.scale_type}/>
                   <h6 className="text-slate-700 mt-2">Maestro de servicios:</h6>
                   <RenderServicesList servicesListContent={servicesContent?.servicesList}/>
@@ -1779,7 +1789,7 @@ export default function MyUserX () {
                           <div className="">
                             
                                                         
-                            <ShowServices  ubicacionId={ubicacionId}/>
+                            <ShowUbicacion  ubicacionId={ubicacionId}/>
 
                           </div>
 
@@ -1843,7 +1853,10 @@ export default function MyUserX () {
                   ) : (
                   
             
-                    <p>Favor <Link to="/Login"> ingrese </Link> para ver ubicaciones disponibles.</p>
+                   
+                   <Navigate to="/login" replace={true} state={{ from: "/mytasks" }} />
+                                       
+                                     
             
                   )}
                                 

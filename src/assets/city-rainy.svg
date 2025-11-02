@@ -118,10 +118,10 @@
   <desc>SVG animado de horizonte urbano con nubes, ondas y ventanas animadas en loop infinito perfecto.</desc>
 
 <g opacity="0.6">
-  <ellipse cx="200" cy="100" rx="120" ry="40" fill="#cfd8dc">
+  <ellipse cx="200" cy="180" rx="120" ry="40" fill="#cfd8dc" fillOpacity="0.5">
     <animate attributeName="cx" values="200;1250" dur="60s" repeatCount="indefinite"/>
   </ellipse>
-  <ellipse cx="600" cy="120" rx="140" ry="45" fill="#b0bec5">
+  <ellipse cx="600" cy="220" rx="140" ry="45" fill="#b0bec5" fillOpacity="0.3">
     <animate attributeName="cx" values="600;-200" dur="80s" repeatCount="indefinite"/>
   </ellipse>
 </g>

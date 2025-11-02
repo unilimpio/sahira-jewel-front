@@ -157,7 +157,7 @@ export default function MyCompliance () {
       if(listContent){
     
         return(
-          <div className="mt-2 mb-4">
+          <div className="mt-2 mb-4 max-h-48 overflow-y-auto">
                 
             <table id="eval-display" 
               className="bg-white opacity-90 text-[10px] sm:text-sm shadow-md rounded-sm">
@@ -165,7 +165,7 @@ export default function MyCompliance () {
             
                   <thead id="table-evals-display-head" 
                           className="border border-b-zinc-300 " >
-                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold">
+                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
                       <td className="p-1"   >
                         id#
                       </td>
@@ -189,7 +189,7 @@ export default function MyCompliance () {
               {
                 listContent.evals.map(row => (
                   
-                  <tr className="" key={'tr-'+row.id} >
+                  <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+row.id} >
                     <td className="p-2" id={'td-id'+row.id}   >
                       { row.id  }
                     </td>

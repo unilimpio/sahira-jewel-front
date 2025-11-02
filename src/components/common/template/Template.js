@@ -17,7 +17,7 @@ import Footer from "./Footer";
 
 import logoUni from '../../../logo-unilimpio.svg';
 
-
+const user = AuthService.getCurrentUser();
 
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
@@ -32,7 +32,7 @@ const Template = ({children}) => {
 
   useEffect(() => {
     
-    const user = AuthService.getCurrentUser();
+    
 
     if (user) {
       setCurrentUser(user);
@@ -59,12 +59,12 @@ const Template = ({children}) => {
   <div className="lg:container  mx-auto ">
 
     <Header isLoggedIn={isLoggedIn}/>
-
+    
     <div id="main" className="bg-white dark:bg-slate-900 p-4 md:p-12 lg:p-18 mb-20">
       {children}
     </div>
 
-    <NavBottom isLoggedIn={isLoggedIn}/>
+    <NavBottom isLoggedIn={isLoggedIn} user={user}/>
     <Footer />
     
   </div>

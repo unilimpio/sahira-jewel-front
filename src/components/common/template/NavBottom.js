@@ -14,11 +14,13 @@ import LoginIcon from "../template/icons/LoginIcon"
 import SignupIcon from "../template/icons/SignupIcon"
 import TasksIcon from "./icons/TasksIcon";
 
+import AuthService from "../../../services/auth.service";
 
-const NavBottom = ({isLoggedIn}) => {
+const NavBottom = ({isLoggedIn, user}) => {
   //HERE YOU CAN CHANGE THE ICONS AND LINKS COLORS AND HOVERS
 const linkClass = `m-1 hover:text-slate-600 focus:text-slate-400 text-blue-500 text-center drop-shadow-sm`;
-const linkClassActive = `m-1  text-slate-400 text-center drop-shadow-md`;
+const linkClassActive = `m-1 text-lime-500 hover:text-slate-600 text-center drop-shadow-md`;
+//const user = AuthService.getCurrentUser();
 
   return (
        
@@ -35,14 +37,22 @@ const linkClassActive = `m-1  text-slate-400 text-center drop-shadow-md`;
               {isLoggedIn ? (
             
                 <>
+                {parseInt(user.confs.is_module_evals, 10) && parseInt(user.uConfs.is_module_evals, 10) ? (
+
                   <NavLink to={"/mycompliance"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                     <ComplianceIcon/>
                     Compliance
                   </NavLink>
+                
+                ) : ('')
+                }
+                {parseInt(user.confs.is_module_ux, 10) && parseInt(user.uConfs.is_module_ux, 10) ? (  
                   <NavLink to={"/myuserx"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                     <UxIcon/>
                     UX
                   </NavLink>
+                ) : ('')
+                }
                   <NavLink to={"/mytasks"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                     <TasksIcon/>
                     Tasks

@@ -245,7 +245,7 @@ export default function UxSurvey () {
                   
                 setVerified(code === response.data?.service.code_verifier);
 
-                UserService.getIp().then(
+                /*UserService.getIp().then(
   
                   (response) => {
                     console.log(response.data)
@@ -260,7 +260,7 @@ export default function UxSurvey () {
                   }
         
         
-                )
+                )*/
                 
                 //setLocation(userLoc());
 
@@ -413,15 +413,13 @@ export default function UxSurvey () {
     console.log(serviceId);
     console.log(code);
 
-
     console.log(content);
     console.log(service);
     
     console.log(localStorage.getItem("cs_uxsurvey_verified"));
     console.log(localStorage.getItem("cs_uxsurvey_complete"));
     console.log(prevInstance);
-    
-    
+        
     console.log(isComplete);
     console.log(verified);
   
@@ -1852,8 +1850,11 @@ export default function UxSurvey () {
 
           }
                  
-                      
-          <Logo mainColor={"slate-600"}/>
+          <div className="place-content-between">
+            <Logo mainColor={"slate-600"}/>
+            
+            </div>            
+          
                       
                       
                       

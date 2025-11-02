@@ -1,4 +1,5 @@
 import React from "react";
+import { Navigate } from "react-router";
 import AuthService from "../services/auth.service";
 import Template from "./common/template/Template";
 
@@ -14,23 +15,37 @@ const Profile = () => {
         
           <h4 className="text-zinc-600">
             Profile
-          </h4>
-          
-           <img
+            <img
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
             alt="profile-img"
-            className="w-20 sm:w-32 rounded-full opacity-75 z-10 float-right "
+            className="w-20 sm:w-32 rounded-full opacity-75 z-10 float-right"
             /> 
+          </h4>
+          
+           
+        {
+           currentUser ? ( 
+           <>
+              <p>
+                <h4 className="text-secondary">{currentUser.fullname}</h4> 
+              </p>
+              <p>
+                <strong className="text-secondary">Id:</strong> {currentUser.uId}
+              </p>
+              <p>
+                <strong className="text-secondary">Email:</strong> {currentUser.email}
+              </p>
+              <p className="text-xs text-secondary">
+                Valoramos mucho tu privacidad, por eso intentamos manter la cantidad de datos personales que recolectamos al minimo.
+              </p>
+           
+           
+           </>
         
-        <p>
-          <strong className="text-secondary">Id:</strong> {currentUser.uId}
-        </p>
-        <p>
-          <strong className="text-secondary">Email:</strong> {currentUser.email}
-        </p>
-        <p className="text-xs text-secondary">
-          Valoramos mucho tu privacidad, por eso intentamos manter la cantidad de datos personales que recolectamos al minimo.
-        </p>
+           ) : (<Navigate to="/login" replace={true} state={{ from: "/profile" }} />)
+      
+        }
+        
         {/*
         <strong>Authorities:</strong>
         <ul>

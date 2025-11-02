@@ -67,18 +67,18 @@ const WeatherReport = ({className, location}) => {
 
   return (
                        
-        <div className="fixed top-0 right-0  w-1/4 sm:w-fit flex flex-col m-2 rounded-lg border border-slate-400">
+        <div className="fixed top-20 right-0  w-1/4 sm:w-fit flex flex-col m-2 rounded-lg border border-slate-400">
           {
             weatherInfo ? (
               <div className={!weatherInfo.current.is_day ? ('text-white'):('')}>
-                <p className="text-[9px] text-right">
+                <p className="text-[10px] text-right">
                   {weatherInfo?.location?.name + ', ' + weatherInfo?.location?.region+', ' + weatherInfo?.location?.country}<br/>
                   <strong>Fecha y Hora Local: </strong>{weatherInfo?.location?.localtime }<br/>
                   <strong>Clima Hoy: </strong>
-                  <img className="w-5 float-right" alt={`forecast for today is ${weatherInfo?.current?.condition.text}`} src={weatherInfo?.current?.condition.icon}/>
+                  <img className="w-14 float-right" alt={`forecast for today is ${weatherInfo?.current?.condition.text}`} src={weatherInfo?.current?.condition.icon}/>
                   {weatherInfo?.current?.temp_c} °C - {weatherInfo.current.is_day ? ('Dia') : ('Noche') }<br/>
                  
-                  <strong>Humedad: </strong>{weatherInfo?.current?.humidity}<br/>
+                  humedad: {weatherInfo?.current?.humidity}<br/>
                 </p>
                 
               </div>
@@ -95,21 +95,21 @@ const WeatherReport = ({className, location}) => {
           }
           
           { 
-            weatherInfo?.current?.condition?.code === 1000 && weatherInfo.location.isDay &&(
+            weatherInfo?.current?.condition?.code === 1000 && weatherInfo?.current?.is_day &&(
 
               <CitySunny/>
 
             )
           }
           {
-             weatherInfo?.current?.condition?.code === 1000 && !weatherInfo.location.isDay &&(
+             weatherInfo?.current?.condition?.code !== 1000 && !weatherInfo?.current?.is_day && !isRain &&(
               <CityNight/>
              )
           }
           {
             
              weatherInfo?.current?.condition?.code !== 1000 && isRain &&(
-              <CityRainy isNight={!weatherInfo.current.is_day}/>
+              <CityRainy isNight={!weatherInfo?.current?.is_day}/>
              )
           }
               

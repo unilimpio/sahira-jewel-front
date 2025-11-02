@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useId} from "react";
-import { Link } from "react-router";
+import { Link, useNavigate, Navigate } from "react-router";
+
+//import { Navigate } from "react-router-dom";
 
 import Logo from "./common/Logo";
 
@@ -19,7 +21,11 @@ import logoUni from '../logo-unilimpio.svg';
 
 export default function MyTasks () {
 
+  const navigate = useNavigate();
   const user = AuthService.getCurrentUser();
+
+  
+              
   
   const [taskId, setTaskId] = useState(false);
   
@@ -33,19 +39,22 @@ export default function MyTasks () {
 
   const wrapperClass = `w-full h-full p-4 mb-4 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
 
-
+  
   
   function TasksList({uId}){   
     
     const [loading, setLoading] = useState(false);
-    //const [message, setMessage] = useState("");
-    const [listContent, setListContent] = useState(false);
-
+    const [content, setContent] = useState(false);
+    const [listContentPending, setListContentPending] = useState(false);
+    const [listContentComplete, setListContentComplete] = useState(false);
    
     useEffect(() => {
       // Add scroll event listener when the component mounts
-   
-
+      
+      if(!user){
+                    
+        navigate('/login');
+      }
     
       let ignore = false;
 
@@ -59,7 +68,7 @@ export default function MyTasks () {
       const options = createOptions();
       
       if(!options.uId){
-        setListContent("");
+        setListContentPending("");
         setError("no se recibieron los parametros correctos.")
         //setMessage("no se recibieron los parametros correctos.")
         
@@ -70,9 +79,11 @@ export default function MyTasks () {
               (response) => {
 
                 if(!ignore){
-                
-                  setListContent(response?.data);
-                  
+                  setContent(response?.data)
+                  setListContentPending(response?.data?.tasks_pending);
+                  setListContentComplete(response?.data?.tasks_complete);
+                  console.log(response?.data?.tasks_complete)
+                  console.log(response?.data?.tasks_pending)
                   //console.log(response);              
                   //console.log(response?.status);
                   //console.log(response?.statusText)
@@ -92,10 +103,14 @@ export default function MyTasks () {
                   (error?.response && error?.response.data) ||
                   error?.message ||
                   error?.toString();
-                
-                setListContent(_content);
+                  console.log(_content);
+                setError(_content);
 
-                
+                if(_content.indexOf('401') !== -1){
+                    localStorage.removeItem("user");
+                    //localStorage.removeItem("cs_uxsurvey_session");
+                    window.location.reload()
+                }
               
               }
             
@@ -122,8 +137,8 @@ export default function MyTasks () {
         setMessage(false);
         setError(false);
         
-        setListContent(''); 
-        
+        setListContentComplete(''); 
+        setListContentPending(''); 
         setTaskId(taskId);
         console.log(taskId);
         //setInstance(instance);
@@ -135,17 +150,23 @@ export default function MyTasks () {
       return (
   
   
-        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100
+                          transition delay-50 duration-500 ease-in-out hover:scale-110 focus:-translate-y-2
+                          " 
                 onClick={handleClick}>
-          <svg  className="w-4 h-4 " viewBox="0 0 512 512"> 
+                  {/*
+                    <svg  className="w-4 h-4 " viewBox="0 0 512 512"> 
     
-            <path className=" fill-green-400 " d="M256,0C114.625,0,0,114.625,0,256c0,141.374,114.625,256,256,256c141.374,0,256-114.626,256-256
-              C512,114.625,397.374,0,256,0z M351.062,258.898l-144,85.945c-1.031,0.626-2.344,0.657-3.406,0.031
-              c-1.031-0.594-1.687-1.702-1.687-2.937v-85.946v-85.946c0-1.218,0.656-2.343,1.687-2.938c1.062-0.609,2.375-0.578,3.406,0.031
-              l144,85.962c1.031,0.586,1.641,1.718,1.641,2.89C352.703,257.187,352.094,258.297,351.062,258.898z"/>
-  
-          </svg>
+                      <path className=" fill-green-400 " d="M256,0C114.625,0,0,114.625,0,256c0,141.374,114.625,256,256,256c141.374,0,256-114.626,256-256
+                        C512,114.625,397.374,0,256,0z M351.062,258.898l-144,85.945c-1.031,0.626-2.344,0.657-3.406,0.031
+                        c-1.031-0.594-1.687-1.702-1.687-2.937v-85.946v-85.946c0-1.218,0.656-2.343,1.687-2.938c1.062-0.609,2.375-0.578,3.406,0.031
+                        l144,85.962c1.031,0.586,1.641,1.718,1.641,2.89C352.703,257.187,352.094,258.297,351.062,258.898z"/>
+            
+                    </svg>
+
+                  */}
           
+          <span className="">⚙️</span>
           
   
         </button>
@@ -161,7 +182,8 @@ export default function MyTasks () {
         setMessage(false);
         setError(false);
         
-        setListContent(''); 
+        setListContentComplete(''); 
+        setListContentPending(''); 
         
         setTaskId(taskId);
         console.log(taskId);
@@ -174,17 +196,11 @@ export default function MyTasks () {
       return (
   
   
-        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100" 
+        <button className="w-4 h-4 bg-white text-white rounded-full hover:shadow-sm opacity-50 hover:opacity-100
+                            transition delay-50 duration-500 ease-in-out hover:scale-110 focus:-translate-y-2
+                          " 
                 onClick={handleClick}>
-          <svg viewBox="0 -4 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                  <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                    <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -4563.000000)" fill="#000000">
-                      <g id="icons" transform="translate(56.000000, 160.000000)">
-                        <path d="M216,4409.00052 C216,4410.14768 215.105,4411.07682 214,4411.07682 C212.895,4411.07682 212,4410.14768 212,4409.00052 C212,4407.85336 212.895,4406.92421 214,4406.92421 C215.105,4406.92421 216,4407.85336 216,4409.00052 M214,4412.9237 C211.011,4412.9237 208.195,4411.44744 206.399,4409.00052 C208.195,4406.55359 211.011,4405.0763 214,4405.0763 C216.989,4405.0763 219.805,4406.55359 221.601,4409.00052 C219.805,4411.44744 216.989,4412.9237 214,4412.9237 M214,4403 C209.724,4403 205.999,4405.41682 204,4409.00052 C205.999,4412.58422 209.724,4415 214,4415 C218.276,4415 222.001,4412.58422 224,4409.00052 C222.001,4405.41682 218.276,4403 214,4403" id="view_simple-[#815]"/>
-                      </g>
-                    </g>
-                  </g>
-                </svg>
+          🔎
           
           
   
@@ -193,21 +209,18 @@ export default function MyTasks () {
       );
     }  
 
-    function RenderList({listContent}){
-  
-    
-      if(listContent){
-    
+    function RenderListPending({content}){
+          
         return(
-          <div className="mt-2 mb-4">
+          <div className="mt-2 mb-4 max-h-48 overflow-y-auto">
                 
             <table id="eval-display" 
-              className="bg-white opacity-90 text-[10px] sm:text-sm shadow-md rounded-sm">
+              className="bg-white opacity-90 text-[10px] w-full sm:text-sm shadow-md rounded-sm">
                              
             
                   <thead id="table-evals-display-head" 
                           className="border border-b-zinc-300 " >
-                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold">
+                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
                       <td className="p-1"   >
                         id#
                       </td>
@@ -229,9 +242,79 @@ export default function MyTasks () {
             
               
               {
-                listContent.tasks.map(row => (
+                content.tasks_pending.map(row => (
                   
-                  <tr className="" key={'tr-'+row.id} >
+                  <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+row.id} >
+                    <td className="p-2" id={'td-id'+row.id}   >
+                      { row.id  }
+                    </td>
+                    <td className="p-2 " id={'td-due_date'+row.id}   >
+                      { row.due_date }
+                    </td>
+                    <td className="p-2 " id={'td-task'+row.id}   >
+                      { row.task }
+                    </td> 
+                    <td className="p-2">
+                    { row.is_complete && (
+                       ` ✅`
+                    ) }
+                    </td>
+                    <td className="p-2">
+                      {row.is_complete ? (<ViewButton taskId={row.id}/>) : (<RunButton taskId={row.id}/>)}
+                      
+                      
+                    </td>    
+                  
+                  </tr> 
+                  
+            
+                ))
+              }
+              </tbody>
+              </table>
+            
+            
+          </div>
+        );
+          
+    }
+
+    function RenderListComplete({content}){
+  
+        return(
+          <div className="mt-2 mb-4 max-h-48  overflow-y-auto">
+                
+            <table id="eval-display" 
+              className="bg-white opacity-90 text-[10px] sm:text-sm shadow-md rounded-sm w-full">
+                             
+            
+                  <thead id="table-evals-display-head" 
+                          className="border border-b-zinc-300 " >
+                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
+                      <td className="p-1"   >
+                        id#
+                      </td>
+                      <td className="p-1"   >
+                        Fecha Plazo:
+                      </td>
+                      <td className="p-1"  >
+                        Tarea
+                      </td> 
+                      <td className="p-1">Status</td>
+                      <td className="p-1">Accion</td>
+  
+                    </tr>
+  
+  
+  
+                  </thead>
+                  <tbody className="text-zinc-600 ">
+            
+              
+              {
+                content.tasks_complete.map(row => (
+                  
+                  <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+row.id} >
                     <td className="p-2" id={'td-id'+row.id}   >
                       { row.id  }
                     </td>
@@ -264,27 +347,12 @@ export default function MyTasks () {
           </div>
         );
     
-      } else {
-    
-        return(
-          
-            <p>no se pudo cargar la info</p>
-          
-    
-        );
-    
-      }
-    
     }
   
     return (
-      
-      
-      
-        
+              
       <div className="flex flex-col relative z-1">
-          
-              <p className="text-sm md:text-md mb-0">Estas son las tareas asignadas a su usuario ({uId}): </p>
+                        
               {loading && (
                 <div className="flex">
                   <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
@@ -295,9 +363,13 @@ export default function MyTasks () {
                 </div>
 
               )}
-              {listContent && (   
-
-              <RenderList listContent={listContent}/>
+              {content && (   
+                <div className="flex flex-col">
+                  <h6 className="text-sm md:text-md mb-0">Tareas pendientes mas recientes : </h6>
+                  <RenderListPending content={content}/>
+                  <h6 className="text-sm md:text-md mb-0">Ultimas tareas completadas : </h6>
+                  <RenderListComplete content={content}/>
+                </div>
               )}
             
                            
@@ -313,7 +385,7 @@ export default function MyTasks () {
     const [selectedCheck, setSelectedCheck] = useState("");
     const [loading, setLoading] = useState(false);
     //const [message, setMessage] = useState(false);
-    const [content, setContent] = useState(null);
+    const [task, setTask] = useState(null);
 
     
 
@@ -335,7 +407,7 @@ export default function MyTasks () {
 
             (response) => {
 
-              setContent(response.data);
+              setTask(response.data);
               
               console.log(response);
               
@@ -411,7 +483,7 @@ export default function MyTasks () {
         //setError('Atención: la tarea no se ha completado! No olvide completarla más adelante.')
         console.log('cancelled by the user');
         setLoading(false);
-        setContent(''); 
+        setTask(false); 
         setTaskId(false);
         //setInstance(false);
         setShowModal(false);
@@ -448,10 +520,10 @@ export default function MyTasks () {
 
       function handleClick (){
       
-        setMessage("Proceso finalizxado correctamente");
-        console.log('proceso finalizado correctamente');
+        setMessage("");
+        //console.log('vista ');
         setLoading(false);
-        setContent(''); 
+        setTask(false); 
         setTaskId(false);
         //setInstance(false);
         setShowModal(false);
@@ -485,7 +557,7 @@ export default function MyTasks () {
     } 
 
 
-    const CheckButton = ({className, children, idPrefix, checked, isView}) => {       
+    const CheckButton = ({className, children, idPrefix, checked , isView}) => {       
 
       const [isChecked, setIsChecked] = useState(checked);
 
@@ -638,7 +710,7 @@ export default function MyTasks () {
           (response) => {
           
 
-              setContent(response.data);
+              setTask(response.data);
               
               if(response.status === 204){
                 setError(error + response.statusText)
@@ -663,7 +735,7 @@ export default function MyTasks () {
               setTaskId(null);
               
               
-              return content;
+              return task;
 
           })
           .catch( 
@@ -691,20 +763,20 @@ export default function MyTasks () {
     
           <form id="taskView" onSubmit={handleSubmit}  className="container mx-auto">
 
-            <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-stone-100 text-wrap ">
-                    <h3 className="text-sm font-thin bg-slate-200">
+            <div className="flex flex-col p-2 border rounded-md border-slate-700 bg-neutral-100 text-wrap ">
+                    <h3 className="text-sm font-thin bg-slate-200 py-1">
                       
-                        
+                        📋&nbsp;
                       <span className="text-slate-700 font-bold">
-                      {"["+task.task_id+"]"}{task.task_task}
+                      {task.task_task}
                         
                       </span>
                     </h3>
                     
-                    <h4 className="text-sm font-thin text-zinc-700 bg-slate-100 text-left text-ellipsis overflow-hidden ">Descripcion: {task.task_description}</h4>
+                    <h4 className="text-sm font-thin text-zinc-700 bg-slate-100 text-left text-ellipsis overflow-hidden ">{task.task_description}</h4>
                     
 
-                    <div className="flex flex-row justify-evenly">
+                    <div className="flex flex-row justify-evenly p-2">
 
                       
                         <CheckButton className="w-8 h-8 " idPrefix={`tarea-cumplida-`} checked={task.task_is_complete} isView={isView}>Tarea Cumplida</CheckButton>
@@ -714,13 +786,13 @@ export default function MyTasks () {
                         {/*<NoPasaButton clave="0" isChecked={isNoPasaChecked}> No Pasa</NoPasaButton>*/}
                         
                     </div>
-                    <div className="mx-auto">
+                    <div className="mx-auto p-2">
                       
                       <ObsInput className="" obsInitial={task.task_obs ? (`${task.task_obs}`) : ``} isView={isView}/>
                       {
-                        isView && (
+                        isView && task.task_obs && (
                           
-                          <span className="-mt-4 font font-extralight text-xs italic float-right">{`actualizado el :${task.task_obs ? (`${task.task_date_updated}`) : ``}`}</span>
+                          <span className="-mt-4 font font-extralight text-[9px] italic float-right">{`Comentario actualizado el :${task.task_obs ? (`${task.task_date_updated}`) : ``}`}</span>
 
                         )
 
@@ -785,10 +857,10 @@ export default function MyTasks () {
     return (
         
         <>
-          <div className="flex w-11/12 h-fit self-center mx-auto p-2  ">
+          <div className="flex w-11/12 h-4/6 self-center mx-auto p-2  ">
               
               
-              {content ? (
+              {task ? (
 
                 <div id="taskView-modal" 
                     className="mx-auto  my-2 flex flex-col   
@@ -806,9 +878,9 @@ export default function MyTasks () {
                         
                       )}
 
-                  <Logo mainColor={"cyan-500"}/>
+                 
 
-                    <div className="flex flex-row p-1 place-content-between">
+                    <div className="flex flex-row p-2 place-content-between">
                       
                       
                       <div className="flex flex-col">
@@ -818,7 +890,7 @@ export default function MyTasks () {
                         <h2 className="m-1 grow                       
                         text-stone-500 text-xl md:text-4xl text-left
                           font-black ">
-                          📋&nbsp;Task. N°{taskId}
+                          Task. N°{taskId}
                         </h2>
 
                       </div>
@@ -826,7 +898,7 @@ export default function MyTasks () {
 
                     <div className="" >  
                              
-                      <RenderContent task={content.task}/>
+                      <RenderContent task={task.task}/>
 
                     </div>  
 
@@ -888,9 +960,10 @@ export default function MyTasks () {
 
                 }
                 {!user &&
-          
-                  <p>Favor <Link to="/Login"> ingrese </Link> para ver evaluaciones disponibles.</p>
-          
+                  <>
+                    <Navigate to="/login" replace={true} state={{ from: "/mytasks" }} />
+                    
+                  </>
                 }
                                
         
