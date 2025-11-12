@@ -18,7 +18,8 @@ import UserService from "../../../services/user.service";
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-const WeatherReport = ({className, location = false}) => {
+
+const WeatherReport = ({className, location = false, bgMode = false, color }) => {
 
   const [weatherInfo,setWeatherInfo] = useState(false);
   //const [haystack, setHaystack] = useState(false);
@@ -26,6 +27,15 @@ const WeatherReport = ({className, location = false}) => {
   
   const [error,setError] = useState(false);
   const [message,setMessage] = useState(false);
+  let textClassName = '';
+
+  if(color === 'light'){
+      textClassName = 'text-neutral-200';
+    } else if(color === 'dark'){
+      textClassName = 'text-black';
+    } else {
+      textClassName = 'text-sky-600';
+    }
   
   useEffect(() => {
 
@@ -68,16 +78,18 @@ const WeatherReport = ({className, location = false}) => {
 
   }, [location]);
 
-  if(location){
+  
+
+  if(location && bgMode){
 
     return (
                        
-        <div className="fixed bottom-16 right-0  w-1/5  flex flex-col m-2 rounded-lg  bg-neutral-200 bg-opacity-50">
+        <div className="fixed bottom-16 right-0  w-1/5  flex flex-col m-2 rounded-lg  bg-neutral-200 bg-opacity-50 shadow-md">
           {
             weatherInfo && (
-              <div className={'text-neutral-300 p-2'}>
-                <h5 className="text-[10px] font-semibold">Info Local: </h5>
-                <p className="text-[10px] text-pretty">
+              <div className={` p-2`}>
+                <h5 className={`${textClassName} text-[10px] font-semibold`}>Info Local: </h5>
+                <p className={`${textClassName} text-[10px] text-pretty`}>
                   <img className="w-14 sm:w-16 float-left" alt={`forecast for today is ${weatherInfo?.current?.condition.text}`} src={weatherInfo?.current?.condition.icon}/>
                   
                   {weatherInfo?.location?.name + ', ' + weatherInfo?.location?.region+', ' + weatherInfo?.location?.country}<br/>
@@ -96,26 +108,26 @@ const WeatherReport = ({className, location = false}) => {
           }
           
           { 
-            weatherInfo?.current?.condition?.code === 1000 && weatherInfo?.current?.is_day &&(
+            weatherInfo?.current?.condition?.code === 1000 && weatherInfo?.current?.is_day && (
 
               <CitySunny/>
 
             )
           }
           {
-             weatherInfo && weatherInfo?.current?.condition?.code !== 1000 && !weatherInfo?.current?.is_day && !isRain &&(
+             weatherInfo && weatherInfo?.current?.condition?.code !== 1000 && !weatherInfo?.current?.is_day && !isRain && (
               <CityNight/>
              )
           }
           {
             
-             weatherInfo?.current?.condition?.code !== 1000 && isRain &&(
+             weatherInfo?.current?.condition?.code !== 1000 && isRain && (
               <CityRainy isNight={!weatherInfo?.current?.is_day}/>
              )
           }
           {
             
-             !weatherInfo  &&(
+             !weatherInfo &&(//if wetaher info was not set for some reason, then lets default to bokeh instead of white screen or even error
               <div className="-z-50">    
                 <Bokeh />
               </div>
@@ -127,20 +139,40 @@ const WeatherReport = ({className, location = false}) => {
         </div>    
   );
 
-  } else {
+  } else if(location && !bgMode){//if location is not set it will default to boke instead of white screen or even error, so this is kind of out of place but necessary
+    
     return (
                        
-        <div className="fixed bottom-16 right-0  w-1/5  flex flex-col m-2 rounded-lg  bg-neutral-200 bg-opacity-50">
+        <div className="fixed bottom-16 right-0   w-1/5  flex flex-col m-2 rounded-lg  bg-neutral-200 bg-opacity-25 shadow-md">
+          {
+            weatherInfo && (
+              <div className={`${textClassName} p-2`}>
+                <h5 className={`${textClassName} text-[10px] font-semibold`}>Info Local: </h5>
+                <p className={`${textClassName} text-[10px] text-pretty`}>
+                  <img className="w-14 sm:w-16 float-left" alt={`forecast for today is ${weatherInfo?.current?.condition.text}`} src={weatherInfo?.current?.condition.icon}/>
+                  
+                  {weatherInfo?.location?.name + ', ' + weatherInfo?.location?.region+', ' + weatherInfo?.location?.country}<br/>
+                  
+                  
+                  <Clock format={'DD/MM/YYYY HH:mm:ss'} ticking={true} timezone={weatherInfo?.location?.tz_id} /><br />
+                  
+                  {weatherInfo?.current?.temp_c} °C - {weatherInfo.current.is_day ? ('Dia') : ('Noche') }<br/>
+                 
+                  humedad: {weatherInfo?.current?.humidity}%<br/>
+                  <span className={` ${textClassName} italic text-[9px]`}>{weatherInfo?.current?.condition.text}</span>
+                </p>
+                
+              </div>
+            )
+          }          
           
-          
-          
-          
-          <div className="-z-50">    
-            <Bokeh />
-          </div>
           
         </div>    
   );
+  } else {
+    return(
+      <></>
+    );
   }
   
 

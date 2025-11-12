@@ -14,12 +14,14 @@ import logoUni from '../logo-unilimpio.svg';
 
 import Logo from "./common/LogoUx";
 import WeatherReport from "./common/template/WeatherReport";
+import BokehGoldPink from "./common/template/BokehScreenSaver";
 
 
 import DelayedNav from "./common/DelayedNav";
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+//const BACK = "https://cmx.unilimpio.com/";
+const BACK = "http://cmxbk/";
 
 export default function UxSurvey () {
 
@@ -1121,7 +1123,7 @@ export default function UxSurvey () {
         return(
     
           
-            <div className=" mt-14 w-1/2 p-1 md:w-1/3 md:p-10 bg-neutral-100 bg-opacity-50 rounded-md shadow-md">
+            <div className=" mt-14 w-1/2 p-1 md:w-1/3 md:p-10 bg-neutral-100 bg-opacity-50 rounded-md shadow-lg">
                     <div className={isBadUx ? 'hidden' : 'p-4 '} >
                       <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
 
@@ -1150,8 +1152,8 @@ export default function UxSurvey () {
                                           onClick={handleClickOk}
                                           
                                         >
-                                        <p className="text-xs " ><span className={` text-8xl `}>{emojiLike}</span><br/>
-                                          <span className="bg-neutral-200 rounded-sm bg-opacity-75">{` `+labelLike}</span>
+                                        <p className="text-xs " ><span className={` text-8xl`}>{emojiLike}</span><br/>
+                                          <span className="bg-neutral-200 rounded-sm bg-opacity-75 shadow-md">{` `+labelLike}</span>
                                         </p>
                                       </button>
                                       
@@ -1166,7 +1168,7 @@ export default function UxSurvey () {
 
                                         >
                                         <p className="text-xs" ><span className={` text-8xl `}>{emojiNotLike}</span><br/>
-                                          <span className="bg-neutral-200 rounded-sm bg-opacity-75">{` `+labelNotLike}</span>
+                                          <span className="bg-neutral-200 rounded-sm bg-opacity-75 shadow-md">{` `+labelNotLike}</span>
                                         </p>
                                       </button>
                                       
@@ -1204,7 +1206,7 @@ export default function UxSurvey () {
                                 
                                 <div className="" id="ux-options-holder" >
                                   
-                                    <p className="bg-neutral-200 text-xs font-thin rounded-sm my-0 bg-opacity-75">
+                                    <p className="bg-neutral-200 text-xs font-thin rounded-sm my-1 bg-opacity-75">
                                           Haz calificado:&nbsp;
                                           &nbsp;
                                           <span className="text-[9px]">    {`[${service?.service_id}]`} </span>
@@ -1213,7 +1215,7 @@ export default function UxSurvey () {
                                     </p>
                                   
                                   <div className={isBadUx ? '' : 'hidden'} id="bad-ux-options">
-                                        <p className="text-red-600 bg-red-300 text-xs rounded-sm bg-opacity-75">Lamentamos que no estes satisfecho con este servicio, por favor dinos cual fue la razon?</p>
+                                        <p className="text-red-600 bg-red-300 text-xs rounded-sm bg-opacity-75 shadow-md">Lamentamos que no estes satisfecho con este servicio, por favor dinos cual fue la razon?</p>
                                         <div className='grid sm:grid-cols-3 lg:grid-cols-4 '>
                                               
                                               {alertCriterios && (
@@ -1231,7 +1233,7 @@ export default function UxSurvey () {
                                                         
                                                   >
                                                       <p className="text-xs font-thin" ><span className={(isRadio === criterio.id)?`text-6xl `:'text-6xl '}>{criterio.emoji}</span><br/>
-                                                        <span className="bg-neutral-200 rounded-sm bg-opacity-75">{` `+criterio.label}</span>
+                                                        <span className="bg-neutral-200 rounded-sm bg-opacity-75 shadow-md">{` `+criterio.label}</span>
                                                       </p>
                                                     
                                                   </button>
@@ -1762,14 +1764,43 @@ export default function UxSurvey () {
     <div className={`w-full relative h-screen bg-none content-start `}>
           
           {
-            service && (
+            service && service?.ubicacion_bg_mode === 'weather-report' &&(
                                                           
-              <WeatherReport location={service.ubicacion_location}/>
-                            
+              <WeatherReport location={service.ubicacion_location} bgMode = {true} color = {service.ubicacion_wr_text_color}/>
                           
             )
 
           }
+          
+          {
+            service && service?.ubicacion_bg_mode === 'bokeh-gold-pink' &&(
+              <>
+                <WeatherReport location={service.ubicacion_location} color = {service.ubicacion_wr_text_color}/>                                            
+                <div className="-z-40">    
+                  <BokehGoldPink />
+                </div>
+              </>            
+            )
+
+          }
+          {
+            service && service?.ubicacion_bg_mode === 'custom' && service?.ubicacion_custom_bg !== null &&(
+              <>
+              <WeatherReport location={service.ubicacion_location} color = {service.ubicacion_wr_text_color}/>                                            
+              <div className="-z-50">    
+                 
+                    <img src={BACK+`assets/images/`+service?.ubicacion_custom_bg} 
+                        alt="imagen de fondo personalizado para la ubicacion" 
+                        className="fixed -top-6 left-0 w-screen -z-40"
+                    />
+                 
+              </div>
+              </>            
+            )
+
+          }
+
+          
                  
           <div className="place-content-between">
             <Logo mainColor={"slate-600"}/>
