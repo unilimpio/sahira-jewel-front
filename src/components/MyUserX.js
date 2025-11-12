@@ -99,8 +99,7 @@ export default function MyUserX () {
                     //setContent(response?.data);
                     setLoading(false);
                     console.log(response?.data)
-                    
-    
+                      
                     if(response?.data?.message){
                       
                       console.log(response?.data?.message)
@@ -108,10 +107,7 @@ export default function MyUserX () {
                     }
                     
                     
-                }
-                
-           
-                ,
+                },
     
                 (error) => {
                   const _content =
@@ -563,7 +559,6 @@ export default function MyUserX () {
 
         } else {
 
-
           return(
             <div className="mb-2 max-h-48 overflow-y-auto">
                   
@@ -722,17 +717,23 @@ export default function MyUserX () {
             </div>
           );
 
-      }
-        
-
-
+        }
     
       } else {
     
         return(
           
-            <p>no se pudo cargar la info</p>
-          
+            
+                          <div className="flex">
+                            <svg className="animate-spin  w-16 h-16 fill-slate-600" viewBox="0 0 24 24">
+                              <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                              <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                            </svg>
+                            <span className="text-slate-700 font-extralight ml-2 hidden">Loading...</span>
+                          </div>
+  
+                     
+         
     
         );
     
@@ -1795,9 +1796,6 @@ export default function MyUserX () {
 
 
                         )}
-
-                        
-                        
                       
                       
                       </div>
@@ -1854,7 +1852,7 @@ export default function MyUserX () {
                   
             
                    
-                   <Navigate to="/login" replace={true} state={{ from: "/mytasks" }} />
+                   <Navigate to="/login" replace={true} state={{ from: "/myux" }} />
                                        
                                      
             

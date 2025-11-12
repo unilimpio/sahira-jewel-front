@@ -556,8 +556,6 @@ export default function UxSurvey () {
       }
       
       
-
-        
       async function handleSubmit(event) {
 
         
@@ -900,7 +898,7 @@ export default function UxSurvey () {
 
       
       //logic to show the style of scale for measurion user experience, by default it is set to like-dislike
-      if (scale === '5-points'){
+      if (!loading && scale === '5-points'){
 
         return(
     
@@ -1118,25 +1116,25 @@ export default function UxSurvey () {
         
         );
 
-      } else if( scale === 'like-dislike' ){
+      } else if(!loading && scale === 'like-dislike' ){
 
         return(
     
-          <div className="">
-            <div className="flex bg-neutral-100 bg-opacity-50 rounded-md shadow-md">
-                    <div className={isBadUx ? 'hidden' : 'p-4'} >
+          
+            <div className=" mt-14 w-1/2 p-1 md:w-1/3 md:p-10 bg-neutral-100 bg-opacity-50 rounded-md shadow-md">
+                    <div className={isBadUx ? 'hidden' : 'p-4 '} >
                       <form id="ux-feedback-form" onSubmit={handleSubmit}  className="">
 
-                        <div className="flex ">                  
+                        <div className="flex justify-center">                  
                                 
-                              <div className="relative " >
+                              <div className="relative " id="ux-options-holder">
                                 
-                                <div className="" id="ux-options-holder" >
+                                
                                   <div className="flex w-full mx-auto">
-                                    <p className="text-sm font-thin -mt-4">
-                                          Por favor califique su experiencia con este servicio:<br/>
-                                          <span className="bg-white  shadow-sm p-1text-zinc-500 font-extrathin  text-xs ">&nbsp;
-                                              {`${service?.service_name}  [id: ${service?.service_id}].`}
+                                    <p className="text-sm font-thin -mt-4 bg-neutral-200 rounded-sm bg-opacity-75">
+                                          Por favor califique su experiencia con este servicio:
+                                          <span className="p-1 text-slate-900 font-extrathin  text-xs ">&nbsp;
+                                              {`${service?.service_name}  [id: ${service?.service_id}], ${service?.ubicacion_name}`}
                                           </span> 
                                     </p>
                                   </div>
@@ -1152,8 +1150,8 @@ export default function UxSurvey () {
                                           onClick={handleClickOk}
                                           
                                         >
-                                        <p className="text-xs" ><span className={` text-8xl `}>{emojiLike}</span><br/>
-                                          {` `+labelLike}
+                                        <p className="text-xs " ><span className={` text-8xl `}>{emojiLike}</span><br/>
+                                          <span className="bg-neutral-200 rounded-sm bg-opacity-75">{` `+labelLike}</span>
                                         </p>
                                       </button>
                                       
@@ -1168,13 +1166,13 @@ export default function UxSurvey () {
 
                                         >
                                         <p className="text-xs" ><span className={` text-8xl `}>{emojiNotLike}</span><br/>
-                                          {` `+labelNotLike}
+                                          <span className="bg-neutral-200 rounded-sm bg-opacity-75">{` `+labelNotLike}</span>
                                         </p>
                                       </button>
                                       
                                       
                                   </div>
-                                </div>
+                                
                                                                     
                               </div>
                                 
@@ -1200,22 +1198,23 @@ export default function UxSurvey () {
                     <div className={isBadUx ? 'p-4' : 'hidden'} >
                       <form id="ux-feedback-form" onSubmit={handleSubmitBadUx}  className="">
 
-                        <div className="flex ">                  
+                        <div className="flex justify-center">                  
                                 
-                              <div className="relative " >
+                              <div className="" >
                                 
                                 <div className="" id="ux-options-holder" >
-                                  <div className="flex w-full mx-auto">
-                                    <p className="text-xs font-thin mb-0 -mt-4">
+                                  
+                                    <p className="bg-neutral-200 text-xs font-thin rounded-sm my-0 bg-opacity-75">
                                           Haz calificado:&nbsp;
-                                          <span className="bg-white  shadow-sm p-1text-zinc-500 font-extrathin  text-xs ">&nbsp;
-                                              {`${service?.service_name}  [id: ${service?.service_id}].`}
-                                          </span> 
+                                          &nbsp;
+                                          <span className="text-[9px]">    {`[${service?.service_id}]`} </span>
+                                          {`${service?.service_name} , ${service?.ubicacion_name}`}
+                                          
                                     </p>
-                                  </div>
+                                  
                                   <div className={isBadUx ? '' : 'hidden'} id="bad-ux-options">
-                                        <p className="text-red-600 bg-red-300 text-sm">Lamentamos que no estes satisfecho, por favor dinos cual fue la razon?</p>
-                                          <div className='flex flex-col sm:grid sm:grid-cols-3 '>
+                                        <p className="text-red-600 bg-red-300 text-xs rounded-sm bg-opacity-75">Lamentamos que no estes satisfecho con este servicio, por favor dinos cual fue la razon?</p>
+                                        <div className='grid sm:grid-cols-3 lg:grid-cols-4 '>
                                               
                                               {alertCriterios && (
                                                 alertCriterios.map((criterio, index) =>
@@ -1232,7 +1231,7 @@ export default function UxSurvey () {
                                                         
                                                   >
                                                       <p className="text-xs font-thin" ><span className={(isRadio === criterio.id)?`text-6xl `:'text-6xl '}>{criterio.emoji}</span><br/>
-                                                        {` `+criterio.label}
+                                                        <span className="bg-neutral-200 rounded-sm bg-opacity-75">{` `+criterio.label}</span>
                                                       </p>
                                                     
                                                   </button>
@@ -1240,7 +1239,7 @@ export default function UxSurvey () {
                                                 ))}
 
                                                 <label htmlFor={`bad-ux-other`} className="text-slate-700 border text-xs font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">
-                                                  {`Otro:`}         
+                                                    <span className="bg-neutral-200 rounded-sm bg-opacity-75 text-[9px] p-1">Otro:</span>        
                                                     <br/>
                                                     <input 
                                                       className={
@@ -1249,7 +1248,7 @@ export default function UxSurvey () {
                                                         border rounded-md 
                                                         focus:shadow-sm 
                                                         focus:ring-slate-500 focus:ring-1 focus:outline-none
-                                                        h-6
+                                                        h-5 
                                                         
                                                       `}
 
@@ -1264,8 +1263,8 @@ export default function UxSurvey () {
                                                     
                                                       <button value="9999" type="submit" 
                                                         className="border border-slate-400 bg-neutral-300 text-slate-800 
-                                                                    m-0 p-1 rounded-md
-                                                                    text-xs h-6
+                                                                    m-0  rounded-md
+                                                                    text-[9px] h-5
                                                                     
                                                                   ">
                                                           Enviar
@@ -1279,39 +1278,10 @@ export default function UxSurvey () {
                                 </div>
                                   
 
-                                
-                                
-                              
-                                    
                               </div>
                                 
                                 
-                              <div className=" flex justify-evenly my-2">
-                            
-                                  {
-            /*
-            <>
-                                      <SaveButton
-                                        loading={loading} 
-                                        className={`
-                                          `}>{`${emojiSave} ${labelSave}`}
-                                          
-                                      </SaveButton>
-                                      
-                                      <CancelButton 
-                                        className=" ">
-                                          
-                                          {`${emojiClose} ${labelClose}`}
-                                      </CancelButton>           
-                                      
-                                    </>
-            */
-                                  }
-                                    
-                                  
                               
-                          
-                              </div>
 
                                 
                                 
@@ -1332,11 +1302,11 @@ export default function UxSurvey () {
                       </form>
                     </div>
             </div>
-          </div>
+          
         
         );
 
-      } else if ( scale === 'satis-disatis'){
+      } else if (!loading && scale === 'satis-disatis'){
 
         return(
     
@@ -1424,6 +1394,21 @@ export default function UxSurvey () {
         
         );
 
+      } else {
+
+        return(
+          
+                            <div className=" flex mt-14 w-1/2 p-1 md:w-1/3 md:p-10 bg-neutral-100 bg-opacity-50 rounded-md shadow-md">
+                              
+                                <svg className=" animate-spin h-6 w-6 fill-slate-200" viewBox="0 0 24 24">
+                                  <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                                  <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                                </svg>
+                                <span className="text-slate-200">Loading</span>
+  
+                                          
+                            </div>
+        );
       }
     
   
@@ -1580,24 +1565,26 @@ export default function UxSurvey () {
       return(
   
           
-        <div className="">
-            <div className=" flex flex-col mt-0
-                  sm:flex-row sm:justify-start 
-                  sm:w-fit 
-                  border-1 border-neutral-500 bg-neutral-100 bg-opacity-30 rounded-md shadow-md
-                  ">
+        <div className="flex flex-col  sm:flex-row mt-14 w-1/2 p-1 md:w-1/3 md:p-10 bg-neutral-100 bg-opacity-50 rounded-md shadow-md" id="final-message">
+            
                     <div className="p-4" >
-                      <h1 className="text-3xl font-extrabold text-lime-300">Gracias!</h1>
+                      <h1 className="text-3xl font-extrabold text-lime-500">Gracias!</h1>
 
-                      <p className="text-sm font-thin m-1 ">
+                      <p className=" text-sm font-thin m-1 ">
+                        <span className="text-xs bg-neutral-200 rounded-sm bg-opacity-75">
                         Haz calificado:&nbsp; 
-                        <span className="bg-white text-xs">
+                        
                         {service && (
-                          <>{`${service.service_name}[${service.service_id}] - ${service.ubicacion_description} `}</>
+                          <>
+                            <span className="text-[9px]">
+                              {`[${service.service_id}]`}
+                            </span>
+                          {`${service.service_name} ,  ${service.ubicacion_name} `}
+                          </>
                         )}
                         </span>
                         <br/>
-                        <span className="font-bold text-md text-sky-600">
+                        <span className="bg-neutral-200 rounded-sm font-bold text-md text-sky-600 bg-opacity-75">
                           
                           Apreciamos tu retroalimentación. Será utilizada para mejorar nuestros servicios. 
                             
@@ -1606,9 +1593,9 @@ export default function UxSurvey () {
                         
                         
                       </p>
-                      <p className="text-sm font-thin text-secondary"> 
+                      <p className="text-sm font-thin text-slate-800 bg-neutral-200 rounded-sm bg-opacity-75"> 
                         Cerrando&nbsp; 
-                        <DelayedNav secs={2} url={'/uxsurvey?'} sID={serviceId} c={code} className="" active={true}/> 
+                        <DelayedNav secs={3} url={'/uxsurvey?'} sID={serviceId} c={code} className="" active={true}/> 
                       </p>
                       
                     </div>
@@ -1684,17 +1671,10 @@ export default function UxSurvey () {
                     */}
                     
                                              
-            </div>   
+             
                   
     
-            <div className=" flex sm:w-8/12 justify-evenly sm:justify-start my-2">
-                
-                    
-                     &nbsp;  
-                    
-                  
-              
-            </div>
+                      
     
         </div>
             
@@ -1710,14 +1690,11 @@ export default function UxSurvey () {
 
     if(isVerified){
 
-
       if(!isComplete){
 
-
-        return (
+        return (        
         
-        
-            <div className="container w-3/4 sm:w-1/2 ">
+          <div className="flex justify-center  mx-auto ">
                 
                 {error && (
                     <div className="form-group">
@@ -1726,103 +1703,47 @@ export default function UxSurvey () {
                       </div>
                     </div>
                 )}
-                
-                
-  
-                    
-                    <div className="justify-self-center">
-                        
-                        
-                        <div className="p-0">
-                          
-                          
-                            
-                            {
-                              loading && (
-                                <div className="mr-8 flex flex-row ">
-                              
-                                <svg className=" animate-spin h-6 w-6 fill-slate-700" viewBox="0 0 24 24">
-                                  <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                                  <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                                </svg>
-                                <span className="text-slate-700">Loading</span>
-  
-                                          
-                            </div>)
-  
-                            }
-  
-                        </div>
-                            
+                                                
                                
-                        {/*(serviceId) && (
-  
-                                  !isBadUx ? ( <RenderInterface />)
-                                  
-                                  : (<RenderBadUxInterface />)
-                                   
-                                ) */
+                {
                                 
-                                service && (
+                  service && (
 
-                                  <RenderInterface />
+                    <RenderInterface />
 
-                                )
+                  )
 
 
-                        }
-  
+                }  
                                 
-                                               
-  
-                    </div>
-              
             
-                               
-            
-            </div>
-          );
+          </div>
 
-        } else {
+        );
+      } else {
 
-          return (
+        return (              
       
-            
-      
-              <div className={!isComplete?'hidden':'container w-3/4 sm:w-1/2'}>
-                    
-                   
-                <Final />
-      
-              </div>
+          <div className={!isComplete?'hidden':'flex justify-center mx-auto '}>                   
+                <Final />      
+          </div>
       
       
-                  
-          
-          );
-
-
-        }
-
-
-
+        );
+      }
 
     } else {
 
-      //the qr was not verified, nothing to do.
-      return (
-      
-        
-  
-          <div className="">
-                
-            <p>No se pudo autenticar el QR escaneado.</p>   
-            
-  
+      //the qr has not YET been verified, for better UX, show show loading animation or placeholder:
+      return (  
+          <div className="flex-row">
+                  <svg className="animate-spin h-10 w-10 fill-slate-200" viewBox="0 0 24 24">
+                      <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                      <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                  </svg>
+              <span className="text-slate-200 font-extralight ml-2">Loading...</span>
           </div>
   
-  
-              
         
       );
 
@@ -1853,18 +1774,14 @@ export default function UxSurvey () {
           <div className="place-content-between">
             <Logo mainColor={"slate-600"}/>
             
-            </div>            
+          </div>            
           
-                      
-                      
-                      
-          
-            
+                    
   
-          <main className="relative inset-y-32 sm:inset-y-20">
+          <main className="relative ">
                 
                 
-                          <FeedBackLive service={service} isVerified={verified} isComplete={isComplete} scale={scaleType}/>
+            <FeedBackLive service={service} isVerified={verified} isComplete={isComplete} scale={scaleType}/>
                 
             {error && (
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router";
+import Clock from 'react-live-clock';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 //import logo from "./logo_clean_verify.png"
@@ -10,13 +11,14 @@ import CityNight from "./CityNight";
 import CityCloudy from "./CityBackground";
 import CityRainy from "./CityRainy";
 import CityStorm from "./CityBackground";
+import Bokeh from "./BokehScreenSaver";
 
 import UserService from "../../../services/user.service";
 
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-const WeatherReport = ({className, location}) => {
+const WeatherReport = ({className, location = false}) => {
 
   const [weatherInfo,setWeatherInfo] = useState(false);
   //const [haystack, setHaystack] = useState(false);
@@ -61,36 +63,35 @@ const WeatherReport = ({className, location}) => {
       )
 
     }
+    
     fetchWeather();
 
   }, [location]);
 
-  return (
+  if(location){
+
+    return (
                        
-        <div className="fixed top-20 right-0  w-1/4 sm:w-fit flex flex-col m-2 rounded-lg border border-slate-400">
+        <div className="fixed bottom-16 right-0  w-1/5  flex flex-col m-2 rounded-lg  bg-neutral-200 bg-opacity-50">
           {
-            weatherInfo ? (
-              <div className={!weatherInfo.current.is_day ? ('text-white'):('')}>
-                <p className="text-[10px] text-right">
+            weatherInfo && (
+              <div className={'text-neutral-300 p-2'}>
+                <h5 className="text-[10px] font-semibold">Info Local: </h5>
+                <p className="text-[10px] text-pretty">
+                  <img className="w-14 sm:w-16 float-left" alt={`forecast for today is ${weatherInfo?.current?.condition.text}`} src={weatherInfo?.current?.condition.icon}/>
+                  
                   {weatherInfo?.location?.name + ', ' + weatherInfo?.location?.region+', ' + weatherInfo?.location?.country}<br/>
-                  <strong>Fecha y Hora Local: </strong>{weatherInfo?.location?.localtime }<br/>
-                  <strong>Clima Hoy: </strong>
-                  <img className="w-14 float-right" alt={`forecast for today is ${weatherInfo?.current?.condition.text}`} src={weatherInfo?.current?.condition.icon}/>
+                  
+                  
+                  <Clock format={'DD/MM/YYYY HH:mm:ss'} ticking={true} timezone={weatherInfo?.location?.tz_id} /><br />
+                  
                   {weatherInfo?.current?.temp_c} °C - {weatherInfo.current.is_day ? ('Dia') : ('Noche') }<br/>
                  
-                  humedad: {weatherInfo?.current?.humidity}<br/>
+                  humedad: {weatherInfo?.current?.humidity}%<br/>
+                  <span className="italic text-[9px]">{weatherInfo?.current?.condition.text}</span>
                 </p>
                 
               </div>
-            ):(
-
-              
-              <span className="bg-red-300 border-red-500 h-4 w-fit">
-                No se pudo cargar la informacion de clima;
-              </span>
-
-            
-
             )
           }
           
@@ -102,7 +103,7 @@ const WeatherReport = ({className, location}) => {
             )
           }
           {
-             weatherInfo?.current?.condition?.code !== 1000 && !weatherInfo?.current?.is_day && !isRain &&(
+             weatherInfo && weatherInfo?.current?.condition?.code !== 1000 && !weatherInfo?.current?.is_day && !isRain &&(
               <CityNight/>
              )
           }
@@ -112,18 +113,36 @@ const WeatherReport = ({className, location}) => {
               <CityRainy isNight={!weatherInfo?.current?.is_day}/>
              )
           }
-              
-
-          
+          {
             
-
-              
-
-         
+             !weatherInfo  &&(
+              <div className="-z-50">    
+                <Bokeh />
+              </div>
+             )
+          }
+          
           
           
         </div>    
   );
+
+  } else {
+    return (
+                       
+        <div className="fixed bottom-16 right-0  w-1/5  flex flex-col m-2 rounded-lg  bg-neutral-200 bg-opacity-50">
+          
+          
+          
+          
+          <div className="-z-50">    
+            <Bokeh />
+          </div>
+          
+        </div>    
+  );
+  }
+  
 
   
 };

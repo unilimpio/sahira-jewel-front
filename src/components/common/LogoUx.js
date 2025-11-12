@@ -6,7 +6,7 @@ const Logo = ({mainColor, width}) => {
   const borderColor = `border-t-`+mainColor || `border-t-white`;  
 
   return (
-    <div id="brand-logo" className="fixed top-0 left-0 z-50 flex flex-row m-2 p-1 rounded-md">
+    <div id="brand-logo" className="fixed top-0 left-0  flex flex-row m-2 p-1 rounded-md">
             
             <div id="brand-art" className="">
               {/*
