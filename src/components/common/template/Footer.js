@@ -11,6 +11,8 @@ import logoUni from '../../../logo-unilimpio.svg';
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
+let linkClass = `text-zinc-600 text-[11px] sm:text-sm md:text-base lg:text-lg no-underline hover:text-zinc-900 hover:underline p-2`;
+
 const Footer = () => {
 
   
@@ -18,24 +20,22 @@ const Footer = () => {
 
   return (
     
-      <footer className="fixed w-full flex justify-between z-40 bottom-0 right-0 bg-slate-800">
+      <footer className="fixed w-full flex justify-between z-40 bottom-0 right-0 bg-neutral-300 h-12 sm:h-16 md:h-20 lg:h-24">
         
-          <p className="content-end text-sky-900 text-[8px] font-light mb-0 opacity-90">
-            &copy;MFC - All rights reserved.
-          </p>
+          <p className="p-2 text-zinc-800 text-sm sm:text-base md:text-lg lg:text-2xl font-light">
+            Sahira Jewels CO. ,<br/> <span className="text-[9px] font-extralight mb-2">All rights Reserved. 2025 </span>
+          </p>        
         
-        
-        <div className="w-1/3 p-1 bg-gradient-to-r from-transparent to-sky-600">  
-          <div className="flex justify-end ">
-            <p className="text-white text-[8px] font-thin text-shadow-lg">
-              powered by:
-            </p>
-            <a href="https://unilimpio.com/"> <img src={logoUni} alt="logo Unilimpio" className="z-30 w-8 h-8 sm:w-12 sm:h-12 " /></a>
+        <div className="grow  ">  
+          <div className="flex justify-end">
+             <Link to={"/home"} className={` `+ linkClass}>
+                          Politica de Privacidad
+             </Link>
+             <Link to={"/home"} className={` `+ linkClass}>
+                          Politica de Entrega
+             </Link>
           </div>
         </div>  
-        
-
-
         
          
       </footer>

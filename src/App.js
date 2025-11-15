@@ -9,68 +9,45 @@ import AuthService from "./services/auth.service";
 
 import Login from "./components/Login";
 import Logout from "./components/Logout";
-
 import Register from "./components/Register";
+import Account from "./components/Account";
+
 import Home from "./components/Home";
-import MyCompliance from "./components/MyCompliance";
-import MyUserX from "./components/MyUserX";
-import UxSurvey from "./components/UxSurvey";
-import MyTasks from "./components/MyTasks";
+import Collection from "./components/Collection";
+import Featured from "./components/Featured";
+import About from "./components/About";
+import Cart from "./components/Cart";
+import Wishlist from "./components/Wishlist";
 
 
-import Profile from "./components/Profile";
-
-
-
-
-//import AuthVerify from "./common/AuthVerify";
-//import EventBus from "./common/EventBus";
 
 const App = () => {
-  //const [showModeratorBoard, setShowModeratorBoard] = useState(false);
-  //const [showAdminBoard, setShowAdminBoard] = useState(false);
   
-
-  /*
-  const logOut = () => {
-    AuthService.logout();
-    //setShowModeratorBoard(false);
-    //setShowAdminBoard(false);
-    setCurrentUser(undefined);
-  };
-  */
 
   return (
     
       
-    
       <div id="routes" className=" " >
           <Routes>
             <Route path={"/"} element={<Home />} />
             <Route path={"/home"} element={<Home />} />
             
-            <Route path={"/mycompliance"} element={<MyCompliance />} />
-            <Route path={"/myuserx"} element={<MyUserX />} />
-            <Route path={"/mytasks"} element={<MyTasks />} />
+            <Route path={"/collection"} element={<Collection />} />
+            <Route path={"/featured"} element={<Featured />} />
+            <Route path={"/about"} element={<About />} />
             
             <Route path={"/login"} element={<Login />} />
             <Route path={"/logout"} element={<Logout />} />
             <Route path={"/register"} element={<Register />} />
-            <Route path={"/profile"} element={<Profile />} />
-            <Route path={"/UxSurvey"} element={<UxSurvey />} />
+            <Route path={"/account"} element={<Account />} />
+
+            <Route path={"/cart"} element={<Cart />} />
+            <Route path={"/wishlist"} element={<Wishlist />} />
             
-            
-            {/*}
-            <Route path="/user" element={<BoardUser />} />
-            <Route path="/mod" element={<BoardModerator />} />
-            <Route path="/admin" element={<BoardAdmin />} />
-          */}
 
           </Routes>
       </div>
        
-      
-      
       
     
   );
