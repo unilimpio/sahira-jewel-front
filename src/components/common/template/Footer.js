@@ -5,13 +5,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 //import logo from "./logo_clean_verify.png"
 import "../../../App.css";
 
-import logoUni from '../../../logo-unilimpio.svg';
+
 
 
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-let linkClass = `text-zinc-600 text-[11px] sm:text-sm md:text-base lg:text-lg no-underline hover:text-zinc-900 hover:underline p-2`;
+let linkClass = `text-zinc-600 text-[11px] sm:text-sm md:text-base lg:text-lg no-underline hover:text-neutral-100 hover:underline p-2`;
 
 const Footer = () => {
 
@@ -20,12 +20,14 @@ const Footer = () => {
 
   return (
     
-      <footer className="fixed w-full flex justify-between z-40 bottom-0 right-0 bg-neutral-300 h-12 sm:h-16 md:h-20 lg:h-24">
-        
-          <p className="p-2 text-zinc-800 text-sm sm:text-base md:text-lg lg:text-2xl font-light">
-            Sahira Jewels CO. ,<br/> <span className="text-[9px] font-extralight mb-2">All rights Reserved. 2025 </span>
-          </p>        
-        
+      <footer className="fixed w-full z-40 -bottom-1 h-9 sm:h-16 md:h-20 lg:h-24 ">
+        <div className="flex justify-between w-full bg-neutral-300 ">
+          <div className="flex-col m-1">
+          <h6 className="m-0 text-zinc-800 text-[10px] sm:text-base md:text-lg lg:text-2xl font-light">
+            Sahira Jewels Co. ,
+          </h6>
+          <p className="text-[8px] font-extralight m-0">All rights Reserved. &copy; 2025 </p>        
+        </div>
         <div className="grow  ">  
           <div className="flex justify-end">
              <Link to={"/home"} className={` `+ linkClass}>
@@ -37,7 +39,7 @@ const Footer = () => {
           </div>
         </div>  
         
-         
+        </div> 
       </footer>
       
    

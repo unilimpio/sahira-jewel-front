@@ -12,6 +12,9 @@ import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
 
 
+const pathToImg = "assets/uploads/"
+const backUrl = process.env.REACT_APP_BACK_URL;
+const baseUrl = process.env.REACT_APP_BASE_URL;
 
 export default function Collection () {
 
@@ -35,56 +38,33 @@ export default function Collection () {
 
   const [error, setError] = useState(false);
 
-  const wrapperClass = `w-full h-full p-4 mb-4 mx-auto `;
+  const wrapperClass = `w-full h-full p-3  mx-auto `;
 
-  const [cartContent, setCartContent]  = useState(UserService.getCart());
-
-  console.log(cartContent)
-  function ProductList({catId}){   
+  
+  function CatFilter(){   
     
     const [loading, setLoading] = useState(false);
     //const [message, setMessage] = useState("");
-    const [listContent, setListContent] = useState(false);
+    const [categories, setCategories] = useState(false);
       
     useEffect(() => {
-      // Add scroll event listener when the component mounts
-   
-      let ignore = false;
-
+      
       function createOptions() {
         return {
-          catId: catId,           
+          catId: null,           
                    
         };
       }
       
-      const options = createOptions();
+      const options = createOptions();   
       
-      if(!options.catId){
-        
-        options.catId = 0;
-        
-      } else {
-
-          UserService.getProducts(options.catId).then(
+          UserService.getCategories(options.catId).then(
 
               (response) => {
 
-                if(!ignore){
-                
-                  setListContent(response?.data.products);
-                  
-                  //console.log(response);              
-                  //console.log(response?.status);
-                  //console.log(response?.statusText)
+                  setCategories(response?.data.categories);                  
 
-                  if(response?.data.message){
-                    
-                    //setMessage(response?.data.message)
-                  }
-                  console.log(response?.data.message)
-
-                }
+                  console.log(response?.data)                
               
               },
 
@@ -94,22 +74,125 @@ export default function Collection () {
                   error?.message ||
                   error?.toString();
                 
-                setListContent(_content);
+                setCategories(_content);
 
-                
+                console.log(error)
               
               }
             
           )
 
-        
-      }  
-
- 
       return () => {
 
-        ignore = true;
+
+      };
+  
+    }, []);
+
+    function SelectTemplate({categories}){
+      
+      const handleChange = (event)=>{
         
+        setCatId(event.target.value)
+
+      }
+             
+        return(
+          <div className="flex flex-row">
+            <p className="text-sm font-thin">Filter by category:&nbsp;</p>   
+            <select id="categories-select" className={` border border-zinc-500 rounded-lg text-sm font-light h-5`} value={catId} onChange={handleChange}>                             
+            
+              {
+                categories?.map(row => (
+                  <option value={ row.id  }>{ row.name }</option>
+                  
+                  
+            
+                ))
+              }
+              
+              </select>
+            
+            
+          </div>
+        );
+    
+    
+    }
+  
+    return (
+         
+      <div className="">              
+              
+              {categories ? (   
+
+              <SelectTemplate categories={categories}/>
+              
+              ):
+              (
+                <div className="flex">
+                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                  </svg>
+                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
+                </div>
+              )
+              }
+            
+                           
+      </div>
+ 
+    );
+  
+  }
+ 
+
+  function ProductGrid({catId}){   
+    
+    const [loading, setLoading] = useState(false);
+    //const [message, setMessage] = useState("");
+    const [products, setProducts] = useState(false);
+      
+    useEffect(() => {
+      // Add scroll event listener when the component mounts
+   
+
+      function createOptions() {
+        return {
+          catId: catId,           
+                   
+        };
+      }
+      
+      const options = createOptions();   
+
+          UserService.getProducts(options.catId).then(
+
+              (response) => {
+                
+                  setProducts(response?.data.products);         
+                  console.log(response?.data)                  
+                  console.log(response?.data.products)
+               
+              
+              },
+
+              (error) => {
+                const _content =
+                  (error?.response && error?.response.data) ||
+                  error?.message ||
+                  error?.toString();
+                
+                setProducts(_content);
+                console.log(error)
+              
+              }
+            
+          )
+
+      
+      return () => {
 
       };
   
@@ -122,7 +205,7 @@ export default function Collection () {
         setMessage(false);
         setError(false);
         setLoading(true);
-        setListContent(false); 
+        setProducts(false); 
         
         setProdId(prodId);
         console.log('product id state changed to : '.prodId)
@@ -153,79 +236,34 @@ export default function Collection () {
       );
     }  
 
-    function ListTemplate({listContent}){
+    function GridTemplate({products}){
   
              
         return(
-          <div className="mt-2 mb-4 max-h-48 overflow-y-auto">
-                
-            <table id="eval-display" 
-              className="bg-white opacity-90 text-[10px] sm:text-sm shadow-md rounded-sm">
-                             
-            
-                  <thead id="table-evals-display-head" 
-                          className="border border-b-zinc-300 " >
-                    <tr className="bg-gradient-to-b from-stone-300 to-white  font-semibold sticky top-0 z-40">
-                      <td className="p-1"   >
-                        id#
-                      </td>
-                      <td className="p-1"   >
-                        Name
-                      </td>
-                      <td className="p-1"  >
-                        price
-                      </td> 
-                      <td className="p-1"  >
-                        stock
-                      </td>
-                      <td className="p-1"  >
-                        image
-                      </td>  
-                      
-                      <td className="p-1">Accion</td>
-  
-                    </tr>
-  
-  
-  
-                  </thead>
-                  <tbody className="text-zinc-600 ">
-            
-              
-              {
-                listContent?.map(row => (
-                  
-                  <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+row.id} >
-                    <td className="p-2" id={'td-id'+row.id}   >
-                      { row.id  }
-                    </td>
-                    <td className="p-2 " id={'td-date_inicio_planif'+row.id}   >
-                      { row.name }
-                    </td>
-                    
-                    <td className="p-2">
-                    { row.price }
-                    </td>
-                    <td className="p-2">
-                    { row.stock }
-                    </td>
-                    <td className="p-2">
-                    { row.image }
-                    </td>
-                    <td className="p-2">
-                      <ViewButton prodId={row.id}/>
-                    </td>    
-                  
-                  </tr> 
-                  
-            
-                ))
-              }
-              </tbody>
-              </table>
-            
-            
-          </div>
+          <div className="mt-6 mb-48 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
+          {products?.map((product) => (
+            <div key={product.id} className="group relative ">
+              <img
+                alt={product.imageAlt}
+                src={backUrl+pathToImg+product.imageSrc}
+                className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+              />
+              <div className="mt-4 flex justify-between">
+                <div>
+                  <h3 className="text-xl text-zinc-600">
+                    <a href={`${baseUrl+'product?pId='+product.id}`} className="text-purple-400">
+                      <span aria-hidden="true" className="absolute inset-0 text-purple-400 " />
+                      {product.name}
+                    </a>
+                  </h3>
+                  <p className="mt-1 text-sm text-zinc-500">{product.description}</p>
+                </div>
+                <p className="text-xl font-medium text-gray-900">${product.price}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+          
         );
     
     
@@ -233,23 +271,23 @@ export default function Collection () {
   
     return (
          
-      <div className="flex flex-col relative z-1">
-          
-              <p className="text-sm md:text-md mb-0">Estos son los porductos en esta categoria : </p>
-              {loading && (
-                <div className="flex">
+      <div className="flex flex-col">         
+              
+            
+            {products ? (   
+
+              <GridTemplate products={products}/>
+              
+            ) : (
+              <div className="flex">
                   <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
                     <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
                     <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
                   </svg>
                   <span className="text-slate-700 font-extralight ml-2">Loading...</span>
                 </div>
-
-              )}
-              {listContent && (   
-
-              <ListTemplate listContent={listContent}/>
-              )}
+            )
+            }
             
                            
       </div>
@@ -674,22 +712,20 @@ export default function Collection () {
   return (
     
     <Template>
-        <div 
+      <div 
         className={`      `+wrapperClass}>
         
       
-        <div className={`flex flex-col
+        <div className={`relative
                     
                     ${showModal && (
                       `hidden`
                     )
                     }
                     
-        `} >
-          
-          <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Collection</h1>
-
-              {message && (
+              `} 
+        >
+          {message && (
                   
                   <AlertBox message={message} type="info"/>
                  
@@ -697,13 +733,16 @@ export default function Collection () {
               {error && (
                   <AlertBox message={error} type="error"/>
                   
-                )}
-            
+          )}
+          <div className=" bg-white  p-1 ">
+              <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Collection</h1>
               
+              <CatFilter catId={catId} />
+          </div>          
 
-
-              <ProductList catId={catId} />
-
+          <div className="">
+              <ProductGrid catId={catId} />
+          </div>
               
         
         </div>   

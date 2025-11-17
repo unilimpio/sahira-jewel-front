@@ -37,30 +37,21 @@ const Template = ({children}) => {
     if (user) {
       setCurrentUser(user);
       setIsLoggedIn(true);
-    //  setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-    //  setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+    
     }
 
-    /*
-    EventBus.on("logout", () => {
-      logOut();
-    });
-
-    return () => {
-      EventBus.remove("logout");
-    };
-    */
+   
   }, []);
 
  
 
   return (
     
-  <div className="lg:container  mx-auto ">
+  <div className="relative">
 
-    <Header isLoggedIn={isLoggedIn}/>
+    <Header isLoggedIn={isLoggedIn} />
     
-    <div id="main" className="bg-white dark:bg-slate-900 p-4 md:p-12 lg:p-18 mb-20">
+    <div id="main" className="bg-white dark:bg-slate-900 ">
       {children}
     </div>
 

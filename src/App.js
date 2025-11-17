@@ -14,10 +14,14 @@ import Account from "./components/Account";
 
 import Home from "./components/Home";
 import Collection from "./components/Collection";
+import Product from "./components/Product";
 import Featured from "./components/Featured";
-import About from "./components/About";
-import Cart from "./components/Cart";
+import Contact from "./components/Contact";
+
 import Wishlist from "./components/Wishlist";
+import About from "./components/About";
+import MyOrders from "./components/MyOrders";
+import FinishOrder from "./components/FinishOrder";
 
 
 
@@ -33,16 +37,19 @@ const App = () => {
             <Route path={"/home"} element={<Home />} />
             
             <Route path={"/collection"} element={<Collection />} />
+            <Route path={"/product"} element={<Product />} />
             <Route path={"/featured"} element={<Featured />} />
+            <Route path={"/wishlist"} element={<Wishlist />} />
             <Route path={"/about"} element={<About />} />
+            <Route path={"/contact"} element={<Contact />} />
             
             <Route path={"/login"} element={<Login />} />
             <Route path={"/logout"} element={<Logout />} />
             <Route path={"/register"} element={<Register />} />
             <Route path={"/account"} element={<Account />} />
 
-            <Route path={"/cart"} element={<Cart />} />
-            <Route path={"/wishlist"} element={<Wishlist />} />
+            <Route path={"/account/orders"} element={<MyOrders />} />
+            <Route path={"/finish-order"} element={<FinishOrder />} />
             
 
           </Routes>

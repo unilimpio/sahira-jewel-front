@@ -1,7 +1,7 @@
 import axios from "axios";
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
-const API_URL = "https://back.sahirajewels.com/index.php/api/";
-//const API_URL = "http://sj/index.php/api/";
+//const API_URL = "https://back.sahirajewels.com/index.php/api/";
+const API_URL = "http://sj/index.php/api/";
 
 
 const register = ( email, password) => {
@@ -13,22 +13,6 @@ const register = ( email, password) => {
 };
 
 const login = (email, password) => {
-
-  return axios
-    .post(API_URL + "login", {
-      email,
-      password,
-    })
-    .then((response) => {
-      if (response.data.email) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
-
-      return response.data;
-    });
-};
-
-const guestLogin = (email, password) => {
 
   return axios
     .post(API_URL + "login", {

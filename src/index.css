@@ -11,6 +11,5 @@
 
 @tailwind utilities;
 
-@tailwind screens;
 
-
+@import "tailwindcss/screens";

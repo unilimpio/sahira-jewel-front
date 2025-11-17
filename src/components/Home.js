@@ -56,7 +56,7 @@ export default function Home () {
               <p className="text-zinc-600 text-sm">
                   Mira lo que tenemos por aqui
               </p>
-      
+              
         </div>
       
       
