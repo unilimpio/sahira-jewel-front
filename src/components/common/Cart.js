@@ -1,48 +1,56 @@
 import { Routes, Route, Link } from "react-router";
-import { useState } from 'react'
+import { useState , useEffect} from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 
 import CartIcon from './template/icons/CartIcon'
+import AuthService from "../../services/auth.service";
+import UserService from "../../services/user.service";
 
-const products = [
-  {
-    id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
-    quantity: 1,
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-    imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-  {
-    id: 3,
-    name: 'Zip Tote Basket',
-    href: '#',
-    color: 'White and black',
-    price: '$140.00',
-    quantity: 1,
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-03.jpg',
-    imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
-  },
-]
 
-export default function Cart({className, iconClassName}) {
-  const [open, setOpen] = useState(false)
 
+const pathToImg = "assets/uploads/"
+const backUrl = process.env.REACT_APP_BACK_URL;
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
+
+
+function usePersistedState(key, defaultValue) {
+  const [state, setState] = useState(() => {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : defaultValue;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+
+  return [state, setState];
+}
+
+
+export default function Cart({
+  className, iconClassName,
+  cart,
+  setCart,
+	deleteCourseFromCartFunction,
+	totalAmountCalculationFunction,
+	
+}) {
+
+
+  const [open, setOpen] = useState(false)  
+ //const [cart, setCart] = usePersistedState('sjCart', 0);
+  const minusPlusButtonClassName = `bg-neutral-100 h-5 w-5 rounded-full drop-shadow-md hover:drop-shadow-sm p-0 m-0`;
+  const minusPlusSpanClassName = ` text-sm align-top m-0`;  
+  
+  console.log('the cart is at this momento:',cart)
+  console.log('the cart.lenght is at this momento:',cart.length)
+  
+  
+
+  
   return (
     <div className="">
       
@@ -50,7 +58,16 @@ export default function Cart({className, iconClassName}) {
         onClick={() => setOpen(true)}
         className={` ${className}  `}
       >
-         <CartIcon className={`  ${className} `} iconClassName={` ${iconClassName} `} />
+        <div className="relative">
+          <CartIcon className={`  ${className} `} iconClassName={` ${iconClassName} `} />
+          {cart.length !== 0 && (
+            <div className="absolute w-4 h-4 bg-red-400  rounded-full top-0 right-0 z-50 bg-opacity-90 flex justify-center">
+              <p className={`text-[10px] font-semibold text-white` } >{cart.length}</p>
+            </div>
+          )}
+        </div>
+         
+         
       </button>
       <Dialog open={open} onClose={setOpen} className="fixed top-0 right-0 z-50 ">
         <DialogBackdrop
@@ -68,7 +85,7 @@ export default function Cart({className, iconClassName}) {
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                     <div className="flex items-start justify-between">
-                      <DialogTitle className="text-lg font-medium text-gray-900">Shopping cart</DialogTitle>
+                      <DialogTitle className="text-xl font-medium text-zinc-600 ">Shopping cart</DialogTitle>
                       <div className="ml-3 flex h-7 items-center">
                         <button
                           type="button"
@@ -81,53 +98,88 @@ export default function Cart({className, iconClassName}) {
                         </button>
                       </div>
                     </div>
+                    {cart.lenght === 0  ? (
+	                    <h4 className="text-md font-thin text-zinc-600">Tu bolsa de compras esta vacia, llenala de productos maravillosos...</h4>
+	                  ) : (
 
-                    <div className="mt-8">
-                      <div className="flow-root">
-                        <ul role="list" className="-my-6 divide-y divide-gray-200">
-                          {products.map((product) => (
-                            <li key={product.id} className="flex py-3">
-                              <div className="size-14 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                <img alt={product.imageAlt} src={product.imageSrc} className="w-16 object-cover" />
-                              </div>
-
-                              <div className="ml-4 flex flex-1 flex-col">
-                                <div>
-                                  <div className="flex justify-between text-base font-medium text-gray-900">
-                                    <h6 className="text-neutral-600">
-                                      <Link to={"/collection&pId="+product.id} className="hover:no-underline text-neutral-400 ">
-                                        {product.name}
-                                      </Link>
-                                    </h6>
-                                    <p className="ml-4">{product.price}</p>
-                                  </div>
-                                  <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                                </div>
-                                <div className="flex flex-1 items-end justify-between text-sm">
-                                  <p className="text-gray-500">Qty {product.quantity}</p>
+                      <div className="mt-8">
+                        <div className="">
+                          <ul  className="-my-6 divide-y divide-gray-200">
+                            {cart.map((item) => (
+                              <li key={item.product.id} className="">
+                                <div className="h-fit">
                                   <div className="flex">
-                                    <button type="button" className="font-medium text-purple-400 hover:text-indigo-500">
-                                      Remove
-                                    </button>
+                                    <div className="w-12">
+                                      <img src={backUrl+pathToImg+item.product.imageSrc} 
+                                        alt={item.product.imageAlt} />
+                                    </div>
+                                    <div className="">
+                                      <h6>{item.product.name}</h6>
+                                      <p>Price: ${item.product.price}</p>
+                                    </div>
+                                  </div>
+                                  <div className="w-full">
+                                    <div className="flex flex-row-reverse justify-between">
+                                      <button
+                                        className="text-red-400 text-[10px] h-3 hover:underline"
+                                        onClick={() => 
+                                        deleteCourseFromCartFunction(item.product)}>
+                                        Remove Product
+                                      </button>
+                                      <div className="flex">
+                                        <button  className={` ${minusPlusButtonClassName}`}
+                                          onClick={(e) => {
+                                          setCart((prevCart) => {
+                                            const updatedCart = prevCart.map((prevItem) =>
+                                                        prevItem.product.id === item.product.id
+                                                            ? { ...prevItem, quantity: 
+                                                            item.quantity + 1 }
+                                                            : prevItem
+                                            );
+                                            return updatedCart;
+                                          })
+                                        }}>
+                                          <span className={` ${minusPlusSpanClassName} `}>
+                                            +</span></button>
+                                        <p className='text-zinc-600 text-sm font-medium mx-2'>{item.quantity} </p>
+                                        <button className={` ${minusPlusButtonClassName}`}
+                                          onClick={(e) => {
+                                          setCart((prevCart) => {
+                                            const updatedCart = prevCart.map(
+                                            (prevItem) =>
+                                            prevItem.product.id === item.product.id
+                                                ? { ...prevItem, quantity:
+                                                Math.max(item.quantity - 1, 0) }
+                                                : prevItem
+                                            );
+                                            return updatedCart;
+                                          })
+                                        }}>
+                                        <span className={` ${minusPlusSpanClassName} `}>
+                                          -</span></button>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>  
+                    )  }
                   </div>
 
                   <div className="border-t border-gray-200 px-4 py-4 sm:px-6">
                     <div className="flex justify-between text-base font-medium text-gray-900">
-                      <p>Subtotal</p>
-                      <p>$262.00</p>
+                      <p className="text-zinc-600">Subtotal</p>
+                      <p className="text-zinc-600">USD {totalAmountCalculationFunction()}</p>
                     </div>
-                    <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                    <div className="mt-2 justify-items-center">
+                    <p className="mt-0.5 text-xs text-gray-500">Shipping and taxes calculated at checkout.</p>
+                    <div className="mt-2 flex  justify-center">
                       <button
-                        className="flex items-center text-center rounded-md border border-transparent bg-purple-400 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                        className="bg-purple-400 drop-shadow-md disabled:drop-shadow-none text-white rounded-md p-3 disabled:bg-zinc-200 transition-all hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg"
+                        disabled={cart.length === 0 || 
+                        totalAmountCalculationFunction() === 0}
                       >
                         Checkout
                       </button>
@@ -138,7 +190,7 @@ export default function Cart({className, iconClassName}) {
                         <button
                           type="button"
                           onClick={() => setOpen(false)}
-                          className="font-medium text-purple-400 hover:text-indigo-500"
+                          className="font-medium hover:text-zinc-400 hover:underline text-indigo-500"
                         >
                           Continue Shopping
                           <span aria-hidden="true"> &rarr;</span>

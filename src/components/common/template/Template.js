@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../../App.css";
 
 import AuthService from "../../../services/auth.service";
-
+import UserService from "../../../services/user.service";
 
 import Logo from "../Logo";
 
@@ -18,6 +18,8 @@ import Footer from "./Footer";
 import logoUni from '../../../logo-unilimpio.svg';
 
 const user = AuthService.getCurrentUser();
+//const cart = UserService.getCart();
+
 
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";

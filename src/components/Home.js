@@ -43,7 +43,7 @@ export default function Home () {
           
           
          
-              <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Hola&nbsp;
+              <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Hello!👋&nbsp;
 
               {user && (
                  
@@ -53,9 +53,11 @@ export default function Home () {
           
               }
               </h1>
-              <p className="text-zinc-600 text-sm">
-                  Mira lo que tenemos por aqui
-              </p>
+              <h3 className="text-zinc-600 font-thin">
+                 We got the best artist designed, hand-crafted, indigenous inspired jewels for you.<br />
+                 You are amazing! 
+              </h3>
+              <p className="">Every piece is carefully conceptualized, designed, and then hand crafted in our own or with the support of local artisanal jewelers who preserve a millenary craft.</p>
               
         </div>
       

@@ -36,7 +36,7 @@ export default function Featured () {
 
         <div className={` `+wrapperClass}>
           
-          <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Featured Products</h1>
+          <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Featured</h1>
           
       
         </div>

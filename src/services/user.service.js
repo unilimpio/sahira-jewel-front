@@ -11,17 +11,49 @@ const API_URL = "http://sj/index.php/api/";
 
 const getCart = () => {
 
+  const cartItems = [
+  {
+    id: 1,
+    name: 'Throwback Hip Bag',
+    href: '#',
+    color: 'Salmon',
+    price: '$90.00',
+    quantity: 1,
+    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-cartItem-01.jpg',
+    imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
+  },
+  {
+    id: 2,
+    name: 'Medium Stuff Satchel',
+    href: '#',
+    color: 'Blue',
+    price: '$32.00',
+    quantity: 1,
+    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-cartItem-02.jpg',
+    imageAlt:
+      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
+  },
+  {
+    id: 3,
+    name: 'Zip Tote Basket',
+    href: '#',
+    color: 'White and black',
+    price: '$140.00',
+    quantity: 1,
+    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-cartItem-03.jpg',
+    imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
+  },
+]
   
   let cart = false;
-  if(localStorage.getItem("sj_cart") !== null){
-    cart = localStorage.getItem("sj_cart");
-  };
   
-  if(!cart){
-    return null;
+  if(localStorage.getItem("sj_cart") !== null){
+    cart = JSON.parse(localStorage.getItem("sj_cart"));
   } else {
-    return JSON.parse(cart);    //returns an empty object??
-  }
+    localStorage.setItem('sj_cart',JSON.stringify(cartItems) ) ;//set cart as an empty object but at least it exists
+  }   
+  return cart;    //returns an empty object??
+  
   
     
 };

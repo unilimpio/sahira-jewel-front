@@ -20,7 +20,7 @@ const Footer = () => {
 
   return (
     
-      <footer className="fixed w-full z-40 -bottom-1 h-9 sm:h-16 md:h-20 lg:h-24 ">
+      <footer className="fixed w-full z-40 bottom-0 h-9 sm:h-16 md:h-20 lg:h-24 bg-white">
         <div className="flex justify-between w-full bg-neutral-300 ">
           <div className="flex-col m-1">
           <h6 className="m-0 text-zinc-800 text-[10px] sm:text-base md:text-lg lg:text-2xl font-light">

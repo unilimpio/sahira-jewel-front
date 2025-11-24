@@ -23,7 +23,7 @@ const linkClassActive = `m-1 text-purple-400 hover:no-underline -translate-y-1 s
   return (
        
       <nav id="responsive-bottom-nav" 
-            className="w-full content-start h-20 md:hidden fixed bottom-0 left-0 z-40 bg-white px-4 shadow-lg">
+            className="w-full content-between h-24 sm:hidden fixed bottom-0 left-0 z-40 bg-white px-4 shadow-lg">
 
           <div className="flex flex-row justify-between font-light text-sm ">
             

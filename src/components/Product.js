@@ -30,19 +30,32 @@ const backUrl = process.env.REACT_APP_BACK_URL;
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
 
+
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+function usePersistedState(key, defaultValue) {
+  const [state, setState] = useState(() => {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : defaultValue;
+  });
 
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+
+  return [state, setState];
+}
 
 export default function Product () {
 
   const options = {
-  colors: [
-    { id: 'washed-black', name: 'Washed Black', classes: 'bg-gray-700 checked:outline-gray-700' },
-    { id: 'white', name: 'White', classes: 'bg-white checked:outline-gray-400' },
-    { id: 'washed-gray', name: 'Washed Gray', classes: 'bg-gray-500 checked:outline-gray-500' },
+  sizes: [
+    { id: 'small', name: 'Small', classes: 'bg-gray-700 checked:outline-gray-700' },
+    { id: 'medium', name: 'Medium', classes: 'bg-white checked:outline-gray-400' },
+    { id: 'large', name: 'Large', classes: 'bg-gray-500 checked:outline-gray-500' },
   ],
   details: [
     {
@@ -87,7 +100,10 @@ export default function Product () {
   ],
 }
 
-  let navigate = useNavigate();
+  
+
+
+  
 
   const user = AuthService.getCurrentUser();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -95,7 +111,7 @@ export default function Product () {
     if(searchParams.get("pId")){
           
           console.log(searchParams.get("pId"))
-        }
+    }
   
   const [prodId, setProdId] = useState(searchParams.get("pId"));
  
@@ -104,6 +120,8 @@ export default function Product () {
   const [message, setMessage] = useState(false);
 
   const [error, setError] = useState(false);
+
+  const [cart, setCart] = usePersistedState('sjCart', 0);
 
   const wrapperClass = `w-full h-full p-3  mx-auto `;  
   
@@ -116,11 +134,22 @@ export default function Product () {
     const [details, setDetails] = useState(false);
  
 
-    //simple strings for the buttons, choose your own!
-    const strSave = `✅ Aceptar y Continuar`;
-    const strCancel = `❌ Cancelar`;
-
-     
+    const addCourseToCartFunction = (course) => {
+      console.log('this cart after before ',cart)
+      const alreadyCourses = cart
+                  .find(item => item.product.id === course.id);
+        if (alreadyCourses) {
+          const latestCartUpdate = cart.map(item =>
+            item.product.id === course.id ? { 
+            ...item, quantity: item.quantity + 1 } 
+            : item
+          );
+          setCart(latestCartUpdate);
+        } else {
+          setCart([...cart, {product: course, quantity: 1}]);
+        }
+        console.log('this cart after update ',cart )
+	  }; 
 
   
     useEffect(() => {
@@ -159,7 +188,7 @@ export default function Product () {
           
         )         
         
-        
+        console.log('this inside useffect in product detail component',cart)
      
       // Clean up the event listener when the component unmounts
       return () => {
@@ -173,48 +202,16 @@ export default function Product () {
     }, [prodId]);    
 
     const ProductDetailTemplate = ({product, images, details}) => { 
+
+      let navigate = useNavigate();
    
-      function handleSubmit(event) {
+      function handleClick(event) {
 
         event.preventDefault();
 
-        const form = event.target;
-
-        //this one ocntains all the magic ...
-          const formData = new FormData(form);
-        
-        const values = [...formData.entries()];
-        const formElements = form.elements;
-        
-        const onSubmitObs = formData.get("obs");
-             
-        
-        console.log(values);
-        
-        console.log(form);
-        
-        console.log(formElements);
-        
-        console.log(onSubmitObs);
-
-        
-        
-       
-
-        if (!error) {
-                    
-          const data = {
-
-            order_details: formData.get("talla"),            
-            
-          }
-          console.log(data);
-              
-          
-        }       
-        
-
-        
+        addCourseToCartFunction(product)
+        setMessage('Product added to cart!');
+        navigate(0)
         
       }
       
@@ -223,14 +220,14 @@ export default function Product () {
              
       return (   
   
-        <button  type="submit" id="submit"
+        <button  
                 className={className + 
                   `  rounded-md border border-white  bg-purple-400                  
                       hover:shadow-md hover:bg-indigo-600 
                   transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
                   `                    
                 } 
-                disabled={loading} >
+                disabled={loading} onClick={handleClick}>
           
           <span className="mx-8 text-white font-semibold text-md">{children}</span>
           
@@ -396,7 +393,7 @@ export default function Product () {
 
           {/* Product info */}
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-600">{product.name}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-600 font-serif">{product.name}</h1>
 
             <div className="mt-3">
               <h2 className="sr-only">Product information</h2>
@@ -408,7 +405,8 @@ export default function Product () {
               <h3 className="sr-only">Reviews</h3>
               <div className="flex items-center">
                 <div className="flex items-center">
-                  {[0, 1, 2, 3, 4].map((rating) => (
+                  {/*
+                  [0, 1, 2, 3, 4].map((rating) => (
                     <StarIcon
                       key={rating}
                       aria-hidden="true"
@@ -417,7 +415,8 @@ export default function Product () {
                         'size-5 shrink-0',
                       )}
                     />
-                  ))}
+                  ))
+                  */}
                 </div>
                 <p className="sr-only">{product.rating} out of 5 stars</p>
               </div>
@@ -439,7 +438,7 @@ export default function Product () {
 
                 <fieldset aria-label="Choose a color" className="mt-2">
                   <div className="flex items-center gap-x-3">
-                    {product.sizes?.map((size) => (
+                    {options.sizes?.map((size) => (
                       <div
                         key={size.id}
                         className="flex rounded-full outline outline-1 -outline-offset-1 outline-black/10"
@@ -462,7 +461,7 @@ export default function Product () {
               </div>
 
               <div className="mt-10 flex">
-                <Add2CartButton>Add to bag</Add2CartButton>
+                <Add2CartButton addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
 
                 <button
                   type="button"
@@ -515,9 +514,7 @@ export default function Product () {
           </div>
         </div>
         
-      );
-
-      
+      );      
   
     }
 
@@ -576,13 +573,8 @@ export default function Product () {
         
         {prodId &&(
           <ProductDetail prodId={prodId}/>
-          
-
-
         )}
-
-        
-            
+    
         </div>
       </Template>
   );
