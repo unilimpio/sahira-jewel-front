@@ -5,7 +5,12 @@ module.exports = {
    
   ],
   theme: {
-    extend: {},
+    extend: {  
+      colors: {
+                'sahira-green': '#566c2f',
+                'sahira-beige': '#efe9dd',
+              },
+    },
   },
   plugins: [
     

@@ -4,8 +4,8 @@ import qs from "qs";
 
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
 //const API_URL = "https://back.sahirajewels.com/index.php/api/";
-const API_URL = "http://sj/index.php/api/";
-
+//const API_URL = "http://sj/index.php/api/";
+const API_URL = process.env.REACT_APP_API_URL;
 
 
 

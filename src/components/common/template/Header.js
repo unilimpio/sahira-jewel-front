@@ -9,6 +9,7 @@ import "../../../App.css";
 
 import LogoutIcon from "../template/icons/LogoutIcon"
 import LoginIcon from "../template/icons/LoginIcon"
+import UserIcon from "../template/icons/UserIcon"
 import HamburguerIcon from "../template/icons/HamburguerIcon"
 import CloseIcon from "../template/icons/CloseIcon"
 
@@ -62,8 +63,8 @@ const Header = ({isLoggedIn}) => {
   
 
   const linkClassIcons = `p-2 md:mx-4 text-slate-800 hover:text-white sm:text-xs md:text-lg lg:text-lg hover:-translate-y-1 hover:transition`;
-  const linkClass = `p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-sm sm:text-md md:text-lg lg:text-xl `;
-  const link2Class = ` flex p-2 text-zinc-600 no-underline hover:no-underline hover:text-purple-400 text-sm sm:text-md md:text-lg lg:text-xl stroke-zinc-600 hover:stroke-purple-400`;
+  const linkClass = `p-3 font-light text-zinc-600 no-underline hover:text-sahira-green hover:underline text-sm sm:text-md md:text-lg lg:text-xl `;
+  const link2Class = ` flex p-2 text-sahira-green no-underline hover:no-underline hover:text-zinc-400 text-sm sm:text-md md:text-lg lg:text-xl stroke-sahira-green hover:stroke-zinc-600`;
 
   const linkDrawerClass = `p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-lg  `;
 
@@ -110,10 +111,10 @@ const Header = ({isLoggedIn}) => {
   return (
     
       <header  className={`sticky top-0 z-40 flex-col`}>
-        <div className=" relative z-40  w-full flex place-content-between drop-shadow-md rounded-md bg-neutral-100            
-            bg-opacity-75 h-fit">
+        <div className=" relative z-40  w-full flex place-content-between  bg-sahira-beige           
+            h-fit">
         
-          <Link to={"/"} className="hover:no-underline ">
+          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5">
             <Logo className={"w-36 sm:w-42 md:w-64"}/>
           </Link>
           <div className=" flex-col w-1/2 place-content-start justify-items-end ">
@@ -121,7 +122,7 @@ const Header = ({isLoggedIn}) => {
                     
                           
                 <Link to={"/about"} className={` `+ linkClass}>
-                  About
+                  Our Story
                 </Link>
                 <Link to={"/contact"} className={` `+ linkClass}>
                   Contact
@@ -140,27 +141,28 @@ const Header = ({isLoggedIn}) => {
                   <>
                 
                     <Link to={"/login"} className={` `+linkClass}>
-                      <LoginIcon iconClassName={"w-6 h-6 fill-lime-600"} textClassName={"text-center text-zinc-600"} > Login </LoginIcon>
+                      <UserIcon iconClassName={"w-6 h-6 "} className={""} /> 
                     
                     </Link>
+
+
                   
                   </>
                 )}
-                        
+                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 hover:fill-sahira-green "} deleteCourseFromCartFunction={deleteCourseFromCartFunction} totalAmountCalculationFunction={totalAmountCalculationFunction} cart={cart} setCart={setCart}/>
+          
             </nav>
-            <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 -z-50 justify-end">
-              <CartComponent className={"transition hover:-translate-y-2 mx-1"} iconClassName={"w-8 h-8 fill-zinc-600  "} deleteCourseFromCartFunction={deleteCourseFromCartFunction} totalAmountCalculationFunction={totalAmountCalculationFunction} cart={cart} setCart={setCart}/>
-            </nav>
+            
             
 
           </div>
           
         </div>
-        <nav className="flex justify-center w-full fixed sm:static sm:z-30 -top-20 -z-50 bg-gradient-to-br from-stone-400 via-white to-stone-500 shadow-lg rounded-full ">
+        <nav className="flex justify-center w-full fixed sm:static sm:z-30 -top-20 -z-50 bg-sahira-beige">
 
               <div className="flex justify-between w-5/6">
                 <Link to={"/"} className={` `+ link2Class}>
-                  <HomeIcon iconClassName={'w-6 '} />&nbsp;Home
+                  <HomeIcon iconClassName={'w-6 h-6 '} />&nbsp;Home
                 </Link>
                 <Link to={"/featured"} className={` `+ link2Class}>
                   Featured
@@ -173,10 +175,9 @@ const Header = ({isLoggedIn}) => {
                 </Link>
               </div>             
                         
-            </nav>
-        <div id="mobile-top-menu" className="absolute top-2 right-2 z-50 visible sm:hidden place-content-center">
-          <nav className="flex flex-row justify-center ">                      
-              <CartComponent className={"transition hover:-translate-y-1 p-1"} iconClassName={"w-6 h-6 fill-zinc-600   "}  deleteCourseFromCartFunction={deleteCourseFromCartFunction} totalAmountCalculationFunction={totalAmountCalculationFunction}  cart={cart} setCart={setCart}/>
+        </nav>
+        <div id="mobile-top-menu" className="absolute w-full top-0 z-50 visible sm:hidden flex justify-center bg-sahira-beige">
+          <nav className="flex flex-row w-full">                      
                       {
                         hamIsOpen ? (
                           <CloseButton iconClassName={`w-6 h-6 fill-zinc-600 ${hamIsOpen ? ('') : ('')}`} buttonClassName={`transition delay-150 ${hamIsOpen ? ('') : ('')}`}/>
@@ -185,6 +186,13 @@ const Header = ({isLoggedIn}) => {
                         )
 
                       }
+
+                      <Link to={"/"} className="hover:no-underline sm:hidden flex flex-grow justify-center">
+                        <Logo className={"w-36 sm:w-42 md:w-64"}/>
+                      </Link>
+                                    
+                      <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600   "}  deleteCourseFromCartFunction={deleteCourseFromCartFunction} totalAmountCalculationFunction={totalAmountCalculationFunction}  cart={cart} setCart={setCart}/>
+
 
           </nav>
           {
@@ -214,8 +222,9 @@ const Header = ({isLoggedIn}) => {
                       ) : (
                       
                       
-                          <Link to={"/login"} className={` `+linkDrawerClass}>
-                            <LoginIcon iconClassName={"w-6 h-6 fill-lime-600"} textClassName={"text-center text-zinc-600"} > Login </LoginIcon>
+                          <Link to={"/login"} className={`flex `+linkDrawerClass}>
+                                                  <UserIcon iconClassName={"w-6 h-6 "} className={""} /> Account
+
                           
                           </Link>
                         

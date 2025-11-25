@@ -31,7 +31,7 @@ function usePersistedState(key, defaultValue) {
 
 
 export default function Cart({
-  className, iconClassName,
+  className, iconClassName, buttonClassName,
   cart,
   setCart,
 	deleteCourseFromCartFunction,
@@ -42,7 +42,7 @@ export default function Cart({
 
   const [open, setOpen] = useState(false)  
  //const [cart, setCart] = usePersistedState('sjCart', 0);
-  const minusPlusButtonClassName = `bg-neutral-100 h-5 w-5 rounded-full drop-shadow-md hover:drop-shadow-sm p-0 m-0`;
+  const minusPlusButtonClassName = `bg-sahira-beige h-5 w-5 rounded-full drop-shadow-md hover:drop-shadow-sm p-0 m-0`;
   const minusPlusSpanClassName = ` text-sm align-top m-0`;  
   
   console.log('the cart is at this momento:',cart)
@@ -52,16 +52,16 @@ export default function Cart({
 
   
   return (
-    <div className="">
+    <>
       
       <button
         onClick={() => setOpen(true)}
-        className={` ${className}  `}
+        className={` ${buttonClassName}  `}
       >
-        <div className="relative">
+        <div className="">
           <CartIcon className={`  ${className} `} iconClassName={` ${iconClassName} `} />
           {cart.length !== 0 && (
-            <div className="absolute w-4 h-4 bg-red-400  rounded-full top-0 right-0 z-50 bg-opacity-90 flex justify-center">
+            <div className="absolute w-4 h-4 bg-red-400  rounded-full top-3 right-2 z-50 bg-opacity-90 flex justify-center">
               <p className={`text-[10px] font-semibold text-white` } >{cart.length}</p>
             </div>
           )}
@@ -85,7 +85,7 @@ export default function Cart({
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                     <div className="flex items-start justify-between">
-                      <DialogTitle className="text-xl font-medium text-zinc-600 ">Shopping cart</DialogTitle>
+                      <DialogTitle className="text-xl font-medium text-sahira-green ">Shopping cart</DialogTitle>
                       <div className="ml-3 flex h-7 items-center">
                         <button
                           type="button"
@@ -113,9 +113,9 @@ export default function Cart({
                                       <img src={backUrl+pathToImg+item.product.imageSrc} 
                                         alt={item.product.imageAlt} />
                                     </div>
-                                    <div className="">
-                                      <h6>{item.product.name}</h6>
-                                      <p>Price: ${item.product.price}</p>
+                                    <div className="text-zinc-600">
+                                      <h6 className="font-medium">{item.product.name}</h6>
+                                      <p className="font-light"> ${item.product.price}</p>
                                     </div>
                                   </div>
                                   <div className="w-full">
@@ -177,7 +177,7 @@ export default function Cart({
                     <p className="mt-0.5 text-xs text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div className="mt-2 flex  justify-center">
                       <button
-                        className="bg-purple-400 drop-shadow-md disabled:drop-shadow-none text-white rounded-md p-3 disabled:bg-zinc-200 transition-all hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg"
+                        className="bg-sahira-green drop-shadow-md disabled:drop-shadow-none text-white rounded-md p-3 disabled:bg-zinc-200 transition-all hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg"
                         disabled={cart.length === 0 || 
                         totalAmountCalculationFunction() === 0}
                       >
@@ -190,7 +190,7 @@ export default function Cart({
                         <button
                           type="button"
                           onClick={() => setOpen(false)}
-                          className="font-medium hover:text-zinc-400 hover:underline text-indigo-500"
+                          className="mt-1 font-medium  hover:underline text-zinc-600"
                         >
                           Continue Shopping
                           <span aria-hidden="true"> &rarr;</span>
@@ -204,6 +204,6 @@ export default function Cart({
           </div>
         </div>
       </Dialog>
-    </div>
+    </>
   )
 }

@@ -53,9 +53,9 @@ export default function Product () {
 
   const options = {
   sizes: [
-    { id: 'small', name: 'Small', classes: 'bg-gray-700 checked:outline-gray-700' },
-    { id: 'medium', name: 'Medium', classes: 'bg-white checked:outline-gray-400' },
-    { id: 'large', name: 'Large', classes: 'bg-gray-500 checked:outline-gray-500' },
+    { id: 'small', name: 'Small', classes: 'bg-neutral-300 checked:outline-gray-700' },
+    { id: 'medium', name: 'Medium', classes: 'bg-neutral-500 checked:outline-gray-700' },
+    { id: 'large', name: 'Large', classes: 'bg-neutral-700 checked:outline-gray-700' },
   ],
   details: [
     {
@@ -100,10 +100,6 @@ export default function Product () {
   ],
 }
 
-  
-
-
-  
 
   const user = AuthService.getCurrentUser();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -222,8 +218,8 @@ export default function Product () {
   
         <button  
                 className={className + 
-                  `  rounded-md border border-white  bg-purple-400                  
-                      hover:shadow-md hover:bg-indigo-600 
+                  `  rounded-md border border-white                   
+                      hover:shadow-md 
                   transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
                   `                    
                 } 
@@ -393,11 +389,11 @@ export default function Product () {
 
           {/* Product info */}
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-600 font-serif">{product.name}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-sahira-green font-serif">{product.name}</h1>
 
             <div className="mt-3">
               <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl tracking-tight text-gray-900">${product.price}</p>
+              <p className="text-3xl tracking-tight text-zinc-600">${product.price}</p>
             </div>
 
             {/* Reviews */}
@@ -432,12 +428,13 @@ export default function Product () {
             </div>
 
             <form className="mt-6">
-              {/* Colors */}
+              {/* Sizes */}
               <div>
                 <h3 className="text-sm font-medium text-gray-600">Size</h3>
 
-                <fieldset aria-label="Choose a color" className="mt-2">
+                <fieldset aria-label="Choose a size" className="mt-2">
                   <div className="flex items-center gap-x-3">
+                    
                     {options.sizes?.map((size) => (
                       <div
                         key={size.id}
@@ -445,7 +442,7 @@ export default function Product () {
                       >
                         <input
                           defaultValue={size.id}
-                          defaultChecked={size === product.sizes[0]}
+                          defaultChecked={size === options.sizes[0]}
                           name="size"
                           type="radio"
                           aria-label={size.name}
@@ -461,7 +458,7 @@ export default function Product () {
               </div>
 
               <div className="mt-10 flex">
-                <Add2CartButton addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
+                <Add2CartButton className={"bg-sahira-green"} addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
 
                 <button
                   type="button"
@@ -483,7 +480,7 @@ export default function Product () {
                   <Disclosure key={detail.name} as="div">
                     <h3>
                       <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
-                        <span className="text-sm font-medium text-gray-900 group-data-[open]:text-indigo-600">
+                        <span className="text-sm font-medium text-zinc-600 group-data-[open]:text-sahira-green">
                           {detail.name}
                         </span>
                         <span className="ml-6 flex items-center">

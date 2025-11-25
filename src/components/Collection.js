@@ -258,14 +258,14 @@ export default function Collection () {
               <div className="mt-4 flex justify-between">
                 <div>
                   <h3 className="text-xl text-zinc-600">
-                    <Link to={`${baseUrl+'product?pId='+product.id}`} className="text-purple-400">
-                      <span aria-hidden="true" className="absolute inset-0 text-purple-400 " />
+                    <Link to={`${baseUrl+'product?pId='+product.id}`} className="text-sahira-green hover:text-zinc-600">
+                      <span aria-hidden="true" className="absolute inset-0  " />
                       {product.name}
                     </Link>
                   </h3>
                   <p className="mt-1 text-sm text-zinc-500">{product.description}</p>
                 </div>
-                <p className="text-xl font-medium text-gray-900">${product.price}</p>
+                <p className="text-xl font-medium text-zinc-600">${product.price}</p>
               </div>
             </div>
           ))}
@@ -306,7 +306,7 @@ export default function Collection () {
               </>
             ) : (
               <div className="flex" id="loading...">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-4 w-4 fill-sahira-green" viewBox="0 0 24 24">
                     <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
                     <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
                   </svg>

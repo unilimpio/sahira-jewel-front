@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-//import logo from "./logo_clean_verify.png"
 import "./App.css";
 
 import AuthService from "./services/auth.service";
