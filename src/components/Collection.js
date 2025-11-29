@@ -39,7 +39,7 @@ export default function Collection () {
 
   const [error, setError] = useState(false);
 
-  const wrapperClass = `w-full h-full p-3  mx-auto `;
+  const wrapperClass = `w-full h-full p-4 mb-4  mx-auto `;
 
   
   function CategoryFilter(){   
@@ -256,14 +256,14 @@ export default function Collection () {
                 className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
               />
               <div className="mt-4 flex justify-between">
-                <div>
+                <div className="w-72">
                   <h3 className="text-xl text-zinc-600">
                     <Link to={`${baseUrl+'product?pId='+product.id}`} className="text-sahira-green hover:text-zinc-600">
                       <span aria-hidden="true" className="absolute inset-0  " />
                       {product.name}
                     </Link>
                   </h3>
-                  <p className="mt-1 text-sm text-zinc-500">{product.description}</p>
+                  <p className="mt-1 text-sm text-zinc-500 truncate">{product.description}</p>
                 </div>
                 <p className="text-xl font-medium text-zinc-600">${product.price}</p>
               </div>
@@ -295,15 +295,14 @@ export default function Collection () {
   
     return (
          
-      <div className="flex flex-col">         
+      <div className="flex flex-col ">         
               
             
             {products ? (   
-              <>
+              
                 
-
                 <GridTemplate products={products}/>
-              </>
+             
             ) : (
               <div className="flex" id="loading...">
                   <svg className="animate-spin h-4 w-4 fill-sahira-green" viewBox="0 0 24 24">
@@ -328,18 +327,9 @@ export default function Collection () {
     
     <Template>
       <div 
-        className={`      `+wrapperClass}>
-        
-      
-        <div className={`relative
-                    
-                    ${showModal && (
-                      `hidden`
-                    )
-                    }
-                    
-              `} 
-        >
+        className={` mt-16    `+wrapperClass}>
+              
+        <div className={`relative`} >
           {message && (
                   
                   <AlertBox message={message} type="info"/>
@@ -349,7 +339,7 @@ export default function Collection () {
                   <AlertBox message={error} type="error"/>
                   
           )}
-          <div className=" bg-white  p-1 ">
+          <div className=" ">
               <h1 className="text-zinc-600 text-2xl font-serif md:text-3xl lg:text-4xl">Collection</h1>
               
               <CategoryFilter catId={catId} />

@@ -2,7 +2,7 @@ import { Routes, Route, Link } from "react-router";
 import { useState , useEffect} from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-
+import { useNavigate, Navigate} from "react-router";
 
 import CartIcon from './template/icons/CartIcon'
 import AuthService from "../../services/auth.service";
@@ -39,10 +39,10 @@ export default function Cart({
 	
 }) {
 
-
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false)  
  //const [cart, setCart] = usePersistedState('sjCart', 0);
-  const minusPlusButtonClassName = `bg-sahira-beige h-5 w-5 rounded-full drop-shadow-md hover:drop-shadow-sm p-0 m-0`;
+  const minusPlusButtonClassName = `bg-neutral-100 h-5 w-5 rounded-full drop-shadow-md hover:drop-shadow-sm p-0 m-0`;
   const minusPlusSpanClassName = ` text-sm align-top m-0`;  
   
   console.log('the cart is at this momento:',cart)
@@ -75,7 +75,7 @@ export default function Cart({
           className="fixed inset-0 bg-gray-500/75 transition-opacity duration-500 ease-in-out data-[closed]:opacity-0"
         />
 
-        <div className="fixed inset-0 overflow-scroll">
+        <div className="fixed inset-0 ">
           <div className="absolute inset-0 ">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16 ">
               <DialogPanel
@@ -83,13 +83,19 @@ export default function Cart({
                 className="pointer-events-auto w-full max-w-md transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
               >
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
-                  <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-                    <div className="flex items-start justify-between">
-                      <DialogTitle className="text-xl font-medium text-sahira-green ">Shopping cart</DialogTitle>
+                  <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+                    <div className="flex items-start justify-between bg-white ">
+                      <DialogTitle className=" text-xl font-medium text-sahira-green flex flex-row">
+                                  <CartIcon className={`-mt-4  ${className} `} iconClassName={` ${iconClassName} `} />
+
+                        Shopping cart</DialogTitle>
                       <div className="ml-3 flex h-7 items-center">
                         <button
                           type="button"
-                          onClick={() => setOpen(false)}
+                          onClick={() => {
+                            setOpen(false)
+                            
+                          }}
                           className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
                         >
                           <span className="absolute -inset-0.5" />
@@ -99,32 +105,38 @@ export default function Cart({
                       </div>
                     </div>
                     {cart.lenght === 0  ? (
-	                    <h4 className="text-md font-thin text-zinc-600">Tu bolsa de compras esta vacia, llenala de productos maravillosos...</h4>
+	                    <div className="text-sm font-thin text-zinc-600">Tu bolsa de compras esta vacia, llenala de productos maravillosos...</div>
 	                  ) : (
 
-                      <div className="mt-8">
-                        <div className="">
+                      <div className="p-8 bg-white h-[50vh] rounded-md overflow-y-scroll">
+                        <div className="my-2">
                           <ul  className="-my-6 divide-y divide-gray-200">
                             {cart.map((item) => (
                               <li key={item.product.id} className="">
                                 <div className="h-fit">
                                   <div className="flex">
-                                    <div className="w-12">
+                                    <div className="w-12 mr-4 mt-2">
                                       <img src={backUrl+pathToImg+item.product.imageSrc} 
-                                        alt={item.product.imageAlt} />
+                                        alt={item.product.imageAlt} className=""/>
                                     </div>
                                     <div className="text-zinc-600">
-                                      <h6 className="font-medium">{item.product.name}</h6>
-                                      <p className="font-light"> ${item.product.price}</p>
+                                      <a href={`${baseUrl}product?pId=${item.product.id}`}
+                                        className="text-sahira-green hover:text-zinc-600 hover:no-underline " >
+                                        <h6 className="text-sm mt-2 font-light" onClick={() => {
+                                                                                      setOpen(false)
+
+                                                                                } }>{item.product.name}</h6>
+                                      </a>
+                                      <p className="font-light text-sm "> ${item.product.price}</p>
                                     </div>
                                   </div>
                                   <div className="w-full">
                                     <div className="flex flex-row-reverse justify-between">
                                       <button
-                                        className="text-red-400 text-[10px] h-3 hover:underline"
+                                        className="text-red-300 text-[9px] h-3 hover:underline"
                                         onClick={() => 
                                         deleteCourseFromCartFunction(item.product)}>
-                                        Remove Product
+                                        Remove
                                       </button>
                                       <div className="flex">
                                         <button  className={` ${minusPlusButtonClassName}`}
@@ -141,7 +153,7 @@ export default function Cart({
                                         }}>
                                           <span className={` ${minusPlusSpanClassName} `}>
                                             +</span></button>
-                                        <p className='text-zinc-600 text-sm font-medium mx-2'>{item.quantity} </p>
+                                        <p className='text-zinc-600 bg-neutral-100 px-1 text-sm font-medium mx-2'>{item.quantity} </p>
                                         <button className={` ${minusPlusButtonClassName}`}
                                           onClick={(e) => {
                                           setCart((prevCart) => {

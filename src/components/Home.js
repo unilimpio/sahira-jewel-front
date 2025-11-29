@@ -39,11 +39,11 @@ export default function Home () {
 
       <Template >
 
-        <div className={` `+wrapperClass}>
+        <div className={`mt-16 `+wrapperClass}>
           
           
          
-              <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Hello!👋&nbsp;
+              <h1 className="text-zinc-600  font-serif text-2xl md:text-3xl lg:text-4xl">Hello!👋&nbsp;
 
               {user && (
                  
@@ -53,11 +53,11 @@ export default function Home () {
           
               }
               </h1>
-              <h3 className="text-zinc-600 font-thin">
+              <h3 className="text-zinc-600 font-thin font-serif">
                  We got the best artist designed, hand-crafted, indigenous inspired jewels for you.<br />
                  You are amazing! 
               </h3>
-              <p className="">Every piece is carefully conceptualized, designed, and then hand crafted in our own or with the support of local artisanal jewelers who preserve a millenary craft.</p>
+              <p className="font-serif text-sm">Every piece is carefully conceptualized, designed, and then hand crafted in our own or with the support of local artisanal jewelers who preserve a millenary craft.</p>
               
         </div>
       

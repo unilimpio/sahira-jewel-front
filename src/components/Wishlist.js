@@ -25,9 +25,9 @@ export default function Wishlist () {
 
       <Template >
 
-        <div className={` `+wrapperClass}>
+        <div className={`mt-16 `+wrapperClass}>
           
-          <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl">Wishlist</h1>
+          <h1 className="text-zinc-600 font-serif text-2xl md:text-3xl lg:text-4xl">Wishlist</h1>
           
       
         </div>

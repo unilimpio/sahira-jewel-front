@@ -120,35 +120,13 @@ export default function Product () {
   const [cart, setCart] = usePersistedState('sjCart', 0);
 
   const wrapperClass = `w-full h-full p-3  mx-auto `;  
-  
-  function ProductDetail({prodId}){   
-    
-    const [loading, setLoading] = useState(false);
-    //const [message, setMessage] = useState(false);
-    const [product, setProduct] = useState(false);
+  const [product, setProduct] = useState(false);
     const [images, setImages] = useState(false);
     const [details, setDetails] = useState(false);
- 
+     const [loading, setLoading] = useState(false);
+    //const [message, setMessage] = useState(false);
 
-    const addCourseToCartFunction = (course) => {
-      console.log('this cart after before ',cart)
-      const alreadyCourses = cart
-                  .find(item => item.product.id === course.id);
-        if (alreadyCourses) {
-          const latestCartUpdate = cart.map(item =>
-            item.product.id === course.id ? { 
-            ...item, quantity: item.quantity + 1 } 
-            : item
-          );
-          setCart(latestCartUpdate);
-        } else {
-          setCart([...cart, {product: course, quantity: 1}]);
-        }
-        console.log('this cart after update ',cart )
-	  }; 
-
-  
-    useEffect(() => {
+   useEffect(() => {
 
       //this blocks the app from scrolling
       //document.body.style.overflow = "hidden";
@@ -195,8 +173,27 @@ export default function Product () {
 
     };
   
-    }, [prodId]);    
+    }, [prodId]);
+  
+  
+    const addCourseToCartFunction = (course) => {
+      console.log('this cart after before ',cart)
+      const alreadyCourses = cart
+                  .find(item => item.product.id === course.id);
+        if (alreadyCourses) {
+          const latestCartUpdate = cart.map(item =>
+            item.product.id === course.id ? { 
+            ...item, quantity: item.quantity + 1 } 
+            : item
+          );
+          setCart(latestCartUpdate);
+        } else {
+          setCart([...cart, {product: course, quantity: 1}]);
+        }
+        console.log('this cart after update ',cart )
+	  }; 
 
+  
     const ProductDetailTemplate = ({product, images, details}) => { 
 
       let navigate = useNavigate();
@@ -353,7 +350,12 @@ export default function Product () {
 
           
       return(
-    
+     
+        <>
+          <div className="w-11/12 mx-auto p-2 ">
+              
+              
+              {product ? (
           <div className="mb-20 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
           <TabGroup className="flex flex-col-reverse">
@@ -381,7 +383,7 @@ export default function Product () {
             <TabPanels>
               {images?.map((image) => (
                 <TabPanel key={image.id}>
-                  <img alt={image.imageAlt} src={backUrl+pathToImg+image.imageSrc} className="aspect-square w-full object-cover sm:rounded-lg" />
+                  <img alt={image.imageAlt} src={backUrl+pathToImg+image.imageSrc} className="aspect-square w-full object-cover sm:rounded-lg mt-16" />
                 </TabPanel>
               ))}
             </TabPanels>
@@ -509,25 +511,9 @@ export default function Product () {
               </div>
             </section>
           </div>
-        </div>
-        
-      );      
-  
-    }
-
-    return (
-        
-        <>
-          <div className="w-11/12 mx-auto p-2 ">
-              
-              
-              {product ? (
-
-                <ProductDetailTemplate product={product} images={images} details={details}/>
-                
+          </div>
               ) : (
-                
-                <div className="flex flex-row">
+             <div className="flex flex-row">
                   <svg className="animate-spin h-10 w-10 fill-stone-200" viewBox="0 0 24 24">
                     <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
                     <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
@@ -541,9 +527,9 @@ export default function Product () {
           </div>
         </>
         
-    );
-
-  } 
+      );     
+  
+    }  
   
   return (
     
@@ -561,15 +547,10 @@ export default function Product () {
                   
         )}
         
-        <div className={`relative ${!showModal ? ('hidden') : ('')}`} >
-          <div className="absolute flex top-0 left-0 m-0 w-full  h-screen">                 
-            <div id="overlay" className="absolute z-30 bg-slate-600 opacity-80 w-full h-screen"></div>
-          </div>                 
         
-        </div>   
         
         {prodId &&(
-          <ProductDetail prodId={prodId}/>
+          <ProductDetailTemplate product={product} images={images} details={details}/>
         )}
     
         </div>

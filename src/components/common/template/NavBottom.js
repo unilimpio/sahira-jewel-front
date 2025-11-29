@@ -14,10 +14,10 @@ import AuthService from "../../../services/auth.service";
 
 const NavBottom = ({isLoggedIn, user}) => {
   //HERE YOU CAN CHANGE THE ICONS AND LINKS COLORS AND HOVERS
-const linkClass = `m-1 hover:text-purple-300 focus:text-purple-400 text-zinc-700 text-center hover:no-underline transition-all hover:-translate-y-1 hover:scale-110 focus:-translate-y-1 focus:scale-110`;
+const linkClass = `m-1 hover:text-sahira-green hover:font-semibold focus:text-sahira-green focus:font-semibold text-zinc-700 text-center hover:no-underline transition-all hover:-translate-y-1 hover:scale-110 focus:-translate-y-1 focus:scale-105`;
 const iconClass = `mx-auto w-6 h-6 fill-zinc-600 stroke-zinc-600`;
 
-const linkClassActive = `m-1 text-purple-400 hover:no-underline -translate-y-1 scale-110`;
+const linkClassActive = `m-1 text-sahira-green font-normal hover:no-underline -translate-y-1 scale-110`;
 //const user = AuthService.getCurrentUser();
 
   return (
