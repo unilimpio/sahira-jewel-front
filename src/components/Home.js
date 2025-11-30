@@ -7,6 +7,7 @@ import UserService from "../services/user.service";
 
 import Template from "./common/template/Template";
 
+
 const user = AuthService.getCurrentUser();
 
 export default function Home () {
@@ -58,7 +59,6 @@ export default function Home () {
                  You are amazing! 
               </h3>
               <p className="font-serif text-sm">Every piece is carefully conceptualized, designed, and then hand crafted in our own or with the support of local artisanal jewelers who preserve a millenary craft.</p>
-              
         </div>
       
       
