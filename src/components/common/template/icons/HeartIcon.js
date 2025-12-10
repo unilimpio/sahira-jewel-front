@@ -9,7 +9,7 @@ const HeartIcon = ({className, iconClassName}) => {
     <div className={` ${className}`}>
     
     <svg viewBox="0 0 64 64" 
-                           strokeWidth="5"                     
+                           strokeWidth="stroke-inherit"                     
                           fill="none"
                           className={` ${iconClassName} `}
                           >

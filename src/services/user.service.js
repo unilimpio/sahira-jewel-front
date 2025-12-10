@@ -80,6 +80,38 @@ const getProducts = (catId) => {
   
 };
 
+const getCards = (catId = false) => {
+  
+  return axios
+  .get(API_URL + "getCards/false"  , 
+    { headers: {}})
+  .catch(function (error){
+    console.log(error)
+  });
+  
+};
+
+const getContent = (catId = false) => {
+  if(!catId ){
+          return axios
+        .get(API_URL + "getContent/false"  , 
+          { headers: {}})
+        .catch(function (error){
+          console.log(error)
+        });
+  } else {
+
+        return axios
+      .get(API_URL + "getContent/" + catId  , 
+        { headers: {}})
+      .catch(function (error){
+        console.log(error)
+      });
+  }
+  
+  
+};
+
 const getProduct = (prodId) => {
   
   return axios
@@ -91,10 +123,28 @@ const getProduct = (prodId) => {
   
 };
 
+const getWishlist = (user) => {
+  
+  return axios
+  .get(API_URL + "getWishlist/" + user.uId , 
+    { headers: {"Authorization" : `Bearer ${user.token}`}})
+  .catch((error)=>{
+    console.log(error)
+    
+    if(error?.status === 401){      
+      console.log('finally i detected a 401 error response, i shall remove traces of the old session so the user is redirected to login page somehow ', error)
+      AuthService.removeCurrentUser();
+      window.location.reload()            
+    }
+    
+  });
+  
+};
+
 const getOrders = (user) => {
   
   return axios
-  .get(API_URL + "getOrders/" + user.id , 
+  .get(API_URL + "getOrders/" + user.uId , 
     { headers: {"Authorization" : `Bearer ${user.token}`}})
   .catch(function (error){
     console.log(error)
@@ -113,17 +163,67 @@ const getOrderItems = (user,orderId) => {
   
 };
 
+const setWish = (user,prodId) => {
+  
+  return axios
+  .post(API_URL + "setWish/" + user.uId +'/'+prodId, {},
+    { headers: {"Authorization" : `Bearer ${user.token}`}})
+  .catch(function (error){
+    console.log(error)
+    if(error.status === 401 ){
+
+      AuthService.removeCurrentUser()
+                            
+    }
+
+  });
+  
+};
+
+const removeWish = (user,wishId) => {
+  
+  return axios
+  .get(API_URL + "removeWish/" +user.uId+'/'+wishId, 
+    { headers: {"Authorization" : `Bearer ${user.token}`}})
+  .catch(function (error){
+    console.log(error)
+    if(error.status === 401 ){
+
+      AuthService.removeCurrentUser()
+                            
+    }
+
+  });
+  
+};
+
+const getProductFromWish = (user,wishId) => {
+  
+  return axios
+  .get(API_URL + "getProductFromWish/" + user.uId+'/'+wishId , 
+    { headers: {"Authorization" : `Bearer ${user.token}`}})
+  .catch(function (error){
+    console.log(error)
+  });
+  
+};
+
 
 
 const UserService = {
   
   getCart,
+  getContent,
+  getWishlist,
   getCategories,
   getProducts,
+  getCards,
   getProduct,
   getOrders,
   getOrderItems,
-  
+  setWish,
+  removeWish,
+  getProductFromWish,
   
 }
 

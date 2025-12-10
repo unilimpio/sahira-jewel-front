@@ -1,25 +1,27 @@
 {
-  "name": "react-hooks-login-registration",
-  "version": "0.1.0",
+  "name": "sahira jewels co e-commerce app",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.1",
-    "@testing-library/user-event": "^13.2.1",
-    "axios": "^0.24.0",
-    "bootstrap": "4.6.0",
-    "flowbite": "^2.5.2",
+    "@svgr/webpack": "^8.1.0",
+    "axios": "^1.13.2",
+    "bootstrap": "^5.3.8",
+    "flowbite": "^4.0.1",
     "http-proxy-middleware": "^2.0.1",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.5.6",
     "qs": "^6.13.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-live-clock": "^6.1.25",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-router": "^7.0.1",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "5.0.1",
+    "react-slick": "^0.31.0",
     "react-validation": "^3.0.7",
     "recharts": "^2.15.1",
+    "slick-carousel": "^1.8.1",
+    "svgo": "^4.0.0",
     "validator": "^13.7.0",
     "web-vitals": "^2.1.0"
   },
@@ -48,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "semver": "^7.7.3",
     "tailwindcss": "^3.4.1"
   }
 }

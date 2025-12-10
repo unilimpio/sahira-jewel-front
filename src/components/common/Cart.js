@@ -42,11 +42,12 @@ export default function Cart({
   const navigate = useNavigate();
   const [open, setOpen] = useState(false)  
  //const [cart, setCart] = usePersistedState('sjCart', 0);
-  const minusPlusButtonClassName = `bg-neutral-100 h-5 w-5 rounded-full drop-shadow-md hover:drop-shadow-sm p-0 m-0`;
-  const minusPlusSpanClassName = ` text-sm align-top m-0`;  
+  const minusButtonClassName = `bg-neutral-100 h-4 w-4 rounded-full border drop-shadow-md p-0 m-0`;
+  const plusButtonClassName = `bg-neutral-100 h-6 w-6 rounded-full border drop-shadow-md p-0 m-0`;
+  const minusPlusSpanClassName = ` text-base font-semibold`;  
   
   console.log('the cart is at this momento:',cart)
-  console.log('the cart.lenght is at this momento:',cart.length)
+  console.log('the cart.lenght is at this momento:',cart?.length)
   
   
 
@@ -58,11 +59,11 @@ export default function Cart({
         onClick={() => setOpen(true)}
         className={` ${buttonClassName}  `}
       >
-        <div className="">
+        <div className="relative">
           <CartIcon className={`  ${className} `} iconClassName={` ${iconClassName} `} />
-          {cart.length !== 0 && (
+          {cart?.length !== 0 && (
             <div className="absolute w-4 h-4 bg-red-400  rounded-full top-3 right-2 z-50 bg-opacity-90 flex justify-center">
-              <p className={`text-[10px] font-semibold text-white` } >{cart.length}</p>
+              <p className={`text-[10px] font-semibold text-white` } >{cart?.length}</p>
             </div>
           )}
         </div>
@@ -86,17 +87,17 @@ export default function Cart({
                   <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                     <div className="flex items-start justify-between bg-white ">
                       <DialogTitle className=" text-xl font-medium text-sahira-green flex flex-row">
-                                  <CartIcon className={`-mt-4  ${className} `} iconClassName={` ${iconClassName} `} />
+                        <CartIcon className={`-mt-4  ${className} `} iconClassName={` w-6 h-6 fill-sahira-green `} />
 
                         Shopping cart</DialogTitle>
-                      <div className="ml-3 flex h-7 items-center">
+                      <div className="absolute top-0 right-0 m-2 ">
                         <button
                           type="button"
                           onClick={() => {
                             setOpen(false)
                             
                           }}
-                          className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
+                          className="relative  p-0 text-gray-400 hover:text-gray-500"
                         >
                           <span className="absolute -inset-0.5" />
                           <span className="sr-only">Close panel</span>
@@ -104,22 +105,30 @@ export default function Cart({
                         </button>
                       </div>
                     </div>
-                    {cart.lenght === 0  ? (
+                    {cart?.lenght === 0  ? (
 	                    <div className="text-sm font-thin text-zinc-600">Tu bolsa de compras esta vacia, llenala de productos maravillosos...</div>
 	                  ) : (
 
-                      <div className="p-8 bg-white h-[50vh] rounded-md overflow-y-scroll">
-                        <div className="my-2">
-                          <ul  className="-my-6 divide-y divide-gray-200">
-                            {cart.map((item) => (
-                              <li key={item.product.id} className="">
-                                <div className="h-fit">
+                      <div className=" bg-white h-[50vh]  overflow-y-scroll">
+                        <div className="mt-4">
+                          <ul  className="-my-4 p-0 divide-y divide-gray-200">
+                            {cart?.map((item) => (
+                              <li key={item.product.id} className="p-1 mt-2">
+                                <div className="">
                                   <div className="flex">
-                                    <div className="w-12 mr-4 mt-2">
-                                      <img src={backUrl+pathToImg+item.product.imageSrc} 
-                                        alt={item.product.imageAlt} className=""/>
+                                    <div className="flex flex-col items-center">
+                                        <img src={backUrl+pathToImg+item.product.imageSrc} 
+                                          alt={item.product.imageAlt} className="max-h-16 max-w-16 rounded-md"/>
+                                        <div className="flex items-center ">
+                                          
+                                          
+                                          <span className="font-light text-xs">Qty:</span>
+                                          <span className='text-zinc-600 bg-neutral-100 rounded-sm shadow-sm px-1 text-sm font-light mx-2'>{item.quantity} </span>
+                                          
+                                          
+                                        </div>
                                     </div>
-                                    <div className="text-zinc-600">
+                                    <div className="text-zinc-600 m-2">
                                       <a href={`${baseUrl}product?pId=${item.product.id}`}
                                         className="text-sahira-green hover:text-zinc-600 hover:no-underline " >
                                         <h6 className="text-sm mt-2 font-light" onClick={() => {
@@ -138,38 +147,40 @@ export default function Cart({
                                         deleteCourseFromCartFunction(item.product)}>
                                         Remove
                                       </button>
-                                      <div className="flex">
-                                        <button  className={` ${minusPlusButtonClassName}`}
-                                          onClick={(e) => {
-                                          setCart((prevCart) => {
-                                            const updatedCart = prevCart.map((prevItem) =>
-                                                        prevItem.product.id === item.product.id
-                                                            ? { ...prevItem, quantity: 
-                                                            item.quantity + 1 }
-                                                            : prevItem
-                                            );
-                                            return updatedCart;
-                                          })
-                                        }}>
-                                          <span className={` ${minusPlusSpanClassName} `}>
-                                            +</span></button>
-                                        <p className='text-zinc-600 bg-neutral-100 px-1 text-sm font-medium mx-2'>{item.quantity} </p>
-                                        <button className={` ${minusPlusButtonClassName}`}
-                                          onClick={(e) => {
-                                          setCart((prevCart) => {
-                                            const updatedCart = prevCart.map(
-                                            (prevItem) =>
-                                            prevItem.product.id === item.product.id
-                                                ? { ...prevItem, quantity:
-                                                Math.max(item.quantity - 1, 0) }
-                                                : prevItem
-                                            );
-                                            return updatedCart;
-                                          })
-                                        }}>
-                                        <span className={` ${minusPlusSpanClassName} `}>
-                                          -</span></button>
+                                      <div className="flex items-center">
+                                        <button className={`flex m-1    ${minusButtonClassName}`}
+                                            onClick={(e) => {
+                                              setCart((prevCart) => {
+                                                const updatedCart = prevCart.map(
+                                                (prevItem) =>
+                                                prevItem.product.id === item.product.id
+                                                    ? { ...prevItem, quantity:
+                                                    Math.max(item.quantity - 1, 0) }
+                                                    : prevItem
+                                                );
+                                                return updatedCart;
+                                              })
+                                            }}>                                          
+                                              <span className="-mt-1.5 px-1 text-center font-light">-</span>                                          
+                                        </button>
+                                        <button  className={`flex m-1 ${plusButtonClassName}`}
+                                            onClick={(e) => {
+                                            setCart((prevCart) => {
+                                              const updatedCart = prevCart.map((prevItem) =>
+                                                          prevItem.product.id === item.product.id
+                                                              ? { ...prevItem, quantity: 
+                                                              item.quantity + 1 }
+                                                              : prevItem
+                                              );
+                                              return updatedCart;
+                                            })
+                                          }}>
+                                            
+                                              <span className="-mt-0.5 px-1.5 text-center font-light">+</span>   
+                                            
+                                        </button>
                                       </div>
+                                      
                                     </div>
                                   </div>
                                 </div>

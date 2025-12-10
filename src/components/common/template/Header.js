@@ -19,7 +19,7 @@ import AuthService from "../../../services/auth.service";
 
 import Logo from "../Logo";
 import CartComponent from "../Cart";
-import WishlistButton from "../WishlistComponent";
+
 import HomeIcon from "./icons/HomeIcon";
 
 const user = AuthService.getCurrentUser();
@@ -66,7 +66,7 @@ const Header = ({isLoggedIn}) => {
   const linkClass = `p-3 font-light text-zinc-600 no-underline hover:text-sahira-green hover:underline text-sm sm:text-md md:text-lg lg:text-xl `;
   const link2Class = ` flex p-2 text-sahira-green no-underline hover:no-underline hover:text-zinc-400 text-sm sm:text-md md:text-lg lg:text-xl stroke-sahira-green hover:stroke-zinc-600`;
 
-  const linkDrawerClass = `p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-lg  `;
+  const linkDrawerClass = `bg-white bg-opacity-50  p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-lg  `;
 
   const [hamIsOpen,setHamIsOpen] = useState(false);
 
@@ -111,18 +111,18 @@ const Header = ({isLoggedIn}) => {
   return (
     
       <header  className={`sticky top-0 z-40 flex-col`}>
-        <div className=" relative z-40  w-full flex place-content-between  bg-sahira-beige           
+        <div className=" relative z-40  w-full flex place-content-between  bg-white           
             h-fit">
         
-          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5">
-            <Logo className={"w-36 sm:w-42 md:w-64"}/>
+          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5 ">
+            <Logo className={"w-36 sm:w-42 md:w-64 "}/>
           </Link>
           <div className=" flex-col w-1/2 place-content-start justify-items-end ">
             <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 -z-50 justify-end">
                     
                           
                 <Link to={"/about"} className={` `+ linkClass}>
-                  Our Story
+                  About Us
                 </Link>
                 <Link to={"/contact"} className={` `+ linkClass}>
                   Contact
@@ -149,7 +149,11 @@ const Header = ({isLoggedIn}) => {
                   
                   </>
                 )}
-                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 hover:fill-sahira-green "} deleteCourseFromCartFunction={deleteCourseFromCartFunction} totalAmountCalculationFunction={totalAmountCalculationFunction} cart={cart} setCart={setCart}/>
+                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 hover:fill-sahira-green "} 
+                  deleteCourseFromCartFunction={deleteCourseFromCartFunction} 
+                  totalAmountCalculationFunction={totalAmountCalculationFunction} 
+                  cart={cart} 
+                  setCart={setCart}/>
           
             </nav>
             
@@ -158,7 +162,7 @@ const Header = ({isLoggedIn}) => {
           </div>
           
         </div>
-        <nav className="flex justify-center w-full fixed sm:static sm:z-30 -top-20 -z-50 bg-sahira-beige">
+        <nav className="flex justify-center w-full fixed sm:static sm:z-30 -top-20 -z-50 bg-white">
 
               <div className="flex justify-between w-5/6">
                 <Link to={"/"} className={` `+ link2Class}>
@@ -176,7 +180,7 @@ const Header = ({isLoggedIn}) => {
               </div>             
                         
         </nav>
-        <div id="mobile-top-menu" className="absolute w-full top-0 z-50 visible sm:hidden flex justify-center bg-sahira-beige">
+        <div id="mobile-top-menu" className="absolute w-full top-0 z-50 visible sm:hidden flex justify-center bg-white bg-opacity-100 drop-shadow-lg">
           <nav className="flex flex-row w-full">                      
                       {
                         hamIsOpen ? (
@@ -188,42 +192,54 @@ const Header = ({isLoggedIn}) => {
                       }
 
                       <Link to={"/"} className="hover:no-underline sm:hidden flex flex-grow justify-center">
-                        <Logo className={"w-36 sm:w-42 md:w-64"}/>
+                        <Logo className={"w-36 sm:w-42 md:w-64 "} iconClassName={'bg-white bg-opacity-50 rounded-lg'}/>
                       </Link>
                                     
-                      <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600   "}  deleteCourseFromCartFunction={deleteCourseFromCartFunction} totalAmountCalculationFunction={totalAmountCalculationFunction}  cart={cart} setCart={setCart}/>
+                      <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600   "}  
+                        deleteCourseFromCartFunction={deleteCourseFromCartFunction} 
+                        totalAmountCalculationFunction={totalAmountCalculationFunction}  
+                        cart={cart} setCart={setCart}/>
 
 
           </nav>
           {
             hamIsOpen && (
-              <div id="mobile-drawer-open" className={`fixed top-16 right-0 w-screen h-96 z-30  ${hamIsOpen ? ('opacity-100'):('opacity-0')}`}>
+              <div id="mobile-drawer-open" className={`fixed top-14 right-0 w-full  z-30  ${hamIsOpen ? ('opacity-100'):('opacity-0')}`}>
                 
-                <div className={`flex bg-white rounded-md border border-zinc-600 shadow-md `}>
+                <div className={`flex  py-6 bg-white bg-opacity-100 hover:bg-opacity-90 rounded-b-lg  drop-shadow-md `}>
                   
-                  <nav className="flex flex-col mx-auto">
+                  <nav className="flex flex-col mx-auto ">
                   
-                        
-                      <Link to={"/about"} className={` `+ linkDrawerClass}>
-                        Our Story
+                      <Link to={"/"} className={`ml-6 `+ linkDrawerClass}>
+                        Home
+                      </Link>                        
+                      <Link to={"/about"} className={`ml-6 `+ linkDrawerClass}>
+                        About
                       </Link>
-                      <Link to={"/contact"} className={` `+ linkDrawerClass}>
+                       <Link to={"/collection"} className={`ml-6 `+ linkDrawerClass}>
+                        Shop
+                      </Link>
+                      <Link to={"/contact"} className={`ml-6 `+ linkDrawerClass}>
                         Contact
                       </Link>
                       {isLoggedIn ? (
                     
-                                                                  
-                          <Link to={"/logout"} className={` `+linkDrawerClass}>
-                            <LogoutIcon/>
-                            Logout
-                          </Link>
-                      
+                          <>                                         
+                            <Link to={"/account"} className={`flex flex-row  -ml-6 `+linkDrawerClass}>
+                              <UserIcon iconClassName={"w-6 h-6 "} className={"p-1"} />
+                              Account
+                            </Link>
+                            <Link to={"/logout"} className={`flex flex-row `+linkDrawerClass}>
+                              <CloseIcon iconClassName={"w-6 h-6 fill-red-400"} className={"p-1"} />
+                              Logout
+                            </Link>
+                          </>
                          
                       ) : (
                       
                       
-                          <Link to={"/login"} className={`flex `+linkDrawerClass}>
-                                                  <UserIcon iconClassName={"w-6 h-6 "} className={""} /> Account
+                          <Link to={"/login"} className={`flex flex-row`+linkDrawerClass}>
+                               <UserIcon iconClassName={"w-6 h-6 "} className={""} /> Account
 
                           
                           </Link>

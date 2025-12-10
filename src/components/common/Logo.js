@@ -2,15 +2,15 @@ import React from "react";
 
 
 
-const Logo = ({className}) => {
+const Logo = ({className,iconClassName}) => {
   
   
     
 
   return (
-    <div id="brand-logo" className="m-2">
+    <div id="brand-logo" className={` m-2 ${className}`}>
                                                           
-    <svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="40 250 1100 300" className={` ${className}`}>
+    <svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="40 250 1100 300" className={` ${iconClassName}`}>
       <defs><clipPath id="b" clipPathUnits="userSpaceOnUse">
       <use href="#a" transform="translate(-221.1 -348.762)"/></clipPath><clipPath id="c" clipPathUnits="userSpaceOnUse"><use href="#a" transform="translate(-211.747 -358.014)"/></clipPath><clipPath id="d" clipPathUnits="userSpaceOnUse"><use href="#a" transform="translate(-110.884 -218.393)"/></clipPath><clipPath id="e" clipPathUnits="userSpaceOnUse">
       <use href="#a" transform="translate(-103.727 -294.668)"/></clipPath><clipPath id="f" clipPathUnits="userSpaceOnUse">

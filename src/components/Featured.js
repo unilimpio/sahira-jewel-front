@@ -34,9 +34,11 @@ export default function Featured () {
 
       <Template >
 
-        <div className={`mt-16 `+wrapperClass}>
+        <div className={`mt-12 `+wrapperClass}>
           
           <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl font-serif">Featured</h1>
+
+          <p className="my-8 text-base font-light text-sahira-green">Proximamente ...</p>
           
       
         </div>

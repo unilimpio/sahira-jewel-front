@@ -11,83 +11,22 @@ import "../../../App.css";
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-const AlertBox = ({message, type = 'info'}) => {
-
-  const [isVisible,setIsVisible] = useState(true);
-  
-  const CloseButton = () => {
-
-    
-
-    function handleClick (){
-    
-      console.log("toggle visibility: "+!isVisible)
-      setIsVisible(!isVisible);
-      
-    
-    }
-  
-    return (     
+const AlertBox = ({message, setMessage, divClassName}) => {
 
 
-      <button  
-              type="button"
-              className={
-                `
-                  
-                  hover:text-zinc-400
-                  text-white
-                `
-              } 
-              
-              onClick={handleClick}
-              >
-        
-        <span className="font-semibold ">x</span>
-          
-      </button>
 
-    );
-  } 
 
-  console.log(type);
-  console.log(message);
-
-if(type === 'info' && isVisible){
 
   return (
-    
-    <div className={``+isVisible ? (``) : (` hidden`) }>
-      <div className={`alert alert-info `} 
-        role="alert">
-          <div className={`flex flex-row justify-between`}>
-            <span className="text-xs"> {message}</span> <CloseButton />
-          </div>
-      </div>
+
+    <div className={`fixed top-20 sm:top-36 w-11/12 z-50 opacity-75 ${divClassName}`}>
+                <div className={`alert ${message.includes('error') ?('alert-danger'):('alert-info')}  alert-dismissible`} role="alert">
+                  <button type="button" className="btn-close" data-bs-dismiss="alert" onClick={(event)=>{event.preventDefault(); setMessage(false)}}></button>
+                  {message}
+                </div>
     </div>
-      
-   
+
   );
-
-}
-
-if(type === 'error' && isVisible){
-
-  return (
-    
-    <div className={``+ isVisible ? (``) : (` hidden`) }>
-      <div className={`alert alert-danger`} 
-        role="alert">
-          <div className={`flex flex-row justify-between`}>
-            <span className="text-xs" >{message}</span> <CloseButton />
-            </div>
-      </div>
-    </div>
-      
-   
-  );
-
-}
   
 };
 

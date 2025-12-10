@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useId} from "react";
+import React, { useState, useEffect} from "react";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 
@@ -23,6 +23,9 @@ import AlertBox from "./common/template/AlertBox";
 
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
+import ProductImages from './common/ProductImages';
+
+import WishlistButton from './common/WishlistButton';
 
 
 const pathToImg = "assets/uploads/"
@@ -53,9 +56,9 @@ export default function Product () {
 
   const options = {
   sizes: [
-    { id: 'small', name: 'Small', classes: 'bg-neutral-300 checked:outline-gray-700' },
-    { id: 'medium', name: 'Medium', classes: 'bg-neutral-500 checked:outline-gray-700' },
-    { id: 'large', name: 'Large', classes: 'bg-neutral-700 checked:outline-gray-700' },
+    { id: 'small', name: 'Small', classes: 'bg-neutral-200 checked:outline-gray-700' },
+    { id: 'medium', name: 'Medium', classes: 'bg-neutral-300 checked:outline-gray-700' },
+    { id: 'large', name: 'Large', classes: 'bg-neutral-400 checked:outline-gray-700' },
   ],
   details: [
     {
@@ -101,6 +104,7 @@ export default function Product () {
 }
 
 
+
   const user = AuthService.getCurrentUser();
   const [searchParams, setSearchParams] = useSearchParams();
     
@@ -117,14 +121,15 @@ export default function Product () {
 
   const [error, setError] = useState(false);
 
-  const [cart, setCart] = usePersistedState('sjCart', 0);
+  const [searchCourse, setSearchCourse] = useState('');
+
+  const [cart, setCart] = usePersistedState('sjCart', []);
 
   const wrapperClass = `w-full h-full p-3  mx-auto `;  
   const [product, setProduct] = useState(false);
     const [images, setImages] = useState(false);
     const [details, setDetails] = useState(false);
      const [loading, setLoading] = useState(false);
-    //const [message, setMessage] = useState(false);
 
    useEffect(() => {
 
@@ -174,9 +179,9 @@ export default function Product () {
     };
   
     }, [prodId]);
+
   
-  
-    const addCourseToCartFunction = (course) => {
+  const addCourseToCartFunction = (course) => {
       console.log('this cart after before ',cart)
       const alreadyCourses = cart
                   .find(item => item.product.id === course.id);
@@ -192,7 +197,7 @@ export default function Product () {
         }
         console.log('this cart after update ',cart )
 	  }; 
-
+    
   
     const ProductDetailTemplate = ({product, images, details}) => { 
 
@@ -215,8 +220,8 @@ export default function Product () {
   
         <button  
                 className={className + 
-                  `  rounded-md border border-white                   
-                      hover:shadow-md 
+                  `  rounded-md ring-2 ring-white p-3                  
+                      drop-shadow-md
                   transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
                   `                    
                 } 
@@ -268,39 +273,7 @@ export default function Product () {
           </button>
     
         );
-      } 
-
-      const SelectField = ({className, children, name}) => {       
-        
-        const [isSelected, setIsSelected] = useState(false);
-        
-        const labelClassName = ` hover:bg-zinc-50  hover:shadow-md p-1 rounded-md flex items-center `;
-        const inputClassName = ` mr-2 ` + className;
-        
-        const id = useId();
-
-        function handleChange(event){
-                      setIsSelected(event.current.value);
-                      console.log('selected change  noted! value:'+event.current.value );
-        }
-
-        return (  
-            
-          <div className="">
-            <label htmlFor={name+id} className={`` + labelClassName}>    
-            <select name={name} id={name+id} value={isSelected} onChange={handleChange}>                
-                {children}
-              </select>
-            </label> 
-            
-            
-          </div>   
-      
-          );
-        
-        
-
-      } 
+      }     
 
       const ObsInput = ({className, children}) => {
 
@@ -356,31 +329,35 @@ export default function Product () {
               
               
               {product ? (
-          <div className="mb-20 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+          <div key={product.id} className="mb-20 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
-          <TabGroup className="flex flex-col-reverse">
+          <TabGroup key={'tabgrp'+product.id} className="flex flex-col-reverse">
             {/* Image selector */}
             <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-              <TabList className="grid grid-cols-4 gap-6">
+              <TabList className="grid grid-cols-4 gap-6 fixed -top-20 -left-20 sm:static">
                 {images?.map((image) => (
                   <Tab
                     key={image.id}
-                    className="group relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-indigo-500/50 focus:ring-offset-4"
+                    className=" group relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-sahira-green/50 focus:ring-offset-4"
                   >
                     <span className="sr-only">{image.imageAlt}</span>
                     <span className="absolute inset-0 overflow-hidden rounded-md">
-                      <img alt={image.imageAlt} src={backUrl+pathToImg+image.imageSrc} className="size-full object-cover" />
+                      <img alt={image.imageAlt} src={backUrl+pathToImg+image.imageSrc} className=" object-contain" />
                     </span>
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-transparent ring-offset-2 group-data-[selected]:ring-indigo-500"
+                      className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-transparent ring-offset-2 group-data-[selected]:ring-sahira-green"
                     />
                   </Tab>
+                  
                 ))}
               </TabList>
+              
             </div>
-
-            <TabPanels>
+            <div className={' sm:hidden mt-16 sm:mt-6 drop-shadow-lg '}>
+              <ProductImages className ={``} images={images} />
+            </div>
+            <TabPanels className={'hidden sm:block'}>
               {images?.map((image) => (
                 <TabPanel key={image.id}>
                   <img alt={image.imageAlt} src={backUrl+pathToImg+image.imageSrc} className="aspect-square w-full object-cover sm:rounded-lg mt-16" />
@@ -393,9 +370,15 @@ export default function Product () {
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
             <h1 className="text-3xl font-bold tracking-tight text-sahira-green font-serif">{product.name}</h1>
 
-            <div className="mt-3">
+            <div className="mt-3 flex justify-between">
               <h2 className="sr-only">Product information</h2>
               <p className="text-3xl tracking-tight text-zinc-600">${product.price}</p>
+              
+                          
+              <WishlistButton product={product} setMessage={setMessage} buttonClassName={``} iconClassName={`-mt-4 h-6 w-6`}/>
+              
+              
+                          
             </div>
 
             {/* Reviews */}
@@ -425,7 +408,7 @@ export default function Product () {
 
               <div
                 dangerouslySetInnerHTML={{ __html: product.description }}
-                className="space-y-6 text-base text-gray-700"
+                className="space-y-6 text-base font-light text-justify text-gray-700"
               />
             </div>
 
@@ -439,13 +422,15 @@ export default function Product () {
                     
                     {options.sizes?.map((size) => (
                       <div
-                        key={size.id}
-                        className="flex rounded-full outline outline-1 -outline-offset-1 outline-black/10"
+                        key={size.id+size.name}
+                        className="flex relative rounded-full  outline-black/10"
                       >
+                        <label className="text-[9px] border-none" htmlFor={size.id+size.name}>
                         <input
                           defaultValue={size.id}
                           defaultChecked={size === options.sizes[0]}
                           name="size"
+                          id={size.id+size.name}
                           type="radio"
                           aria-label={size.name}
                           className={classNames(
@@ -453,6 +438,8 @@ export default function Product () {
                             'size-8 appearance-none rounded-full forced-color-adjust-none checked:outline checked:outline-2 checked:outline-offset-2 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[3px]',
                           )}
                         />
+                        <span className="absolute left-3 top-5">{size.name[0]}</span>
+                        </label>
                       </div>
                     ))}
                   </div>
@@ -462,13 +449,6 @@ export default function Product () {
               <div className="mt-10 flex">
                 <Add2CartButton className={"bg-sahira-green"} addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
 
-                <button
-                  type="button"
-                  className="ml-4 flex items-center justify-center rounded-md px-3 py-3 text-zinc-600  transition-all hover:-translate-y-2 "
-                >
-                  <HeartIcon aria-hidden="true" className="size-6 shrink-0 hover:fill-red-400" />
-                  <span className="sr-only">Add to Wishlist</span>
-                </button>
               </div>
             </form>
 
@@ -533,19 +513,15 @@ export default function Product () {
   
   return (
     
-    <Template>
+    <Template cart={cart} setCart={setCart}>
       <div 
         className={`      `+wrapperClass}>
         
-        {message && (
-                  
-                  <AlertBox message={message} type="info"/>
-                 
-                )}
-              {error && (
-                  <AlertBox message={error} type="error"/>
-                  
-        )}
+        {message &&(
+
+            <AlertBox message={message} setMessage={setMessage} />             
+             
+          )}  
         
         
         

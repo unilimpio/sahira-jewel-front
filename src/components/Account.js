@@ -5,7 +5,7 @@ import Template from "./common/template/Template";
 
 const Account = () => {
   
-  const wrapperClass = `w-full h-full p-4 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
+  const wrapperClass = `w-full h-full p-16 mx-auto border border-slate-600  rounded-lg md:rounded-b-none  shadow-md bg-gradient-to-br from-neutral-200 via-white to-neutral-200`;
 
   const currentUser = AuthService.getCurrentUser();
 

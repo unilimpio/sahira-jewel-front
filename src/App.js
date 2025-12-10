@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/js/bootstrap.bundle.min'
+
 import "./App.css";
+ import "slick-carousel/slick/slick.css";
+    import "slick-carousel/slick/slick-theme.css";
 
 import AuthService from "./services/auth.service";
 
@@ -22,10 +25,23 @@ import About from "./components/About";
 import MyOrders from "./components/MyOrders";
 import FinishOrder from "./components/FinishOrder";
 
+function usePersistedState(key, defaultValue) {
+  const [state, setState] = useState(() => {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : defaultValue;
+  });
+  
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+
+  return [state, setState];
+}
 
 
 const App = () => {
-  
+
+   
 
   return (
     

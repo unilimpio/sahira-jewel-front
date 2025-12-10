@@ -24,13 +24,13 @@ const user = AuthService.getCurrentUser();
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-const Template = ({children}) => {
+const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAmountCalculationFunction, addCourseToCartFunction, children}) => {
   //const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   //const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
-  
+
 
   useEffect(() => {
     
@@ -49,11 +49,13 @@ const Template = ({children}) => {
 
   return (
     
-  <div className="relative">
+  <div className="relative ">
 
-    <Header isLoggedIn={isLoggedIn} />
+    <Header  isLoggedIn={isLoggedIn} />
     
-    <div id="main" className="bg-white dark:bg-slate-900 ">
+   
+
+    <div id="main" className="bg-white min-h-screen dark:bg-slate-900 ">
       {children}
     </div>
 
