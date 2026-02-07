@@ -407,44 +407,53 @@ export default function Product () {
               <h3 className="sr-only">Description</h3>
 
               <div
-                dangerouslySetInnerHTML={{ __html: product.description }}
+                
                 className="space-y-6 text-base font-light text-justify text-gray-700"
-              />
+              >
+                { product.description }
+              </div>
             </div>
 
             <form className="mt-6">
-              {/* Sizes */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-600">Size</h3>
+              
+              {/* Sizes */
+                parseInt(product.is_sizes) ? (
+                  <div className={''}>
+                    <h3 className="text-sm font-medium text-gray-600">Size</h3>
 
-                <fieldset aria-label="Choose a size" className="mt-2">
-                  <div className="flex items-center gap-x-3">
-                    
-                    {options.sizes?.map((size) => (
-                      <div
-                        key={size.id+size.name}
-                        className="flex relative rounded-full  outline-black/10"
-                      >
-                        <label className="text-[9px] border-none" htmlFor={size.id+size.name}>
-                        <input
-                          defaultValue={size.id}
-                          defaultChecked={size === options.sizes[0]}
-                          name="size"
-                          id={size.id+size.name}
-                          type="radio"
-                          aria-label={size.name}
-                          className={classNames(
-                            size.classes,
-                            'size-8 appearance-none rounded-full forced-color-adjust-none checked:outline checked:outline-2 checked:outline-offset-2 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[3px]',
-                          )}
-                        />
-                        <span className="absolute left-3 top-5">{size.name[0]}</span>
-                        </label>
+                    <fieldset aria-label="Choose a size" className="mt-2">
+                      <div className="flex items-center gap-x-3">
+                        
+                        {options.sizes?.map((size) => (
+                          <div
+                            key={size.id+size.name}
+                            className="flex relative rounded-full  outline-black/10"
+                          >
+                            <label className="text-[9px] border-none" htmlFor={size.id+size.name}>
+                            <input
+                              defaultValue={size.id}
+                              defaultChecked={size === options.sizes[0]}
+                              name="size"
+                              id={size.id+size.name}
+                              type="radio"
+                              aria-label={size.name}
+                              className={classNames(
+                                size.classes,
+                                'size-8 appearance-none rounded-full forced-color-adjust-none checked:outline checked:outline-2 checked:outline-offset-2 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[3px]',
+                              )}
+                            />
+                            <span className="absolute left-3 top-5">{size.name[0]}</span>
+                            </label>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </fieldset>
                   </div>
-                </fieldset>
-              </div>
+              ) : ('One size')
+              
+              
+              }
+              
 
               <div className="mt-10 flex">
                 <Add2CartButton className={"bg-sahira-green"} addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
@@ -459,7 +468,8 @@ export default function Product () {
 
               <div className="divide-y divide-gray-200 border-t border-gray-200">
                 {details.map((detail) => (
-                  <Disclosure key={detail.name} as="div">
+                  <div className={detail.items.length === 0 ? ('hidden'):('')}>
+                       <Disclosure key={detail.name} as="div">
                     <h3>
                       <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
                         <span className="text-sm font-medium text-zinc-600 group-data-[open]:text-sahira-green">
@@ -487,6 +497,8 @@ export default function Product () {
                       </ul>
                     </DisclosurePanel>
                   </Disclosure>
+                  </div>
+                 
                 ))}
               </div>
             </section>

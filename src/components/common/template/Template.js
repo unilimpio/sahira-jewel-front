@@ -57,10 +57,11 @@ const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAm
 
     <div id="main" className="bg-white min-h-screen dark:bg-slate-900 ">
       {children}
+      <Footer />
     </div>
 
     <NavBottom isLoggedIn={isLoggedIn} user={user}/>
-    <Footer />
+    
     
   </div>
     

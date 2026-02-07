@@ -14,7 +14,14 @@ import Template from "./common/template/Template";
 
 import InstagramIcon from "./common/template/icons/InstagramIcon";
 
+import logo_vert from '../assets/hero-workshop-vertical.jpeg';
+
+import logo_hori from '../assets/hero-workshop-horizontal.jpeg';
+
 const user = AuthService.getCurrentUser();
+const backUrl = process.env.REACT_APP_BACK_URL;
+const baseUrl = process.env.REACT_APP_BASE_URL;
+const pathToImg = "assets/uploads/"
 
 export default function Home () {
   
@@ -96,7 +103,7 @@ export default function Home () {
 
               {user && (
                 <div className="absolute  top-16 left-2 z-40 flex  bg-white rounded-full w-fit p-1 px-3"> 
-                  <div className="text-lg animate-wiggle">👋</div><span className="font-light text-base">Hola {user?.fullname} !</span>                           
+                                          
                 </div>
                 )          
               }
@@ -107,17 +114,36 @@ export default function Home () {
             <HeroBanner banners={content.banners} />
         
         </div>
-        <div className="">
-                <h1 className="text-zinc-600 font-thin font-serif text-2xl sm:text-4xl p-2 text-center">
+        <div className="h-[70vh] mt-8 relative overflow-hidden">
+                <h1 className="text-zinc-600 font-thin font-serif text-2xl sm:text-4xl p-2  text-center z-50">
                       Joyas con Raíz Ancestral
                 </h1>
-                <h2 className="font-serif text-xl sm:text-2xl text-zinc-600  p-4 text-center">
+                <h2 className="font-serif text-xl sm:text-2xl text-zinc-600  p-4 text-center z-50">
                   Joyería atemporal en plata 925. <br/>Inspirada en las culturas precolombinas de Ecuador y creada especialmente para ti.
                 </h2>
+                <div className="h-[50vh]">
+                  <picture className="object-contain">
+                  <source
+                          media="(max-width: 768px)"
+                          srcSet={logo_hori}
+                        />
+                        <source
+                          media="(min-width: 768px)"
+                          srcSet={logo_hori}
+                        />
+                        <img
+                          src={logo_hori}
+                          alt="Hero"
+                          className=""
+                        />
+                  
+                </picture> 
+                </div>
+                
         </div>
         
               
-        <div className="mx-auto w-[85vw] sm:w-full mt-16 mb-24">
+        <div className="mx-auto w-[90vw] h-[70vh] sm:w-full py-44 mb-24">
               <CardSlider cards={content.cards} setMessage={setMessage}/>
         
         </div>     

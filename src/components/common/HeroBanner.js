@@ -32,14 +32,29 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
                            {/* Your banner content goes here */}
               
                   <div className={'relative mx-auto'}>    
-                    <div id="banner-overlay" className="absolute top-0 bg-black opacity-30 w-full h-full" />
-                    <div className="overflow-hidden h-[83vh]">
-                      <img src={backUrl+pathToImg+banner.imageSrc} alt={banner.imageAlt} className={'w-full content-cover '}/>
+                    <div id="banner-overlay" className="absolute top-0  w-full h-full" />
+                    <div className="overflow-hidden h-[100vh]">
+                      <picture>
+                        <source
+                          media="(max-width: 768px)"
+                          srcSet={backUrl+pathToImg+banner.imageSrcMobile}
+                        />
+                        <source
+                          media="(min-width: 768px)"
+                          srcSet={backUrl+pathToImg+banner.imageSrc}
+                        />
+                        <img
+                          src={backUrl+pathToImg+banner.imageSrc}
+                          alt="Hero"
+                          className=""
+                        />
+                      </picture>
+                      <img src={backUrl+pathToImg+banner.imageSrc} alt={banner.imageAlt} className={''}/>
                     </div>
                     {
                       banner.title && (
 
-                        <div className="absolute bottom-8  w-full flex flex-col  p-6 ">
+                        <div className="absolute bottom-40 md:bottom-56 w-full flex flex-col  p-6 ">
                       
                           <h1 className="text-white font-thin font-serif text-2xl  text-center">
                                 {banner.title}

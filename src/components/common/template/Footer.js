@@ -15,22 +15,26 @@ let linkClass = ` align-text-bottom text-sahira-green text-[9px] sm:text-sm md:t
 
 const Footer = () => {
 
+  const year = new Date().getFullYear();
+ 
   
+
 
 
   return (
     
-      <footer className="fixed w-full z-40 bottom-0  bg-white content-end">
+      <footer className=" w-full z-40 mb-24  bg-white content-end">
         <div className="flex justify-between w-full   m-0 p-0">
-          <div className="flex-col content-end pl-1">
-            <h6 className="m-0 text-sahira-green text-[9px] sm:text-base md:text-lg lg:text-2xl font-light">
+          <div className="flex-col content-end  p-0 -mb-3 ml-4">
+            <h6 className=" text-sahira-green text-[9px] sm:text-base md:text-lg lg:text-2xl font-light">
               Sahira Jewels Co. ,
-               <span className="text-[7px] font-extralight m-0 text-sahira-green">All rights Reserved. &copy; 2025 </span>   
+                  
             </h6>
+            <p className="text-[7px] font-extralight  text-sahira-green -mt-2">All rights Reserved. &copy; {year} </p>
                 
           </div>
         <div className="grow content-end ">  
-          <div className="flex justify-end ">
+          <div className="flex justify-end mb-1 mr-2 ">
              <Link to={"/privacy"} className={` `+ linkClass}>
                           Politica de Privacidad
              </Link>
