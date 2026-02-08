@@ -11,11 +11,12 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
         dots: true,
         
         infinite: true,
-        speed: 500,
+        speed: 1000,
         slidesToShow: 1, // Number of banners visible at once
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 5000,
+        cssEase: 'ease-out'
         // Add more settings as needed (e.g., autoplay, arrows)
       };
 
@@ -34,7 +35,7 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
                   <div className={'relative mx-auto'}>    
                     <div id="banner-overlay" className="absolute top-0  w-full h-full" />
                     <div className="overflow-hidden h-[100vh]">
-                      <picture>
+                      <picture className="h-[50vh]">
                         <source
                           media="(max-width: 768px)"
                           srcSet={backUrl+pathToImg+banner.imageSrcMobile}
@@ -49,7 +50,7 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
                           className=""
                         />
                       </picture>
-                      <img src={backUrl+pathToImg+banner.imageSrc} alt={banner.imageAlt} className={''}/>
+                      
                     </div>
                     {
                       banner.title && (
