@@ -35,7 +35,7 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
                   <div className={'relative mx-auto'}>    
                     <div id="banner-overlay" className="absolute top-0  w-full h-full" />
                     <div className="overflow-hidden h-[100vh]">
-                      <picture className="h-[50vh]">
+                      <picture className="">
                         <source
                           media="(max-width: 768px)"
                           srcSet={backUrl+pathToImg+banner.imageSrcMobile}

@@ -55,7 +55,7 @@ const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAm
     
    
 
-    <div id="main" className="bg-white min-h-screen dark:bg-slate-900 ">
+    <div id="main" className="bg-white min-h-fit dark:bg-slate-900 ">
       {children}
       <Footer />
     </div>

@@ -34,7 +34,7 @@ export default function Wishlist () {
   
   const navigate = useNavigate();
 
-  const wrapperClass = `w-full h-full p-4 mb-4 mx-auto `;
+  const wrapperClass = `w-full h-[80vh] p-4 mb-4 mx-auto `;
 
   
 
@@ -68,8 +68,8 @@ export default function Wishlist () {
             console.log(response?.data.message)
             console.log(response?.data)
             
-            if(response?.data.wishlist.lenght !== 0){
-              setContent(response?.data.wishlist)
+            if(response?.data.wishlist){
+              setContent(response?.data)
             }
             setLoading(false)
             //setMessage('')
@@ -100,7 +100,8 @@ export default function Wishlist () {
       }
 
     } else {
-
+      //setMessage('You need to log-in in order to add items to your wishlist!');
+      localStorage.setItem('sj_flashMessage',JSON.stringify({message:'You need to log-in to view your wishlist!',type:'info'}))
       navigate('/login');
 
     }
@@ -222,7 +223,19 @@ const addCourseToCartFunction = (course) => {
     
     return(
 
-        <>
+      <>
+        { wishlist ? (
+
+            <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
+                  <p className="font-light text-sm">Your Wishlist is empty...
+                    <Link to="/collection" className="text-current">Explore the collection?</Link>
+                    
+
+                  </p>
+            </div>
+
+          ) : (
+        
           <div className="mb-16 max-h-96 overflow-y-auto">
             <form id={'wishlist-add2cart-form'} onSubmit={handleSubmit}>          
             <table id="wishlist-table" 
@@ -232,10 +245,10 @@ const addCourseToCartFunction = (course) => {
                         
                         <tbody className="text-zinc-600 ">
             
-            {wishlist.map((row,index)=>{
+            {wishlist.map((row,index)=>
               
                
-              return (
+              (
 
 
 
@@ -273,7 +286,7 @@ const addCourseToCartFunction = (course) => {
                 </tr>
 
 
-            )})}
+            ))}
 
               </tbody>
             </table>
@@ -282,8 +295,10 @@ const addCourseToCartFunction = (course) => {
           </div>
         
         
-        </>
+        
 
+    )}
+    </>
 
     )
   }
@@ -309,7 +324,7 @@ const addCourseToCartFunction = (course) => {
 
           {content && user &&(
 
-            <WishlistTemplate wishlist={content} setMessage={setMessage}/>
+            <WishlistTemplate wishlist={content.wishlist} setMessage={setMessage}/>
             
           
 
@@ -325,13 +340,7 @@ const addCourseToCartFunction = (course) => {
             </div>
 
           )}
-          { (content && content.lenght === 0 )  && (
-
-            <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
-                  <p className="">Tu wishlist esta vacia...</p>
-            </div>
-
-          )}
+          
       
         </div>
       

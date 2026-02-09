@@ -220,14 +220,14 @@ export default function Product () {
   
         <button  
                 className={className + 
-                  `  rounded-md ring-2 ring-white p-3                  
+                  `  rounded-md ring-1 ring-white p-2                 
                       drop-shadow-md
                   transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
                   `                    
                 } 
                 disabled={loading} onClick={handleClick}>
           
-          <span className="mx-8 text-white font-semibold text-md">{children}</span>
+          <span className="mx-8 text-white font-normal text-base">{children}</span>
           
           
           
@@ -472,27 +472,34 @@ export default function Product () {
                        <Disclosure key={detail.name} as="div">
                     <h3>
                       <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
-                        <span className="text-sm font-medium text-zinc-600 group-data-[open]:text-sahira-green">
+                        <span className="text-sm font-light text-zinc-600 group-data-[open]:text-sahira-green group-data-[open]:font-medium">
                           {detail.name}
                         </span>
                         <span className="ml-6 flex items-center">
                           <PlusIcon
                             aria-hidden="true"
-                            className="block size-6 text-gray-400 group-hover:text-gray-500 group-data-[open]:hidden"
+                            className="block size-3 text-sahira-green group-hover:text-gray-500 group-data-[open]:hidden"
                           />
                           <MinusIcon
                             aria-hidden="true"
-                            className="hidden size-6 text-indigo-400 group-hover:text-indigo-500 group-data-[open]:block"
+                            className="hidden size-3 text-zinc-400 group-hover:text-zinc-600 group-data-[open]:block"
                           />
                         </span>
                       </DisclosureButton>
                     </h3>
                     <DisclosurePanel className="pb-6">
-                      <ul className="list-disc space-y-1 pl-5 text-sm/6 text-gray-700 marker:text-gray-300">
+                      <ul className="list-disc space-y-1 pl-5 text-sm/6 text-zinc-700 marker:text-zinc-300 font-light">
                         {detail.items.map((item) => (
-                          <li key={item} className="pl-2">
-                            {item}
-                          </li>
+                          detail.name === 'Features' ? (
+                            <li key={item} className="">
+                              {item}
+                            </li>
+                          ) : (
+                            <span key={item} className="">
+                                {item}
+                            </span>
+                          )
+                          
                         ))}
                       </ul>
                     </DisclosurePanel>

@@ -9,11 +9,11 @@ import Template from "./common/template/Template";
 
 const user = AuthService.getCurrentUser();
 
-export default function Featured () {
+export default function Gift () {
   
   const navigate = useNavigate();
 
-  const wrapperClass = `w-full h-full p-4 mb-4 mx-auto `;
+  const wrapperClass = `w-full h-[70vh] sm:h-[50vh] p-4 mb-4 mx-auto `;
 
  
 
@@ -36,9 +36,9 @@ export default function Featured () {
 
         <div className={`mt-12 `+wrapperClass}>
           
-          <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl font-serif">Featured</h1>
+          <h1 className="text-zinc-600 text-2xl md:text-3xl lg:text-4xl font-serif">Gift Ideas</h1>
 
-          <p className="my-8 text-base font-light text-sahira-green">Proximamente ...</p>
+          <p className="my-8 text-base font-light text-zinc-600 text-justify">Discover curated combinations and complete jewelry sets in artist-made silver, designed for meaningful moments and special seasons. Thoughtfully handcrafted, subtly daring, and never predictable—because a great gift should feel effortless, but unforgettable.</p>
           
       
         </div>

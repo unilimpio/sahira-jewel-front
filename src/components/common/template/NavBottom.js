@@ -11,6 +11,7 @@ import RulerIcon from "../template/icons/RulerIcon"
 import FeaturedIcon from "../template/icons/FeaturedIcon"
 import HeartIcon from "../template/icons/HeartIcon"
 import AuthService from "../../../services/auth.service";
+import GiftIcon from "./icons/GiftIcon";
 
 const NavBottom = ({isLoggedIn, user}) => {
   //HERE YOU CAN CHANGE THE ICONS AND LINKS COLORS AND HOVERS
@@ -37,9 +38,9 @@ const linkClassActive = `m-1 font-serif no-underline text-sahira-green font-norm
                 <JewelIcon className={`${iconClass}`}/>
                 Collection
               </NavLink> 
-              <NavLink to={"/featured"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
-                <FeaturedIcon className={`${iconClass}`}/>
-                Featured
+              <NavLink to={"/gift"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
+                <GiftIcon className={`${iconClass} `}/>
+                Gift Ideas
               </NavLink> 
               <NavLink to={"/wishlist"} className={({ isActive }) => (isActive ? linkClassActive : linkClass)}>
                 <HeartIcon className={` `} iconClassName={` mx-auto stroke-zinc-600 stroke-2 w-6 h-6`}/>

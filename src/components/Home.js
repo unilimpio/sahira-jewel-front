@@ -27,7 +27,7 @@ export default function Home () {
   
   const navigate = useNavigate();
 
-  const wrapperClass = `w-full h-full mx-auto mb-4 overflow-hidden`;
+  const wrapperClass = `w-full h-full mx-auto mb-54 overflow-hidden`;
 
   if (!user ){
      localStorage.removeItem("sj_session");
@@ -110,62 +110,62 @@ export default function Home () {
         {content && (
           <div className={'relative'}>    
               
-        <div className="mx-auto w-full h-[90vh] overflow-hidden mb-18">
-            <HeroBanner banners={content.banners} />
-        
-        </div>
-        <div className=" mt-6 relative overflow-hidden">
-                <h1 className="text-zinc-600 font-thin font-serif text-2xl sm:text-4xl p-2  text-center z-50">
-                      Joyas con Raíz Ancestral
-                </h1>
-                <h2 className="font-serif text-xl sm:text-2xl text-zinc-600  p-4 text-center z-50">
-                  Joyería atemporal en plata 925. <br/>Inspirada en las culturas precolombinas de Ecuador y creada especialmente para ti.
-                </h2>
-                <div className=" ">
-                  {
-                    /*
-                    <picture className="w-full">
-                  <source
-                          media="(max-width: 768px)"
-                          srcSet={logo_hori}
-                        />
-                        <source
-                          media="(min-width: 768px)"
-                          srcSet={logo_hori}
-                        />
-                        <img
-                          src={logo_hori}
-                          alt="Hero"
-                          className=""
-                        />
-                  
-                </picture>
-
-                    */
-                  }
-                  
-
-                </div>
-                
-        </div>
-        
-              
-        <div className="mx-auto w-[85vw] sm:w-full mb-24">
-          <CardSlider cards={content.cards} setMessage={setMessage}/>
-        </div>     
-                  
-              
-        &nbsp;&nbsp;&nbsp;
-        <div className="mx-auto w-[85vw] sm:w-full mt-24 mb-56">
-              <h5 className={'text-center text-zinc-400 text-4xl my-8'}>Follow Us</h5>
-              <a href={'https://www.instagram.com/sahirajewelry.ec'} className={'text-center text-4xl'}>
-                <InstagramIcon className={'transition-all  hover:scale-110 delay-75'} 
-                iconClassName={'w-10 h-10 mx-auto stroke-zinc-400 stroke-1'} />
-              </a>
-        
-        </div> 
-
+          <div className="mx-auto w-full h-[90vh] overflow-hidden mb-18">
+              <HeroBanner banners={content.banners} />
+          
           </div>
+          <div className=" mt-6 relative overflow-hidden">
+                  <h1 className="text-zinc-600 font-thin font-serif text-2xl sm:text-4xl p-2  text-center z-50">
+                        Joyas con Raíz Ancestral
+                  </h1>
+                  <h2 className="font-serif text-xl sm:text-2xl text-zinc-600  p-4 text-center z-50">
+                    Joyería atemporal en plata 925. <br/>Inspirada en las culturas precolombinas de Ecuador y creada especialmente para ti.
+                  </h2>
+                  <div className=" ">
+                    {
+                      /*
+                      <picture className="w-full">
+                    <source
+                            media="(max-width: 768px)"
+                            srcSet={logo_hori}
+                          />
+                          <source
+                            media="(min-width: 768px)"
+                            srcSet={logo_hori}
+                          />
+                          <img
+                            src={logo_hori}
+                            alt="Hero"
+                            className=""
+                          />
+                    
+                  </picture>
+
+                      */
+                    }
+                    
+
+                  </div>
+                  
+          </div>
+        
+              
+          <div className="mx-auto w-[85vw] sm:w-full mb-24">
+            <CardSlider cards={content.cards} setMessage={setMessage}/>
+          </div>     
+                  
+              
+          &nbsp;&nbsp;&nbsp;
+          <div className="mx-auto w-[85vw] sm:w-full mt-24 mb-56">
+                <h5 className={'text-center text-zinc-400 text-4xl my-8'}>Follow Us</h5>
+                <a href={'https://www.instagram.com/sahirajewelry.ec'} className={'text-center text-4xl'}>
+                  <InstagramIcon className={'transition-all  hover:scale-110 delay-75'} 
+                  iconClassName={'w-10 h-10 mx-auto stroke-zinc-400 stroke-1'} />
+                </a>
+          
+          </div> 
+
+        </div>
           )
        }
 

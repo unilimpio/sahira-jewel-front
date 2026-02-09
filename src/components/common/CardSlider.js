@@ -36,10 +36,10 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
                 {/* Your card content goes here */}
               
                 <div className={"flex flex-col rounded-md p-2 "}>
-                    <h3 className={"font-serif font-semibold text-[12px] text-sahira-green  text-center "}>{card.name}</h3>
+                    <h3 className={"font-serif font-semibold text-sm sm:text-xl text-sahira-green  text-center "}>{card.name}</h3>
                     
                     <div className={"rounded-md w-full  text-[10px] font-light text-zinc-600 truncate m-0 grow transition-all delay-100 group-hover:drop-shadow-lg  group-hover:brightness-105"}>
-                      <img className="w-full h-[25vh] object-cover m-0 " src={backUrl+pathToImg+card.imageSrc} alt={card.imageAlt || 'imagen del product no cargada'} />
+                      <img className="w-full h-[25vh] sm:h-[35vh] object-cover m-0 " src={backUrl+pathToImg+card.imageSrc} alt={card.imageAlt || 'imagen del product no cargada'} />
                         
                     </div>                   
                      
@@ -53,12 +53,17 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
                 </div>
                 
               </a>
-              <div className='relative'>
-                  <WishlistButton product={card} buttonClassName={`absolute bottom-3 right-2 items-center content-center 
+              {
+                /*
+                  <div className='relative'>
+                    <WishlistButton product={card} buttonClassName={`absolute bottom-3 right-2 items-center content-center 
                                transition-all hover:scale-110 
                               `} iconClassName={'-mt-6 h-5 w-5 hover:fill-red-400'} setMessage={setMessage} />
 
-              </div>
+                  </div>
+                */
+              }
+              
               
             </div>
             

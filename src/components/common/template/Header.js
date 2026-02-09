@@ -166,14 +166,15 @@ const Header = ({isLoggedIn}) => {
 
               <div className="flex justify-between w-5/6">
                 <Link to={"/"} className={` `+ link2Class}>
-                  <HomeIcon iconClassName={'w-6 h-6 '} />&nbsp;Home
-                </Link>
-                <Link to={"/featured"} className={` `+ link2Class}>
-                  Featured
+                  Home
                 </Link>
                 <Link to={"/collection"} className={` `+ link2Class}>
                   Collection
                 </Link>
+                <Link to={"/gift"} className={` `+ link2Class}>
+                  Gift Ideas
+                </Link>
+                
                 <Link to={"/wishlist"} className={` `+ link2Class}>
                   Wishlist
                 </Link>

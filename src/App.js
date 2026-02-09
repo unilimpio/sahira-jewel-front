@@ -17,13 +17,15 @@ import Account from "./components/Account";
 import Home from "./components/Home";
 import Collection from "./components/Collection";
 import Product from "./components/Product";
-import Featured from "./components/Featured";
+
 import Contact from "./components/Contact";
 
 import Wishlist from "./components/Wishlist";
 import About from "./components/About";
 import MyOrders from "./components/MyOrders";
 import FinishOrder from "./components/FinishOrder";
+
+import Gift from "./components/Gift"
 
 function usePersistedState(key, defaultValue) {
   const [state, setState] = useState(() => {
@@ -53,7 +55,7 @@ const App = () => {
             
             <Route path={"/collection"} element={<Collection />} />
             <Route path={"/product"} element={<Product />} />
-            <Route path={"/featured"} element={<Featured />} />
+            <Route path={"/gift"} element={<Gift />} />
             <Route path={"/wishlist"} element={<Wishlist />} />
             <Route path={"/about"} element={<About />} />
             <Route path={"/contact"} element={<Contact />} />

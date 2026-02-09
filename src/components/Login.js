@@ -3,22 +3,24 @@ import { useNavigate } from "react-router";
 
 import Template from "./common/template/Template";
 
-
+import FlashMessage from "./common/FlashMessage";
 import AuthService from "../services/auth.service";
 
+const is_flashMsg = localStorage.getItem('sj_flashMessage');
 
-
-const Login = () => {
-  
-  
+const Login = () => { 
   
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false)
-  const [message, setMessage] = useState("");
-
+  
+  const [message, setMessage] = useState('');
+  console.log('hay un flashMessage??',is_flashMsg);
+  const [flashMessage, setFlashMessage] = useState(is_flashMsg);
+  
+  
   const navigate = useNavigate();
 
   const onChangeEmail = (e) => {
@@ -126,24 +128,25 @@ const Login = () => {
 
   const wrapperClass = `w-full mx-auto  p-2 h-[80vh]`;
 
+  
 
   return (
 
     <Template>
       <div className={wrapperClass}>
-        <div className=" sm:w-4/5 md:w-3/5 z-0 m-2 p-2 sm-p-4 ">
+        <div className=" w-full z-0 m-2 p-2 sm-p-4 ">
        
           <div className="flex flex-row relative">
             
-            <h1 className="text-zinc-600 font-serif mt-16 z-10">Login</h1> 
+            <h1 className="text-zinc-600 font-serif mt-16 sm:mt-8 z-10">Login</h1> 
           </div>
        
 
           <form onSubmit={handleLogin} >
             <div className={'flex flex-col justify-center'}>
-              <div className=" flex flex-col mx-auto w-1/2 my-2">
+              <div className=" flex flex-col mx-auto w-1/2 sm:max-w-56 my-2">
               
-                <label htmlFor="email" className="text-sm font-light text-sahira-green -mb-2 z-40 ml-2">
+                <label htmlFor="email" className="text-sm font-light text-sahira-green -mb-2 z-30 ml-2">
                   <span className="bg-white  rounded-sm px-1/2">Email:</span>
                 </label>              
               
@@ -158,8 +161,8 @@ const Login = () => {
                 />
             </div>
 
-            <div className="flex flex-col mx-auto w-1/2 my-2">
-              <label htmlFor="password" className="text-sm font-light text-sahira-green -mb-2 z-40 ml-2">
+            <div className="flex flex-col mx-auto w-1/2 sm:max-w-56 my-2">
+              <label htmlFor="password" className="text-sm font-light text-sahira-green -mb-2 z-30 ml-2">
                 <span className="bg-white   rounded-sm px-1/2">Password:</span></label>
               <input
                 type="password"
@@ -210,6 +213,11 @@ const Login = () => {
      
         </div>
       </div>
+      {flashMessage && (
+                  
+          <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
+                 
+      )}
     </Template>
     
   );
