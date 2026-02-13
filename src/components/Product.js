@@ -26,6 +26,7 @@ import AuthService from "../services/auth.service";
 import ProductImages from './common/ProductImages';
 
 import WishlistButton from './common/WishlistButton';
+import FlashMessage from "./common/FlashMessage";
 
 
 const pathToImg = "assets/uploads/"
@@ -119,6 +120,8 @@ export default function Product () {
 
   const [message, setMessage] = useState(false);
 
+  const [flashMessage, setFlashMessage] = useState(false);
+
   const [error, setError] = useState(false);
 
   const [searchCourse, setSearchCourse] = useState('');
@@ -135,7 +138,8 @@ export default function Product () {
 
       //this blocks the app from scrolling
       //document.body.style.overflow = "hidden";
-       
+        
+      
 
         UserService.getProduct(prodId).then(
 
@@ -178,7 +182,7 @@ export default function Product () {
 
     };
   
-    }, [prodId]);
+    }, []);
 
   
   const addCourseToCartFunction = (course) => {
@@ -216,25 +220,25 @@ export default function Product () {
       const Add2CartButton = ({className, children}) => {
 
              
-      return (   
-  
-        <button  
-                className={className + 
-                  `  rounded-md ring-1 ring-white p-2                 
-                      drop-shadow-md
-                  transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
-                  `                    
-                } 
-                disabled={loading} onClick={handleClick}>
-          
-          <span className="mx-8 text-white font-normal text-base">{children}</span>
-          
-          
-          
-  
-        </button>
-  
-      );
+        return (   
+    
+          <button  
+                  className={className + 
+                    `  rounded-md ring-1 ring-white p-2                 
+                        drop-shadow-md
+                    transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
+                    `                    
+                  } 
+                  disabled={loading} onClick={handleClick}>
+            
+            <span className="mx-8 text-white font-normal text-base">{children}</span>
+            
+            
+            
+    
+          </button>
+    
+        );
     
       }    
 
@@ -375,7 +379,7 @@ export default function Product () {
               <p className="text-3xl tracking-tight text-zinc-600">${product.price}</p>
               
                           
-              <WishlistButton product={product} setMessage={setMessage} buttonClassName={``} iconClassName={`-mt-4 h-6 w-6`}/>
+              <WishlistButton product={product} setFlashMessage={setFlashMessage} buttonClassName={``} iconClassName={`-mt-4 h-6 w-6`}/>
               
               
                           
@@ -536,19 +540,17 @@ export default function Product () {
       <div 
         className={`      `+wrapperClass}>
         
-        {message &&(
-
-            <AlertBox message={message} setMessage={setMessage} />             
-             
-          )}  
-        
-        
         
         {prodId &&(
           <ProductDetailTemplate product={product} images={images} details={details}/>
         )}
     
         </div>
+        {flashMessage && (
+                  
+          <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
+                 
+      )}
       </Template>
   );
 

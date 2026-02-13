@@ -8,9 +8,11 @@ import UserService from "../services/user.service";
 import Template from "./common/template/Template";
 
 import CartIcon from "./common/template/icons/CartIcon";
-import AlertBox from "./common/template/AlertBox";
+
+import FlashMessage from "./common/FlashMessage";
 
 const user = AuthService.getCurrentUser();
+
 const pathToImg = "assets/uploads/"
 const backUrl = process.env.REACT_APP_BACK_URL;
 const baseUrl = process.env.REACT_APP_BASE_URL;
@@ -39,6 +41,8 @@ export default function Wishlist () {
   
 
   const [message,setMessage] = useState(false);
+
+  const [flashMessage, setFlashMessage] = useState(localStorage.getItem('sj_flashMessage'))
   const [content, setContent] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -48,9 +52,7 @@ export default function Wishlist () {
 
   const [product, setProduct] = useState(false);
 
-  const[wishId,setWishId] = useState(false);
-
-  const[action,setAction] = useState(false);
+  
 
   
 
@@ -87,7 +89,7 @@ export default function Wishlist () {
           }
       
         
-        if(error?.status === 401){
+        if(error?.statusCode === '401 Unauthorized'){
           AuthService.removeCurrentUser();
           setMessage(error?.data.messages)
           navigate("/login")
@@ -99,16 +101,16 @@ export default function Wishlist () {
         }
       }
 
-    } else {
-      //setMessage('You need to log-in in order to add items to your wishlist!');
-      localStorage.setItem('sj_flashMessage',JSON.stringify({message:'You need to log-in to view your wishlist!',type:'info'}))
-      navigate('/login');
-
+    }  else {
+       
+      localStorage.setItem('sj_flashMessage',JSON.stringify({message:'Please login to view your Wishlist.',type:'info'}))
+      navigate('/login')
     }
+  
 
     
 
-  },[navigate]);
+  },[]);
 
  
 const addCourseToCartFunction = (course) => {
@@ -183,9 +185,10 @@ const addCourseToCartFunction = (course) => {
             UserService.removeWish(user,event.target.value).then(
               (response)=>{
                 console.log('this is the response from the api call', response?.data)
-                setMessage(response?.data.message)
-                setContent(response?.data.wishlist)
-                setLoading(false)
+                setFlashMessage(JSON.stringify({message:response?.data?.message,type:'info'}))
+                setContent(response?.data?.wishlist)
+                //navigate(0)
+                
               },
               (error)=>{
                 console.log('error log from the then(response, error expression: ',error)
@@ -195,6 +198,8 @@ const addCourseToCartFunction = (course) => {
 
           } catch(error) {
             console.log('error log from the try-catch expression : ', error)
+          } finally {
+            setLoading(false)
           }
         
         
@@ -221,10 +226,12 @@ const addCourseToCartFunction = (course) => {
 
   const WishlistTemplate = ({wishlist, setMessage}) => {
     
-    return(
+    console.log('asi llega wishlist al compoenente hijo',wishlist)
+    if(wishlist){
+      return(
 
       <>
-        { wishlist ? (
+        { wishlist.length === 0  ? (
 
             <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
                   <p className="font-light text-sm">Your Wishlist is empty...
@@ -301,6 +308,19 @@ const addCourseToCartFunction = (course) => {
     </>
 
     )
+
+    } else {
+      return (
+      <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
+                  <p className="font-light text-sm">Your Wishlist is empty...
+                    <Link to="/collection" className="text-current">Explore the collection?</Link>
+                    
+
+                  </p>
+      </div>
+      )
+    }
+    
   }
 
 
@@ -313,11 +333,7 @@ const addCourseToCartFunction = (course) => {
 
         <div className={`mt-12 `+wrapperClass}>
           
-          {message &&(
-
-            <AlertBox message={message} setMessage={setMessage}/>             
-             
-          )} 
+          
           
           <h1 className="text-zinc-600 font-serif text-2xl md:text-3xl lg:text-4xl ">Wishlist</h1>
           <p className="font-light text-sm">Aqui encontrarás tus coup-de-coeur para una futura oportunidad...</p>
@@ -329,7 +345,7 @@ const addCourseToCartFunction = (course) => {
           
 
           )}
-          {(!content  || loading) &&(
+          {loading &&(
 
             <div className="flex mx-auto items-center justify-center w-fit rounded-lg bg-opacity-75 bg-black p-3">
                   <svg className="animate-spin h-10 w-10 fill-white" viewBox="0 0 24 24">
@@ -343,6 +359,12 @@ const addCourseToCartFunction = (course) => {
           
       
         </div>
+
+        {flashMessage && (
+                          
+            <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
+                         
+        )}
       
       
       </Template>

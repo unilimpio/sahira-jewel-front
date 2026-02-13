@@ -23,7 +23,7 @@ const Footer = () => {
 
   return (
     
-      <footer className=" w-full z-40  bg-white content-end mb-24 sm:mb-0">
+      <footer className=" w-full flex-col z-40  bg-white content-end mb-24 sm:mb-0">
         <div className="flex justify-between w-full   m-0 p-0">
           <div className="flex-col content-end  p-0 -mb-3 ml-4">
             <h6 className=" text-sahira-green text-[9px] sm:text-base md:text-lg lg:text-2xl font-light">
@@ -45,6 +45,9 @@ const Footer = () => {
         </div>  
         
         </div> 
+        <div className="text-center text-xs text-zinc-600 my-2">
+          Made with ❤️ in Quito, Ecuador.  
+        </div>
       </footer>
       
    

@@ -6,7 +6,7 @@ import Template from "./common/template/Template";
 import FlashMessage from "./common/FlashMessage";
 import AuthService from "../services/auth.service";
 
-const is_flashMsg = localStorage.getItem('sj_flashMessage');
+
 
 const Login = () => { 
   
@@ -17,8 +17,8 @@ const Login = () => {
   const [error, setError] = useState(false)
   
   const [message, setMessage] = useState('');
-  console.log('hay un flashMessage??',is_flashMsg);
-  const [flashMessage, setFlashMessage] = useState(is_flashMsg);
+ 
+  const [flashMessage, setFlashMessage] = useState(localStorage.getItem('sj_flashMessage'));
   
   
   const navigate = useNavigate();

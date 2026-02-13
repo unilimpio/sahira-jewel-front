@@ -11,7 +11,7 @@ import "../../../App.css";
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-const AlertBox = ({message, type = 'info'}) => {
+const AlertBox = ({message, type = 'info', setFlashMessage}) => {
 
   const [isVisible,setIsVisible] = useState(true);
   
@@ -23,7 +23,7 @@ const AlertBox = ({message, type = 'info'}) => {
     
       console.log("toggle visibility: "+!isVisible)
       setIsVisible(!isVisible);
-      
+      setFlashMessage(false)
     
     }
   

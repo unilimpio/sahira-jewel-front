@@ -12,6 +12,8 @@ import Template from "./common/template/Template";
  
  import AlertBox from "./common/template/AlertBox";
 
+ import ProductGrid from "./common/ProductGrid";
+
 import InstagramIcon from "./common/template/icons/InstagramIcon";
 
 import logo_vert from '../assets/hero-workshop-vertical.jpeg';
@@ -102,7 +104,7 @@ export default function Home () {
               
 
               {user && (
-                <div className="absolute  top-16 left-2 z-40 flex  bg-white rounded-full w-fit p-1 px-3"> 
+                <div className="absolute  top-16 left-2 z-40 flex  bg-white rounded-full w-fit p-1 px-3 hidden"> 
                                           
                 </div>
                 )          
@@ -114,11 +116,14 @@ export default function Home () {
               <HeroBanner banners={content.banners} />
           
           </div>
+          <div className="mx-auto w-[85vw] sm:w-full mb-24">
+             <ProductGrid products={content.products} />
+          </div>
           <div className=" mt-6 relative overflow-hidden">
                   <h1 className="text-zinc-600 font-thin font-serif text-2xl sm:text-4xl p-2  text-center z-50">
                         Joyas con Raíz Ancestral
                   </h1>
-                  <h2 className="font-serif text-xl sm:text-2xl text-zinc-600  p-4 text-center z-50">
+                  <h2 className=" font-extralight text-xl sm:text-2xl text-zinc-600  p-4 text-center z-50">
                     Joyería atemporal en plata 925. <br/>Inspirada en las culturas precolombinas de Ecuador y creada especialmente para ti.
                   </h2>
                   <div className=" ">
@@ -148,7 +153,9 @@ export default function Home () {
                   </div>
                   
           </div>
-        
+
+          
+          
               
           <div className="mx-auto w-[85vw] sm:w-full mb-24">
             <CardSlider cards={content.cards} setMessage={setMessage}/>

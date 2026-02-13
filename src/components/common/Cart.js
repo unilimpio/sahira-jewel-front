@@ -86,10 +86,10 @@ export default function Cart({
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                     <div className="flex items-start justify-between bg-white ">
-                      <DialogTitle className=" text-xl font-medium text-sahira-green flex flex-row">
-                        <CartIcon className={`-mt-4  ${className} `} iconClassName={` w-6 h-6 fill-sahira-green `} />
+                      <DialogTitle className=" text-lg font-light font-serif text-sahira-green flex flex-row">
+                        <CartIcon className={`-mt-4 -ml-3  ${className} `} iconClassName={` w-6 h-6 fill-sahira-green `} />
 
-                        Shopping cart</DialogTitle>
+                        Your Shopping cart</DialogTitle>
                       <div className="absolute top-0 right-0 m-2 ">
                         <button
                           type="button"
@@ -101,7 +101,7 @@ export default function Cart({
                         >
                           <span className="absolute -inset-0.5" />
                           <span className="sr-only">Close panel</span>
-                          <XMarkIcon aria-hidden="true" className="size-6" />
+                          <XMarkIcon aria-hidden="true" className="size-4" />
                         </button>
                       </div>
                     </div>

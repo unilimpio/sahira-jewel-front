@@ -173,8 +173,10 @@ const setWish = (user,prodId) => {
     if(error.status === 401 ){
 
       AuthService.removeCurrentUser()
+      return null;
                             
     }
+    
 
   });
   

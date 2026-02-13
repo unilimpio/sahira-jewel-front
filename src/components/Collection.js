@@ -13,6 +13,10 @@ import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
 
 import WishlistButton from './common/WishlistButton';
+import FlashMessage from "./common/FlashMessage";
+
+import Loading from "./common/template/Loading";
+
 
 
 
@@ -33,6 +37,8 @@ export default function Collection () {
   
   const [message, setMessage] = useState(false);
 
+  const [flashMessage, setFlashMessage] = useState(localStorage.getItem('sj_flashMessage'));
+
   const [loading, setLoading] = useState(false);
 
    const [catId,setCatId] = useState(false);
@@ -40,29 +46,41 @@ export default function Collection () {
    const [prodId, setProdId] = useState(false);
   
    let navigate = useNavigate();
+
+   const [categories, setCategories] = useState(false);
+
+   const [products, setProducts] = useState(false);
   
+   const [searchCourse, setSearchCourse] = useState('');
   
+  /*
   if(searchParams.get("cId")){
     setCatId(searchParams.get("cId"))
   }
   
   if(searchParams.get("pId")){
     setProdId(searchParams.get("pId"))
-  }
+  }*/
+
+   // SOLUCIÓN AL BUCLE INFINITO:
+  useEffect(() => {
+    const cId = searchParams.get("cId");
+    //const pId = searchParams.get("pId");
+    if (cId) {
+      setCatId(cId);
+    } 
+   // if (pId) {
+   //   setProdId(pId);
+   // }
+  }, [searchParams]); // Solo se ejecuta cuando cambia la URL
 
 
-  
-  function CategoryFilter(){   
-    
-    
-    //const [message, setMessage] = useState("");
-    const [categories, setCategories] = useState(false);
-      
-    useEffect(() => {
+  //this useeffect populates the categories within a category set by catId state, if null then you are at the top of the tree
+  useEffect(() => {
       
       function createOptions() {
         return {
-          catId: null,           
+          catId: catId,           
                    
         };
       }
@@ -71,7 +89,7 @@ export default function Collection () {
       
       setLoading(true)
       
-          UserService.getCategories(options.catId).then(
+      UserService.getCategories(options.catId).then(
 
               (response) => {
 
@@ -93,23 +111,72 @@ export default function Collection () {
               
               }
             
-          )
+      )
 
-          setLoading(false)
+      setLoading(false)
       return () => {
 
 
       };
   
-    }, []);
+    }, []);//
+//this use effect populates the products to be shown depending on the catId state
+  useEffect(() => {
+        // Add scroll event listener when the component mounts
+    
 
-    function SelectTemplate({categories}){
+        function createOptions() {
+          return {
+            catId: catId,           
+                    
+          };
+        }
+        
+        const options = createOptions();   
+
+        setLoading(true)
+
+            UserService.getProducts(options.catId).then(
+
+                (response) => {
+                  
+                    setProducts(response?.data.products);         
+                    console.log(response?.data)                  
+                    console.log(response?.data.products)
+                    setLoading(false)
+                
+                },
+
+                (error) => {
+                  const _content =
+                    (error?.response && error?.response.data) ||
+                    error?.message ||
+                    error?.toString();
+                  
+                  setProducts(_content);
+                  console.log(error)
+                
+                }
+              
+            )
+
+        
+        return () => {
+            
+        };
+    
+  }, [catId]);
+
+
+    function SelectCategory({categories}){
       
       const handleChange = (event)=>{
         
         setCatId(event.target.value)
 
       }
+
+      if(categories){
              
         return(
           <div className="flex flex-row">
@@ -131,189 +198,77 @@ export default function Collection () {
             
           </div>
         );
-    
-    
-    }
-  
-    return (
-         
-      <div className="">              
-              
-              {categories ? (   
-
-              <SelectTemplate categories={categories}/>
-              
-              ):
-              (
-                <div className="flex">
-                  <svg className="animate-spin h-4 w-4 fill-slate-600" viewBox="0 0 24 24">
-                    <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                  </svg>
-                  <span className="text-slate-700 font-extralight ml-2">Loading...</span>
-                </div>
-              )
-              }
-            
-                           
-      </div>
- 
-    );
-  
-  }
- 
-
-  function ProductGrid({catId}){   
-    
-    const [loading, setLoading] = useState(false);
-    
-    
-    const [products, setProducts] = useState(false);
-    const [searchCourse, setSearchCourse] = useState('');
-  
-      
-    useEffect(() => {
-      // Add scroll event listener when the component mounts
-   
-
-      function createOptions() {
-        return {
-          catId: catId,           
-                   
-        };
       }
-      
-      const options = createOptions();   
 
-      setLoading(true)
-
-          UserService.getProducts(options.catId).then(
-
-              (response) => {
-                
-                  setProducts(response?.data.products);         
-                  console.log(response?.data)                  
-                  console.log(response?.data.products)
-                  setLoading(false)
-              
-              },
-
-              (error) => {
-                const _content =
-                  (error?.response && error?.response.data) ||
-                  error?.message ||
-                  error?.toString();
-                
-                setProducts(_content);
-                console.log(error)
-              
-              }
-            
-          )
-
-      
-      return () => {
-
-      };
-  
-    }, [catId]);
-
-      
+      return null
+    
+    }   
 
     function GridTemplate({products}){
 
-                   
-      return(
-          <div className="mb-48 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
-          {products?.map((product) => (
-          <div key={'div-'+product.id+'-'+product.name} className="relative">
-            <div  className="group  ">
-              
-              <img
-                alt={product.imageAlt}
-                src={backUrl+pathToImg+product.imageSrc}
-                className="aspect-square w-full rounded-md bg-gray-200 object-cover brightness-100 group-hover:brightness-105 group-hover:drop-shadow-lg transition-all group-hover:scale-105 lg:aspect-auto lg:h-80"
-              />
-              <h3 className="text-xl  text-center font-serif mt-4 ">
-                    <Link to={'/product?pId='+product.id} className="text-sahira-green  no-underline hover:no-underline">
-                      <span aria-hidden="true" className="absolute inset-0  " />
-                      {product.name}
-                    </Link>
-                  </h3>
-                  <p className="w-3/4 text-left font-light mt-1 text-sm text-zinc-500 truncate">{product.description}</p>
-              <div className="mt-1 flex w-3/4 justify-left">
+                    
+        return(
+            <div className="mb-48 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
+            {products?.map((product) => (
+            <div key={'div-'+product.id+'-'+product.name} className="relative">
+              <div  className="group  ">
                 
+                <img
+                  alt={product.imageAlt}
+                  src={backUrl+pathToImg+product.imageSrc}
+                  className="aspect-square w-full rounded-md bg-gray-200 object-cover brightness-100 group-hover:brightness-105 group-hover:drop-shadow-lg transition-all group-hover:scale-105 lg:aspect-auto lg:h-80"
+                />
+                <h3 className="text-xl  text-center font-serif mt-4 ">
+                      <Link to={'/product?pId='+product.id} className="text-sahira-green  no-underline hover:no-underline">
+                        <span aria-hidden="true" className="absolute inset-0  " />
+                        {product.name}
+                      </Link>
+                    </h3>
+                    <p className="w-3/4 text-left font-light mt-1 text-sm text-zinc-500 truncate">{product.description}</p>
+                <div className="mt-1 flex w-3/4 justify-left">
                   
+                    
+                    
+                    <p className="text-left text-xl font-medium text-zinc-600 -mt-1 ">${product.price}</p>
+                    
                   
-                  <p className="text-left text-xl font-medium text-zinc-600 -mt-1 ">${product.price}</p>
-                  
-                
+                </div>
               </div>
-            </div>
+              
+                <WishlistButton product={product} setFlashMessage={setFlashMessage} buttonClassName={`absolute group bottom-2 right-0  items-center content-center 
+                                transition-all hover:scale-105 hover:-translate-y-2 delay-150 duration-500
+                                
+                                p-3`} iconClassName={'-mt-4 h-6 w-6'}/>
+
+
+              </div>
             
-              <WishlistButton product={product} setMessage={setMessage} buttonClassName={`absolute group bottom-2 right-0  items-center content-center 
-                               transition-all hover:scale-105 hover:-translate-y-2 
-                              
-                              p-3`} iconClassName={'-mt-4 h-6 w-6'}/>
-
-
-            </div>
-          
-          ))}
-        </div>
-          
-      );
-    
-    
+            ))}
+          </div>
+            
+        );
+      
+      
     }
-    
+      
     function SearchComponent({ searchCourse, courseSearchUserFunction }) {
-      return (
-        
+        return (
           
+            
+            
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchCourse}
+                onChange={courseSearchUserFunction}
+                className={'border border-zinc-600 bg-neutral-100 w-36 h-4 text-xs font-extralight'}
+              />
+            
           
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchCourse}
-              onChange={courseSearchUserFunction}
-              className={'border border-zinc-600 bg-neutral-100 w-36 h-4 text-xs font-extralight'}
-            />
-          
-        
-      );
+        );
     }
-  
-    return (
-         
-      <div className="flex flex-col ">         
-              
-            
-            {products && (   
-              
-                
-                <GridTemplate products={products}/>
-             
-            ) }
 
-            {(!products  || loading) &&(
-
-            <div className="flex mx-auto items-center justify-center w-fit rounded-lg bg-opacity-75 bg-black p-3">
-                  <svg className="animate-spin h-10 w-10 fill-white" viewBox="0 0 24 24">
-                    <path opacity="0.3" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                  </svg>
-                  <span className="text-white font-extralight ml-2">Loading...</span>
-            </div>
-
-          )}
-            
-                           
-      </div>
- 
-    );
-  
-  }
+    
 
    
   
@@ -324,24 +279,32 @@ export default function Collection () {
         className={` mt-10 sm:mt-16    `+wrapperClass}>
               
         <div className={`relative`} >
-          
-          
-          {message &&(
-
-            <AlertBox message={message} setMessage={setMessage}/>             
-             
-          )}    
-                  
+                       
           
           <div className=" ">
               <h1 className="text-zinc-600 text-2xl font-serif md:text-3xl lg:text-4xl">Collection</h1>
               
-              <CategoryFilter catId={catId} />
+              <SelectCategory categories={categories} />
           </div>          
 
-          <div className="">
-              <ProductGrid catId={catId} />
-          </div>
+          <div className="flex flex-col ">         
+                
+              
+              {products && (   
+                
+                  
+                  <GridTemplate products={products}/>
+              
+              ) }
+
+            {loading &&(
+
+                  <Loading />
+
+            )}
+              
+                            
+        </div>
               
         
         </div>          
@@ -350,6 +313,11 @@ export default function Collection () {
         
             
         </div>
+        {flashMessage && (
+                  
+          <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
+                 
+      )}
       </Template>
   );
 

@@ -25,6 +25,8 @@ import About from "./components/About";
 import MyOrders from "./components/MyOrders";
 import FinishOrder from "./components/FinishOrder";
 
+
+import Privacy from "./components/Privacy";
 import Gift from "./components/Gift"
 
 function usePersistedState(key, defaultValue) {
@@ -67,6 +69,8 @@ const App = () => {
 
             <Route path={"/account/orders"} element={<MyOrders />} />
             <Route path={"/finish-order"} element={<FinishOrder />} />
+
+            <Route path={"/privacy"} element={<Privacy />} />
             
 
           </Routes>
