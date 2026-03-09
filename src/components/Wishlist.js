@@ -227,31 +227,30 @@ const addCourseToCartFunction = (course) => {
   const WishlistTemplate = ({wishlist, setMessage}) => {
     
     console.log('asi llega wishlist al compoenente hijo',wishlist)
-    if(wishlist){
-      return(
+    
+    return(
 
       <>
-        { wishlist.length === 0  ? (
-
-            <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
-                  <p className="font-light text-sm">Your Wishlist is empty...
-                    <Link to="/collection" className="text-current">Explore the collection?</Link>
-                    
-
-                  </p>
-            </div>
-
-          ) : (
         
           <div className="mb-16 max-h-96 overflow-y-auto">
             <form id={'wishlist-add2cart-form'} onSubmit={handleSubmit}>          
             <table id="wishlist-table" 
-                    className="bg-white opacity-90 text-[8px] sm:text-sm shadow-md w-full  ">
+                    className="bg-white  text-[8px] sm:text-sm w-full  ">
                                   
                 
                         
                         <tbody className="text-zinc-600 ">
-            
+            { wishlist.length === 0  && (
+
+              <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
+                    <p className="font-light text-sm">Your Wishlist is empty...
+                      <Link to="/collection" className="text-current">Explore the collection?</Link>
+                      
+
+                    </p>
+              </div>
+
+              )}
             {wishlist.map((row,index)=>
               
                
@@ -260,28 +259,27 @@ const addCourseToCartFunction = (course) => {
 
 
                 <tr className="even:bg-gray-50 odd:bg-white" key={'tr-'+index+'-'+row.id+row.product_name} >
-                          <td className="p-2"    >
-                            { index+1  }
-                          </td>
+                          
                           <td className="p-2 "    >
-                            <img src={` ${backUrl+pathToImg+row.product_imageSrc }`} alt={`${row.product_imageAlt}`} className="drop-shadow-lg rounded-b-md" />                        
+                            <div className="w-28 overflow-clip">
+                              <img src={` ${backUrl+pathToImg+row.product_imageSrc }`} alt={`${row.product_imageAlt}`} 
+                                className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out" />                        
+                            </div>
                           </td>
-                          <td className="p-2 "    >
-                            <span className="text-sahira-green font-serif text-sm">{ row.product_name  }</span><br />
-                            <span className={'text-sm font-light text-zinc-600 '}>${ row.product_price  }</span>
+                          <td className="p-2  overflow-clip "    >
+                            <p className="text-black font-serif  text-[9px] my-0">{ row.product_name  }</p>
+                            <p className="text-black w-[30vw] font-light text-[8px] my-0  truncate">{ row.product_description}</p>
+                           
                           </td>
-                          <td className="p-2 text-[8px] font-light "    >
-                            <p className=" "><span className=" italic">Added on</span>&nbsp;
-                              { row.date_created }</p>
-                          </td>
+                          
                           <td className="p-2 text-center"    >
                             <div className="flex-col pt-2">
                             <button name="addtocart" value={row.id}  onClick={handleClick}
-                                      className={' bg-sahira-green  rounded-full drop-shadow-lg ring-2 ring-white w-8 h-8 flex items-center justify-center m-3'} 
+                                      className={'relative  flex items-center justify-center '} 
                                         >
-                              <span className="absolute w-full flex justify-center text-white font-semibold text-xs">+</span>
-                              <CartIcon className={''} iconClassName={'w-5 h-5 fill-white -mt-1'} />
-
+                              
+                              <CartIcon className={''} iconClassName={'w-6 h-6 fill-black -mt-1'} />
+                              <span className="absolute w-full flex justify-center text-black font-semibold text-xs">+</span>  
                             </button>
                             <button  name="remove" value={row.id}
                                         className="static text-red-300 text-[9px]  hover:underline"
@@ -304,22 +302,12 @@ const addCourseToCartFunction = (course) => {
         
         
 
-    )}
+    
     </>
 
     )
 
-    } else {
-      return (
-      <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
-                  <p className="font-light text-sm">Your Wishlist is empty...
-                    <Link to="/collection" className="text-current">Explore the collection?</Link>
-                    
-
-                  </p>
-      </div>
-      )
-    }
+   
     
   }
 

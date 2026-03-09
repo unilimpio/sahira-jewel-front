@@ -15,3 +15,15 @@
 
 
 @import "tailwindcss/screens";
+
+@theme {
+  --font-mont: Montserrat;
+  --font-cormo: CormorantGaramond-Light;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+    /* Alternative: scroll-behavior: smooth; */
+  }
+}

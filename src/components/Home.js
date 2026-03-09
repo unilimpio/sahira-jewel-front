@@ -20,6 +20,11 @@ import logo_vert from '../assets/hero-workshop-vertical.jpeg';
 
 import logo_hori from '../assets/hero-workshop-horizontal.jpeg';
 
+import hero_img from '../assets/hero-image.png';
+
+import Logo from "./common/Logo";
+
+
 const user = AuthService.getCurrentUser();
 const backUrl = process.env.REACT_APP_BACK_URL;
 const baseUrl = process.env.REACT_APP_BASE_URL;
@@ -60,6 +65,7 @@ export default function Home () {
                              
                       console.log(response?.data)                  
                       console.log(response?.data.cards)
+                      console.log(response?.data.products)
                    
                   
                   },
@@ -104,7 +110,7 @@ export default function Home () {
               
 
               {user && (
-                <div className="absolute  top-16 left-2 z-40 flex  bg-white rounded-full w-fit p-1 px-3 hidden"> 
+                <div className="absolute  top-16 left-2 z-40 bg-white rounded-full w-fit px-3 hidden"> 
                                           
                 </div>
                 )          
@@ -112,62 +118,73 @@ export default function Home () {
         {content && (
           <div className={'relative'}>    
               
-          <div className="mx-auto w-full h-[90vh] overflow-hidden mb-18">
-              <HeroBanner banners={content.banners} />
-          
-          </div>
-          <div className="mx-auto w-[85vw] sm:w-full mb-24">
-             <ProductGrid products={content.products} />
-          </div>
-          <div className=" mt-6 relative overflow-hidden">
-                  <h1 className="text-zinc-600 font-thin font-serif text-2xl sm:text-4xl p-2  text-center z-50">
-                        Joyas con Raíz Ancestral
-                  </h1>
-                  <h2 className=" font-extralight text-xl sm:text-2xl text-zinc-600  p-4 text-center z-50">
-                    Joyería atemporal en plata 925. <br/>Inspirada en las culturas precolombinas de Ecuador y creada especialmente para ti.
-                  </h2>
-                  <div className=" ">
-                    {
-                      /*
-                      <picture className="w-full">
-                    <source
-                            media="(max-width: 768px)"
-                            srcSet={logo_hori}
-                          />
-                          <source
-                            media="(min-width: 768px)"
-                            srcSet={logo_hori}
-                          />
-                          <img
-                            src={logo_hori}
-                            alt="Hero"
-                            className=""
-                          />
-                    
-                  </picture>
+          <div className="flex-col mx-auto content-start justify-center w-full min-h-[90vh] mb-18 py-8 ">
+              {//<HeroBanner banners={content.banners} />
+              }
+              <div className={`flex justify-center`}>
+                  <Logo className={"w-52 "} iconClassName={'fill-black'}/>
+              </div>
 
-                      */
-                    }
-                    
-
-                  </div>
-                  
-          </div>
-
-          
-          
+              <h1 className="text-[9px] text-center font-light font-script mt-4">Jewelry born from the soul of Ecuador</h1>
+              <Link to="/collection" className="text-zinc-700 no-underline hover:underline">
+                <h2 className="text-[8px] text-center font-script mb-20 ">EXPLORE THE COLLECTION</h2>
+              </Link>
+              <div className="flex ">
+                <picture className="w-full object-contain">
+                        <source
+                          media="(max-width: 768px)"
+                          srcSet={hero_img}
+                          className='w-full'
+                        />
+                        <source
+                          media="(min-width: 768px)"
+                          srcSet={hero_img}
+                        />
+                        <img
+                          src={hero_img}
+                          alt="Hero"
+                          className="w-full"
+                        />
+                </picture>
+              </div>
               
-          <div className="mx-auto w-[85vw] sm:w-full mb-24">
-            <CardSlider cards={content.cards} setMessage={setMessage}/>
-          </div>     
+          </div>
+          <div className="flex justify-center p-8 h-[40vh]">
+            <div className="flex-col justify-center content-center my-2 text-center font-light text-[9px]">
+              <p className="m-0">HANDCRAFTED IN ECUADOR</p>
+              <hr class="m-2 border-t border-black w-[9px] mx-auto"></hr>
+              <p className="m-0">STERLING SILVER 925</p>
+              <hr class="m-2 border-t  border-black w-[9px] mx-auto"></hr>
+              <p className="m-0">LIMITED PIECES</p>
+            </div>             
+              
+          </div>
+          <div className="flex flex-col justify-center">
+            <h3 className="text-center font-serif font-thin text-sm">Colecciones Exclusivas</h3>
+            <p className="text-[11px] font-mont text-center">Joyas de autor hechas a mano en Ecuador</p>
+            <div className="mx-auto w-[85vw] sm:w-full mb-24 p-4">
+              <ProductGrid products={content.products} />
+            </div>
+          </div>
+          
+          
+
+          {/*
+            <div className="mx-auto w-[85vw] sm:w-full mb-24">
+              <CardSlider cards={content.cards} setMessage={setMessage}/>
+            </div> 
+
+          */}
+          
+             
                   
               
           &nbsp;&nbsp;&nbsp;
           <div className="mx-auto w-[85vw] sm:w-full mt-24 mb-56">
-                <h5 className={'text-center text-zinc-400 text-4xl my-8'}>Follow Us</h5>
+                <h5 className={'text-center font-light text-zinc-400 text-4xl my-8'}>Follow Us</h5>
                 <a href={'https://www.instagram.com/sahirajewelry.ec'} className={'text-center text-4xl'}>
                   <InstagramIcon className={'transition-all  hover:scale-110 delay-75'} 
-                  iconClassName={'w-10 h-10 mx-auto stroke-zinc-400 stroke-1'} />
+                  iconClassName={'w-10 h-10 mx-auto stroke-zinc-400 fill-none stroke-1'} />
                 </a>
           
           </div> 

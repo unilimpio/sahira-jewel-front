@@ -15,10 +15,10 @@ import GiftIcon from "./icons/GiftIcon";
 
 const NavBottom = ({isLoggedIn, user}) => {
   //HERE YOU CAN CHANGE THE ICONS AND LINKS COLORS AND HOVERS
-const linkClass = `m-1 font-serif hover:drop-shadow-md hover:text-sahira-green no-underline hover:font-normal font-light focus:text-sahira-green  text-zinc-500 text-center hover:no-underline transition-all hover:-translate-y-1 hover:scale-110 focus:-translate-y-1 focus:scale-105`;
+const linkClass = `m-1 hover:drop-shadow-md hover:text-black no-underline hover:font-normal font-light focus:text-black  text-zinc-500 text-center hover:no-underline transition-all hover:-translate-y-1 hover:scale-110 focus:-translate-y-1 focus:scale-105`;
 const iconClass = `mx-auto w-6 h-6 fill-zinc-600 stroke-zinc-600`;
 
-const linkClassActive = `m-1 font-serif no-underline text-sahira-green font-normal hover:no-underline -translate-y-1 scale-110 drop-shadow-md `;
+const linkClassActive = `m-1 no-underline text-black font-light hover:no-underline -translate-y-1 scale-110  `;
 //const user = AuthService.getCurrentUser();
 
   return (

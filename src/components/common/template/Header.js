@@ -56,145 +56,115 @@ const Header = ({isLoggedIn}) => {
 			.reduce((total, item) => 
 						total + item.product.price * item.quantity, 0);
 	};
-
+  
   useEffect(() => {
     console.log('i am inside useeffect of cart component, this is supposed to reload the componene every time cart is modified, but is not working')
   }, [cart]);
   
 
+
   const linkClassIcons = `p-2 md:mx-4 text-slate-800 hover:text-white sm:text-xs md:text-lg lg:text-lg hover:-translate-y-1 hover:transition`;
-  const linkClass = `p-3 font-light text-zinc-600 no-underline hover:text-sahira-green hover:underline text-sm sm:text-md md:text-lg lg:text-xl `;
-  const link2Class = ` flex p-2 text-sahira-green no-underline hover:no-underline hover:text-zinc-400 text-sm sm:text-md md:text-lg lg:text-xl stroke-sahira-green hover:stroke-zinc-600`;
+  const linkClass = `p-3 font-light text-zinc-600 no-underline hover:text-zinc-400 hover:underline text-sm sm:text-base md:text-lg lg:text-xl `;
+  const link2Class = ` flex p-2 text-black font-light no-underline  
+                        hover:no-underline hover:shadow-lg
+                        text-sm sm:text-base md:text-lg lg:text-xl 
+                        transition-all duration-300 ease-in-out `;
 
-  const linkDrawerClass = `bg-white bg-opacity-50  p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-lg  `;
+  const linkDrawerClass = ` p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-lg  `;
 
-  const [hamIsOpen,setHamIsOpen] = useState(false);
+  
 
-  const HamburguerButton=({iconClassName,buttonClassName})=>{
+  
 
-    function handleClick(){
+  
 
-      setHamIsOpen(true);
-      
-    }
+  const MobileTopNav=()=>{
 
-    return(
-      
-        <button  
-          className={`p-2 ${buttonClassName}`} 
-          onClick={handleClick}>
-            <HamburguerIcon className={iconClassName}/>
-        </button>
-      
-    );
-  }
+    const [isVisible,setIsVisible] = useState(false);
+    const [hamIsOpen,setHamIsOpen] = useState(false);
 
-  const CloseButton=({iconClassName,buttonClassName})=>{
+    const HamburguerButton=({className,iconClassName,buttonClassName})=>{
 
-    function handleClick(){
+      function handleClick(){
 
-      setHamIsOpen(false);
-      
-    }
-
-    return(
-      
-        <button  
-          className={`p-2 ${buttonClassName}`} 
-          onClick={handleClick}>
-            <CloseIcon className={iconClassName}/>
-        </button>
-      
-    );
-  }
-
-  return (
-    
-      <header  className={`sticky top-0 z-40 flex-col`}>
-        <div className=" relative z-40  w-full flex place-content-between  bg-white           
-            h-fit">
+        setHamIsOpen(true);
         
-          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5 ">
-            <Logo className={"w-36 sm:w-42 md:w-64 "}/>
-          </Link>
-          <div className=" flex-col w-1/2 place-content-start justify-items-end ">
-            <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 -z-50 justify-end">
+      }
+
+      return(
+        
+          <button  
+            className={`p-2 ${buttonClassName}`} 
+            onClick={handleClick}>
+              <HamburguerIcon className={className} iconClassName={iconClassName}/>
+          </button>
+        
+      );
+    }
+
+    const CloseButton=({className,iconClassName,buttonClassName})=>{
+
+      function handleClick(){
+
+        setHamIsOpen(false);
+        
+      }
+
+      return(
+        
+          <button  
+            className={`p-2 ${buttonClassName}`} 
+            onClick={handleClick}>
+              <CloseIcon className={className} iconClassName={iconClassName}/>
+          </button>
+        
+      );
+  }
+
+    useEffect(() => {
+      const handleScroll = () => {
+        // Define el punto de corte (ej. 100 píxeles)
+        if (window.scrollY > 30) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      };
+
+      window.addEventListener('scroll', handleScroll);
+
+      // Limpieza del listener al desmontar el componente
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }, []);
+
+    return (
+      <div id="mobile-top-menu" 
+          className={` ${isVisible ? 'opacity-100' : 'opacity-0'}
+                      absolute w-full top-0 z-50 visible sm:hidden flex justify-center transition-opacity duration-300 ease-in-out  
+
                     
-                          
-                <Link to={"/about"} className={` `+ linkClass}>
-                  About Us
-                </Link>
-                <Link to={"/contact"} className={` `+ linkClass}>
-                  Contact
-                </Link>
-                {isLoggedIn ? (
-              
-                  <> 
-                                    
-                    <Link to={"/logout"} className={` `+linkClass}>
-                      <LogoutIcon/>
-                      Logout
-                    </Link>
-                
-                  </>  
-                ) : (
-                  <>
-                
-                    <Link to={"/login"} className={` `+linkClass}>
-                      <UserIcon iconClassName={"w-6 h-6 "} className={""} /> 
-                    
-                    </Link>
-
-
-                  
-                  </>
-                )}
-                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 hover:fill-sahira-green "} 
-                  deleteCourseFromCartFunction={deleteCourseFromCartFunction} 
-                  totalAmountCalculationFunction={totalAmountCalculationFunction} 
-                  cart={cart} 
-                  setCart={setCart}/>
-          
-            </nav>
-            
-            
-
-          </div>
-          
-        </div>
-        <nav className="flex justify-center w-full fixed sm:static sm:z-30 -top-20 -z-50 bg-white">
-
-              <div className="flex justify-between w-5/6">
-                <Link to={"/"} className={` `+ link2Class}>
-                  Home
-                </Link>
-                <Link to={"/collection"} className={` `+ link2Class}>
-                  Collection
-                </Link>
-                <Link to={"/gift"} className={` `+ link2Class}>
-                  Gift Ideas
-                </Link>
-                
-                <Link to={"/wishlist"} className={` `+ link2Class}>
-                  Wishlist
-                </Link>
-              </div>             
+                    `}>
+          <nav className={`flex flex-row w-full bg-white bg-opacity-100 `}>                      
+                      
+                      <CloseButton 
+                        className={`transition-opacity duration-300 ease-in-out ${hamIsOpen ? ('opacity-100'):('opacity-0')}`}
+                        iconClassName={`w-6 h-6 fill-zinc-600 ${hamIsOpen ? ('') : ('')} `} 
+                        buttonClassName={` ${hamIsOpen ? ('visible') : ('hidden')}`}/>
                         
-        </nav>
-        <div id="mobile-top-menu" className="absolute w-full top-0 z-50 visible sm:hidden flex justify-center bg-white bg-opacity-100 drop-shadow-lg">
-          <nav className="flex flex-row w-full">                      
-                      {
-                        hamIsOpen ? (
-                          <CloseButton iconClassName={`w-6 h-6 fill-zinc-600 ${hamIsOpen ? ('') : ('')}`} buttonClassName={`transition delay-150 ${hamIsOpen ? ('') : ('')}`}/>
-                        ) : (
-                          <HamburguerButton iconClassName={`w-6 h-6 stroke-zinc-600 ${hamIsOpen ? ('') : ('')}`} buttonClassName={`transition delay-150 ${hamIsOpen ? ('') : ('')}`}/>
-                        )
+                      <HamburguerButton 
+                        className={`transition-opacity duration-300 ease-in-out ${hamIsOpen ? ('opacity-0'):('opacity-100')}`}
+                        iconClassName={`w-6 h-6 stroke-zinc-600 ${hamIsOpen ? ('') : ('')}`} 
+                        buttonClassName={` ${hamIsOpen ? ('hidden') : ('visible')}`}/>
+                        
 
-                      }
-
-                      <Link to={"/"} className="hover:no-underline sm:hidden flex flex-grow justify-center">
-                        <Logo className={"w-36 sm:w-42 md:w-64 "} iconClassName={'bg-white bg-opacity-50 rounded-lg'}/>
-                      </Link>
+                      
+                      <div className="flex flex-grow justify-center py-3">
+                        
+                          <Logo className={"text-black text-2xl w-36 "} iconClassName={'fill-black'}/>
+                        
+                      </div>
                                     
                       <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600   "}  
                         deleteCourseFromCartFunction={deleteCourseFromCartFunction} 
@@ -203,11 +173,16 @@ const Header = ({isLoggedIn}) => {
 
 
           </nav>
-          {
-            hamIsOpen && (
-              <div id="mobile-drawer-open" className={`fixed top-14 right-0 w-full  z-30  ${hamIsOpen ? ('opacity-100'):('opacity-0')}`}>
-                
-                <div className={`flex  py-6 bg-white bg-opacity-100 hover:bg-opacity-90 rounded-b-lg  drop-shadow-md `}>
+          
+            
+              
+              <div id="mobile-drawer-open" className={`fixed top-14 right-0 w-full  z-30  ${hamIsOpen ? ('opacity-100 '):(' opacity-0 hidden')}
+                                                        transition-all duration-400  ease-in-out`}>
+                {
+                //here the drawer is open, the drwaer the block of content that appears when you click  on the top menu menu button i.e.
+                //  hamburguer button 
+                }
+                <div className={`flex  py-6 bg-white bg-opacity-100 rounded-b-lg drop-shadow-lg `}>
                   
                   <nav className="flex flex-col mx-auto ">
                   
@@ -253,11 +228,89 @@ const Header = ({isLoggedIn}) => {
                 </div>
               </div>
               
-            ) 
+           
+      </div>
+    )
+  
+  }
 
-          }              
+  return (
+    
+      <header  className={`sticky top-0 z-40 flex-col`}>
+        <div className=" relative z-40  w-full flex place-content-between  bg-white           
+            h-fit">
+        
+          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5 ">
+            <Logo className={"w-36 sm:w-42 md:w-48 "}/>
+          </Link>
+          <div className=" flex-col w-1/2 place-content-start justify-items-end ">
+            <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 -z-50 justify-end">
+                    
+                          
+                <Link to={"/about"} className={` `+ linkClass}>
+                  About Us
+                </Link>
+                <Link to={"/contact"} className={` `+ linkClass}>
+                  Contact
+                </Link>
+                {isLoggedIn ? (
+              
+                  <> 
+                                    
+                    <Link to={"/logout"} className={` `+linkClass}>
+                      <LogoutIcon/>
+                      Logout
+                    </Link>
+                
+                  </>  
+                ) : (
+                  <>
+                
+                    <Link to={"/login"} className={` `+linkClass}>
+                      <UserIcon iconClassName={"w-6 h-6 stroke-1"} className={""} /> 
+                    
+                    </Link>
 
+
+                  
+                  </>
+                )}
+                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 hover:fill-zinc-400 "} 
+                  deleteCourseFromCartFunction={deleteCourseFromCartFunction} 
+                  totalAmountCalculationFunction={totalAmountCalculationFunction} 
+                  cart={cart} 
+                  setCart={setCart}/>
+          
+            </nav>
+            
+            
+
+          </div>
+          
         </div>
+        <nav className="flex justify-center w-full fixed sm:static sm:z-30 -top-20 -z-50 bg-white">
+
+              <div className="flex justify-between w-5/6">
+                <Link to={"/"} className={` `+ link2Class}>
+                  Home
+                </Link>
+                <Link to={"/collection"} className={` `+ link2Class}>
+                  Collection
+                </Link>
+                <Link to={"/gift"} className={` `+ link2Class}>
+                  Gift Ideas
+                </Link>
+                
+                <Link to={"/wishlist"} className={` `+ link2Class}>
+                  Wishlist
+                </Link>
+              </div>             
+                        
+        </nav>
+        {//folow the header for mobile, only visible when on mobile screen
+        }
+        
+        <MobileTopNav />
         
         
         

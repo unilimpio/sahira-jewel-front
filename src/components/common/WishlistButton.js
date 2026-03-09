@@ -55,7 +55,7 @@ export default function WishlistButton({ product, setFlashMessage, buttonClassNa
             <span className="sr-only">Add to Wishlist</span>
             <HeartIcon 
                 aria-hidden="true" 
-                className={`mx-auto group-focus:fill-red-400 stroke-zinc-600 transition-all delay-150 duration-100 group-focus:-translate-y-1 ${iconClassName}`} 
+                className={`mx-auto group-focus:fill-red-500 stroke-zinc-600 transition-all delay-150 duration-100 group-focus:-translate-y-1 ${iconClassName}`} 
             />
         </button>
     );

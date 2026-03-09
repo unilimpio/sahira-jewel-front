@@ -224,14 +224,14 @@ export default function Product () {
     
           <button  
                   className={className + 
-                    `  rounded-md ring-1 ring-white p-2                 
+                    `  rounded-md ring-1 ring-black p-2                 
                         drop-shadow-md
                     transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
                     `                    
                   } 
                   disabled={loading} onClick={handleClick}>
             
-            <span className="mx-8 text-white font-normal text-base">{children}</span>
+            <span className="mx-8 text-black font-thin text-base">{children}</span>
             
             
             
@@ -342,7 +342,7 @@ export default function Product () {
                 {images?.map((image) => (
                   <Tab
                     key={image.id}
-                    className=" group relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-sahira-green/50 focus:ring-offset-4"
+                    className=" group relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-zinc-600/50 focus:ring-offset-4"
                   >
                     <span className="sr-only">{image.imageAlt}</span>
                     <span className="absolute inset-0 overflow-hidden rounded-md">
@@ -350,7 +350,7 @@ export default function Product () {
                     </span>
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-transparent ring-offset-2 group-data-[selected]:ring-sahira-green"
+                      className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-transparent ring-offset-2 group-data-[selected]:ring-zinc-600"
                     />
                   </Tab>
                   
@@ -372,14 +372,17 @@ export default function Product () {
 
           {/* Product info */}
           <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-            <h1 className="text-3xl font-bold tracking-tight text-sahira-green font-serif">{product.name}</h1>
+            <h1 className="text-3xl  tracking-tight text-black font-light font-serif">{product.name}</h1>
 
             <div className="mt-3 flex justify-between">
               <h2 className="sr-only">Product information</h2>
               <p className="text-3xl tracking-tight text-zinc-600">${product.price}</p>
               
                           
-              <WishlistButton product={product} setFlashMessage={setFlashMessage} buttonClassName={``} iconClassName={`-mt-4 h-6 w-6`}/>
+              <WishlistButton product={product} setFlashMessage={setFlashMessage} buttonClassName={`group items-center content-center 
+                                transition-all hover:scale-105 hover:-translate-y-2 delay-150 duration-500
+                                
+                                p-3`} iconClassName={`-mt-4 h-6 w-6 group-hover:fill-red-400`}/>
               
               
                           
@@ -460,7 +463,7 @@ export default function Product () {
               
 
               <div className="mt-10 flex">
-                <Add2CartButton className={"bg-sahira-green"} addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
+                <Add2CartButton className={"bg-white"} addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
 
               </div>
             </form>
@@ -476,13 +479,13 @@ export default function Product () {
                        <Disclosure key={detail.name} as="div">
                     <h3>
                       <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
-                        <span className="text-sm font-light text-zinc-600 group-data-[open]:text-sahira-green group-data-[open]:font-medium">
+                        <span className="text-sm font-light text-zinc-600 group-data-[open]:text-black group-data-[open]:font-medium">
                           {detail.name}
                         </span>
                         <span className="ml-6 flex items-center">
                           <PlusIcon
                             aria-hidden="true"
-                            className="block size-3 text-sahira-green group-hover:text-gray-500 group-data-[open]:hidden"
+                            className="block size-3 text-black font-light group-hover:text-gray-500 group-data-[open]:hidden"
                           />
                           <MinusIcon
                             aria-hidden="true"

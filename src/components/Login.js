@@ -75,8 +75,8 @@ const Login = () => {
         if(onSubmitPassword !== null ){
             AuthService.login(email, password).then(
                   () => {
-                    navigate("/home");
-                    window.location.reload();
+                    navigate(-1);
+                    //window.location.reload();
                   },
                   (error) => {
                     setError(true)
@@ -146,13 +146,13 @@ const Login = () => {
             <div className={'flex flex-col justify-center'}>
               <div className=" flex flex-col mx-auto w-1/2 sm:max-w-56 my-2">
               
-                <label htmlFor="email" className="text-sm font-light text-sahira-green -mb-2 z-30 ml-2">
+                <label htmlFor="email" className="text-sm font-light text-black -mb-2 z-30 ml-2">
                   <span className="bg-white  rounded-sm px-1/2">Email:</span>
                 </label>              
               
                 <input
                   type="text"
-                  className="w-full  text-xs font-light bg-white shadow-md rounded-sm ring-1 ring-sahira-green  p-2 "
+                  className="w-full  text-xs font-light bg-white shadow-md rounded-sm ring-1 ring-black  p-2 "
                   name="email"
                   autoComplete="email"
                   value={email}
@@ -162,11 +162,11 @@ const Login = () => {
             </div>
 
             <div className="flex flex-col mx-auto w-1/2 sm:max-w-56 my-2">
-              <label htmlFor="password" className="text-sm font-light text-sahira-green -mb-2 z-30 ml-2">
+              <label htmlFor="password" className="text-sm font-light text-black -mb-2 z-30 ml-2">
                 <span className="bg-white   rounded-sm px-1/2">Password:</span></label>
               <input
                 type="password"
-                className="w-full  text-xs font-light bg-white shadow-md rounded-sm ring-1 ring-sahira-green  p-2 "
+                className="w-full  text-xs font-light bg-white shadow-md rounded-sm ring-1 ring-zinc-900  p-2 "
                 autoComplete="current-password"
                 name="password"
                 value={password}
@@ -178,13 +178,13 @@ const Login = () => {
             <div className=" flex mx-auto w-1/2 justify-center mt-4">
               
                 <button type="submit" className={`bg-white shadow-md hover:bg-sahra-green 
-                                      rounded-sm ring-1 ring-sahira-green w-[5rem] 
+                                      rounded-sm ring-1 ring-zinc-900 w-[5rem] 
                                        py-1`} 
                                       
                         disabled={loading}
                         >
                   {!loading ? (
-                      <span className="text-sahira-green font-light ">Login</span>
+                      <span className="text-zinc-900 font-light ">Login</span>
                     ) : (
                       <svg className="animate-spin h-4 w-4 fill-silver-500" viewBox="0 0 24 24">
                         <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />

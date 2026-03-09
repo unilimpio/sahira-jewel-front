@@ -212,33 +212,40 @@ export default function Collection () {
             {products?.map((product) => (
             <div key={'div-'+product.id+'-'+product.name} className="relative">
               <div  className="group  ">
-                
-                <img
-                  alt={product.imageAlt}
-                  src={backUrl+pathToImg+product.imageSrc}
-                  className="aspect-square w-full rounded-md bg-gray-200 object-cover brightness-100 group-hover:brightness-105 group-hover:drop-shadow-lg transition-all group-hover:scale-105 lg:aspect-auto lg:h-80"
-                />
-                <h3 className="text-xl  text-center font-serif mt-4 ">
-                      <Link to={'/product?pId='+product.id} className="text-sahira-green  no-underline hover:no-underline">
-                        <span aria-hidden="true" className="absolute inset-0  " />
-                        {product.name}
-                      </Link>
-                    </h3>
-                    <p className="w-3/4 text-left font-light mt-1 text-sm text-zinc-500 truncate">{product.description}</p>
-                <div className="mt-1 flex w-3/4 justify-left">
-                  
-                    
-                    
-                    <p className="text-left text-xl font-medium text-zinc-600 -mt-1 ">${product.price}</p>
-                    
-                  
+                <div className="w-full  h-[20vh] md:h-[30vh] overflow-clip">  
+                  <img
+                    alt={product.imageAlt}
+                    src={backUrl+pathToImg+product.imageSrc}
+                    className="w-full object-cover group-hover:scale-125 transition-all duration-700 delay-200 ease-in-out"
+                  />
                 </div>
+                <h3 className="text-[10px]  text-center font-serif mt-4 mb-0 ">
+                      
+                        
+                        {product.name}
+                     
+                </h3>
+                <p className="w-3/4  text-center font-script font-light my-0 text-[9px] md:text-xs text-zinc-500 truncate">{product.description}</p>
+                <p className="text-[7px] text-black font-light font-script text-center">Edición Limitada</p>
+                 
               </div>
               
-                <WishlistButton product={product} setFlashMessage={setFlashMessage} buttonClassName={`absolute group bottom-2 right-0  items-center content-center 
+                  
+                    
+              <Link to={'/product?pId='+product.id} className="flex no-underline hover:underline justify-center">
+                    <span className="text-black font-light font-script text-[10px] ">
+                      Descubrir
+                    </span>
+              </Link> 
+                   
+                    
+                  
+              
+              
+                <WishlistButton product={product} setFlashMessage={setFlashMessage} buttonClassName={`group absolute  bottom-2 right-0  items-center content-center 
                                 transition-all hover:scale-105 hover:-translate-y-2 delay-150 duration-500
                                 
-                                p-3`} iconClassName={'-mt-4 h-6 w-6'}/>
+                                p-3`} iconClassName={'-mt-4 h-6 w-6 group-hover:fill-red-400'}/>
 
 
               </div>
