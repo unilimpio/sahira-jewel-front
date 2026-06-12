@@ -226,7 +226,7 @@ export default function Product () {
                   className={className + 
                     `  rounded-md ring-1 ring-black p-2                 
                         drop-shadow-md
-                    transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-150
+                    transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-300
                     `                    
                   } 
                   disabled={loading} onClick={handleClick}>

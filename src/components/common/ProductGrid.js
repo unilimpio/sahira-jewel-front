@@ -14,11 +14,12 @@ export default function ProductGrid({products}) {
           
           <div className="group  transition duration-250 ease-in-out overflow-hidden outline outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10">
             <div className="w-full  h-[20vh] md:h-[30vh] overflow-clip ">
+              <Link to={`/product?pId=${item.product_id}`} className="flex justify-center no-underline text-[9px] font-light m-0 p-2 text-black hover:underline">
               <img
-                alt=""
+                alt={`${item.product_name}`}
                 src={`${backUrl+pathToImg}${item.product_imageSrc}`}
-                className="w-full object-fill group-hover:scale-125 transition-all duration-700 delay-200 ease-in-out "
-              />
+                className="w-full object-cover group-hover:scale-125 transition-all duration-700 delay-200 ease-in-out "
+              /></Link>
             </div>
             
                        

@@ -163,11 +163,14 @@ const addCourseToCartFunction = (course) => {
         }catch(error) {
           console.log(error)
           
+        }finally{
+          setLoading(false)
+          navigate(0)
         }        
         
-        setLoading(false)
         
-              //navigate(0)
+        
+              
            
         
   }
@@ -227,8 +230,8 @@ const addCourseToCartFunction = (course) => {
   const WishlistTemplate = ({wishlist, setMessage}) => {
     
     console.log('asi llega wishlist al compoenente hijo',wishlist)
-    
-    return(
+    if(wishlist){
+      return(
 
       <>
         
@@ -262,25 +265,33 @@ const addCourseToCartFunction = (course) => {
                           
                           <td className="p-2 "    >
                             <div className="w-28 overflow-clip">
+                              <Link to={'/product?pId='+row.product_id} className="flex no-underline hover:underline justify-center">
                               <img src={` ${backUrl+pathToImg+row.product_imageSrc }`} alt={`${row.product_imageAlt}`} 
-                                className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out" />                        
+                                className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out" /></Link>                        
                             </div>
                           </td>
                           <td className="p-2  overflow-clip "    >
-                            <p className="text-black font-serif  text-[9px] my-0">{ row.product_name  }</p>
+                            <Link to={'/product?pId='+row.product_id} className="flex no-underline  ">
+                              <p className="text-black font-serif  text-[9px] my-0">{ row.product_name  }</p>
+                            </Link>
                             <p className="text-black w-[30vw] font-light text-[8px] my-0  truncate">{ row.product_description}</p>
                            
                           </td>
                           
                           <td className="p-2 text-center"    >
                             <div className="flex-col pt-2">
-                            <button name="addtocart" value={row.id}  onClick={handleClick}
+                              {
+                                /*
+                                <button name="addtocart" value={row.id}  onClick={handleClick}
                                       className={'relative  flex items-center justify-center '} 
                                         >
                               
                               <CartIcon className={''} iconClassName={'w-6 h-6 fill-black -mt-1'} />
                               <span className="absolute w-full flex justify-center text-black font-semibold text-xs">+</span>  
                             </button>
+                                */
+                              }
+                            
                             <button  name="remove" value={row.id}
                                         className="static text-red-300 text-[9px]  hover:underline"
                                         onClick={handleRemove}>
@@ -306,6 +317,8 @@ const addCourseToCartFunction = (course) => {
     </>
 
     )
+    }
+    
 
    
     

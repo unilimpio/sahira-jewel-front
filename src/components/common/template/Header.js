@@ -43,23 +43,13 @@ const Header = ({isLoggedIn}) => {
 	
   const [searchCourse, setSearchCourse] = useState('');
 
-	const [cart, setCart] = usePersistedState('sjCart', []);
+	//const [cart, setCart] = usePersistedState('sjCart', []);
 
-	const deleteCourseFromCartFunction = (course) => {
-		const updatedCart = cart
-							.filter(item => item.product.id !== course.id);
-		setCart(updatedCart);
-	};
-
-	const totalAmountCalculationFunction = () => {
-		return cart
-			.reduce((total, item) => 
-						total + item.product.price * item.quantity, 0);
-	};
+	
   
   useEffect(() => {
     console.log('i am inside useeffect of cart component, this is supposed to reload the componene every time cart is modified, but is not working')
-  }, [cart]);
+  }, []);
   
 
 
@@ -162,14 +152,12 @@ const Header = ({isLoggedIn}) => {
                       
                       <div className="flex flex-grow justify-center py-3">
                         
-                          <Logo className={"text-black text-2xl w-36 "} iconClassName={'fill-black'}/>
+                          <Logo className={"text-black text-2xl w-44 "} iconClassName={'fill-black'}/>
                         
                       </div>
                                     
                       <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600   "}  
-                        deleteCourseFromCartFunction={deleteCourseFromCartFunction} 
-                        totalAmountCalculationFunction={totalAmountCalculationFunction}  
-                        cart={cart} setCart={setCart}/>
+                        />
 
 
           </nav>
@@ -237,11 +225,11 @@ const Header = ({isLoggedIn}) => {
   return (
     
       <header  className={`sticky top-0 z-40 flex-col`}>
-        <div className=" relative z-40  w-full flex place-content-between  bg-white           
+        <div className=" static  z-40  w-full flex place-content-between  bg-white           
             h-fit">
         
           <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5 ">
-            <Logo className={"w-36 sm:w-42 md:w-48 "}/>
+            <Logo className={"w-36 sm:w-44 md:w-44 "}/>
           </Link>
           <div className=" flex-col w-1/2 place-content-start justify-items-end ">
             <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 -z-50 justify-end">
@@ -276,10 +264,7 @@ const Header = ({isLoggedIn}) => {
                   </>
                 )}
                 <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 hover:fill-zinc-400 "} 
-                  deleteCourseFromCartFunction={deleteCourseFromCartFunction} 
-                  totalAmountCalculationFunction={totalAmountCalculationFunction} 
-                  cart={cart} 
-                  setCart={setCart}/>
+                 />
           
             </nav>
             

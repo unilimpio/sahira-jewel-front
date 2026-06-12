@@ -121,8 +121,8 @@ export default function Home () {
           <div className="flex-col mx-auto content-start justify-center w-full min-h-[90vh] mb-18 py-8 ">
               {//<HeroBanner banners={content.banners} />
               }
-              <div className={`flex justify-center`}>
-                  <Logo className={"w-52 "} iconClassName={'fill-black'}/>
+              <div className={`flex justify-center pl-6`}>
+                  <Logo className={"w-36 sm:w-44 md:w-44 "} iconClassName={'fill-black'}/>
               </div>
 
               <h1 className="text-[9px] text-center font-light font-script mt-4">Jewelry born from the soul of Ecuador</h1>

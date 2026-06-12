@@ -30,18 +30,32 @@ function usePersistedState(key, defaultValue) {
 }
 
 
+
 export default function Cart({
   className, iconClassName, buttonClassName,
-  cart,
-  setCart,
-	deleteCourseFromCartFunction,
-	totalAmountCalculationFunction,
+  //cart,
+  //setCart,
+	//deleteCourseFromCartFunction,
+	//totalAmountCalculationFunction,
 	
 }) {
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false)  
- //const [cart, setCart] = usePersistedState('sjCart', 0);
+  const [cart, setCart] = usePersistedState('sjCart', 0);
+
+const deleteCourseFromCartFunction = (course) => {
+    const updatedCart = cart
+              .filter(item => item.product.id !== course.id);
+    setCart(updatedCart);
+  };
+
+  const totalAmountCalculationFunction = () => {
+    return cart
+      .reduce((total, item) => 
+            total + item.product.price * item.quantity, 0);
+  };
+ 
   const minusButtonClassName = `bg-neutral-100 h-4 w-4 rounded-full border drop-shadow-md p-0 m-0`;
   const plusButtonClassName = `bg-neutral-100 h-6 w-6 rounded-full border drop-shadow-md p-0 m-0`;
   const minusPlusSpanClassName = ` text-base font-semibold`;  
@@ -117,9 +131,12 @@ export default function Cart({
                                 <div className="">
                                   <div className="flex">
                                     <div className="flex flex-col items-center">
+                                      <Link href={`${baseUrl}product?pId=${item.product.id}`}
+                                        className="text-black  hover:text-zinc-600 no-underline " >
                                         <img src={backUrl+pathToImg+item.product.imageSrc} 
                                           alt={item.product.imageAlt} className="max-h-16 max-w-16 rounded-md"/>
-                                        <div className="flex items-center ">
+                                      </Link>
+                                        <div className="flex items-center mt-2 ">
                                           
                                           
                                           <span className="font-light text-xs">Qty:</span>
@@ -129,13 +146,13 @@ export default function Cart({
                                         </div>
                                     </div>
                                     <div className="text-zinc-600 m-2">
-                                      <a href={`${baseUrl}product?pId=${item.product.id}`}
-                                        className="text-sahira-green hover:text-zinc-600 hover:no-underline " >
-                                        <h6 className="text-sm mt-2 font-light" onClick={() => {
+                                      <Link href={`${baseUrl}product?pId=${item.product.id}`}
+                                        className="text-black  hover:text-zinc-600 no-underline " >
+                                        <h6 className="text-sm mt-2 font-semibold" onClick={() => {
                                                                                       setOpen(false)
 
                                                                                 } }>{item.product.name}</h6>
-                                      </a>
+                                      </Link>
                                       <p className="font-light text-sm "> ${item.product.price}</p>
                                     </div>
                                   </div>
@@ -199,13 +216,13 @@ export default function Cart({
                     </div>
                     <p className="mt-0.5 text-xs text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div className="mt-2 flex  justify-center">
-                      <button
-                        className="bg-sahira-green drop-shadow-md disabled:drop-shadow-none text-white rounded-md p-3 disabled:bg-zinc-200 transition-all hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg"
+                      <Link to="/finish-order"
+                        className="bg-white drop-shadow-md no-underline disabled:drop-shadow-none text-black rounded-md p-3 disabled:bg-zinc-200 disabled:text-zinc-400 transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-black"
                         disabled={cart.length === 0 || 
                         totalAmountCalculationFunction() === 0}
                       >
                         Checkout
-                      </button>
+                      </Link>
                     </div>
                     <div className="mt-1 flex justify-center text-center text-sm text-gray-500">
                       <p>

@@ -212,12 +212,14 @@ export default function Collection () {
             {products?.map((product) => (
             <div key={'div-'+product.id+'-'+product.name} className="relative">
               <div  className="group  ">
-                <div className="w-full  h-[20vh] md:h-[30vh] overflow-clip">  
+                <div className="w-full  h-[35vh] md:h-[30vh] overflow-clip">
+                  <Link to={'/product?pId='+product.id} className="flex no-underline hover:underline justify-center">
                   <img
                     alt={product.imageAlt}
                     src={backUrl+pathToImg+product.imageSrc}
                     className="w-full object-cover group-hover:scale-125 transition-all duration-700 delay-200 ease-in-out"
                   />
+                  </Link>
                 </div>
                 <h3 className="text-[10px]  text-center font-serif mt-4 mb-0 ">
                       
