@@ -56,7 +56,7 @@ const Login = () => {
         const regexNum = /[0-9]/g;
         const regexMayus = /[A-Z]/g;
         const regexMinus = /[a-z]/g;
-        const regexLenght = /^[A-Za-z0-9!\@#$\*]{8,}$/
+        const regexLenght = /^[A-Za-z0-9!/@#$/*]{8,}$/
         const verifSpecial = onSubmitPassword.match(regexSpecial);
         const verifNum = onSubmitPassword.match(regexNum);
         const verifMayus = onSubmitPassword.match(regexMayus);

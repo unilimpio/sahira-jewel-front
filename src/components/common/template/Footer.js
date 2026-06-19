@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router";
+import React  from "react";
+import {  Link } from "react-router";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 //import logo from "./logo_clean_verify.png"
@@ -11,7 +11,7 @@ import "../../../App.css";
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-let linkClass = ` align-text-bottom text-zinc-400 font-extralight text-[9px] sm:text-xs   hover:text-black px-2`;
+let linkClass = ` align-text-bottom text-black font-extralight text-[9px] sm:text-xs   hover:text-black px-2`;
 
 const Footer = () => {
 

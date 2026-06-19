@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { useNavigate, Navigate} from "react-router";
+
 
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 
 import Template from "./common/template/Template";
 
- import CardSlider from './common/CardSlider'; // Assuming CardSlider.js
- import HeroBanner from './common/HeroBanner';
+
  
  import AlertBox from "./common/template/AlertBox";
 
@@ -16,9 +15,7 @@ import Template from "./common/template/Template";
 
 import InstagramIcon from "./common/template/icons/InstagramIcon";
 
-import logo_vert from '../assets/hero-workshop-vertical.jpeg';
 
-import logo_hori from '../assets/hero-workshop-horizontal.jpeg';
 
 import hero_img from '../assets/hero-image.png';
 
@@ -32,7 +29,7 @@ const pathToImg = "assets/uploads/"
 
 export default function Home () {
   
-  const navigate = useNavigate();
+ 
 
   const wrapperClass = `w-full h-full mx-auto mb-54 overflow-hidden`;
 
@@ -77,7 +74,7 @@ export default function Home () {
                       error?.toString();
                     
                     //setProducts(_content);
-                    console.log(error)
+                    console.log(_content)
                   
                   }
                 
@@ -122,7 +119,7 @@ export default function Home () {
               {//<HeroBanner banners={content.banners} />
               }
               <div className={`flex justify-center pl-6`}>
-                  <Logo className={"w-36 sm:w-44 md:w-44 "} iconClassName={'fill-black'}/>
+                  <Logo className={" "} iconClassName={'fill-sahira-black'}/>
               </div>
 
               <h1 className="text-[9px] text-center font-light font-script mt-4">Jewelry born from the soul of Ecuador</h1>
@@ -134,16 +131,19 @@ export default function Home () {
                         <source
                           media="(max-width: 768px)"
                           srcSet={hero_img}
-                          className='w-full'
+                          className="w-full"
+                          fetchPriority="high"
                         />
                         <source
                           media="(min-width: 768px)"
                           srcSet={hero_img}
+                          fetchPriority="high"
                         />
                         <img
                           src={hero_img}
                           alt="Hero"
                           className="w-full"
+                          fetchPriority="high"
                         />
                 </picture>
               </div>
@@ -151,17 +151,17 @@ export default function Home () {
           </div>
           <div className="flex justify-center p-8 h-[40vh]">
             <div className="flex-col justify-center content-center my-2 text-center font-light text-[9px]">
-              <p className="m-0">HANDCRAFTED IN ECUADOR</p>
-              <hr class="m-2 border-t border-black w-[9px] mx-auto"></hr>
-              <p className="m-0">STERLING SILVER 925</p>
-              <hr class="m-2 border-t  border-black w-[9px] mx-auto"></hr>
-              <p className="m-0">LIMITED PIECES</p>
+              <h3 className="m-0 font-light text-[9px]">HANDCRAFTED IN ECUADOR</h3>
+              <hr className="m-2 border-t border-black w-[9px] mx-auto"></hr>
+              <h3 className="m-0 font-light text-[9px]">STERLING SILVER 925</h3>
+              <hr className="m-2 border-t  border-black w-[9px] mx-auto"></hr>
+              <h3 className="m-0 font-light text-[9px]">LIMITED PIECES</h3>
             </div>             
               
           </div>
-          <div className="flex flex-col justify-center">
-            <h3 className="text-center font-serif font-thin text-sm">Colecciones Exclusivas</h3>
-            <p className="text-[11px] font-mont text-center">Joyas de autor hechas a mano en Ecuador</p>
+          <div className="flex flex-col justify-center ">
+            <h2 className="text-center font-script text-sm ">Colecciones Exclusivas</h2>
+            <h3 className="text-[10px] font-light text-center">Joyas de autor hechas a mano en Ecuador</h3>
             <div className="mx-auto w-[85vw] sm:w-full mb-24 p-4">
               <ProductGrid products={content.products} />
             </div>
@@ -181,7 +181,7 @@ export default function Home () {
               
           &nbsp;&nbsp;&nbsp;
           <div className="mx-auto w-[85vw] sm:w-full mt-24 mb-56">
-                <h5 className={'text-center font-light text-zinc-400 text-4xl my-8'}>Follow Us</h5>
+                <h2 className={'text-center font-light text-zinc-400 text-4xl my-8'}>Follow Us</h2>
                 <a href={'https://www.instagram.com/sahirajewelry.ec'} className={'text-center text-4xl'}>
                   <InstagramIcon className={'transition-all  hover:scale-110 delay-75'} 
                   iconClassName={'w-10 h-10 mx-auto stroke-zinc-400 fill-none stroke-1'} />

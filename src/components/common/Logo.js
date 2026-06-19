@@ -8,7 +8,7 @@ const Logo = ({className,iconClassName}) => {
     
 
   return (
-    <div id="brand-logo" className={`relative min-h-12 ${className}`}>
+    <div id="brand-logo" className={`relative w-44 ${className}`}>
       
         <svg  viewBox="40 250 1100 300" className={`h-10 ${iconClassName}`}>
           <defs><clipPath id="b" clipPathUnits="userSpaceOnUse">
@@ -32,8 +32,8 @@ const Logo = ({className,iconClassName}) => {
                                                           
     
               
-      <div class="absolute bottom-0 right-10  ">
-        <span class="font-extralight text-[9px] mx-1 text-black ">by Liz G.</span>
+      <div className="absolute -bottom-1 right-10  ">
+        <span className="font-extralight text-[9px] mx-1 text-black ">by Liz G.</span>
         {/*
           <picture >
           <source srcset="/liz_g_img_transparent.png" media="(min-width: 600px)"  />

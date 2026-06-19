@@ -40,9 +40,9 @@ export default function Cart({
 	
 }) {
 
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false)  
-  const [cart, setCart] = usePersistedState('sjCart', 0);
+const navigate = useNavigate();
+const [open, setOpen] = useState(false)  
+const [cart, setCart] = usePersistedState('sjCart', []);
 
 const deleteCourseFromCartFunction = (course) => {
     const updatedCart = cart
@@ -74,12 +74,14 @@ const deleteCourseFromCartFunction = (course) => {
         className={` ${buttonClassName}  `}
       >
         <div className="relative">
-          <CartIcon className={`  ${className} `} iconClassName={` ${iconClassName} `} />
-          {cart?.length !== 0 && (
-            <div className="absolute w-4 h-4 bg-red-400  rounded-full top-3 right-2 z-50 bg-opacity-90 flex justify-center">
-              <p className={`text-[10px] font-semibold text-white` } >{cart?.length}</p>
-            </div>
-          )}
+          <CartIcon className={`  ${className} `} iconClassName={` ${iconClassName} `} >
+            {cart?.length > 0 ? (
+            
+              <span className={`text-[11px] font-light text-black` } >{cart?.length}</span>
+              
+            ): ('')}
+          </CartIcon>
+          
         </div>
          
          
@@ -126,7 +128,7 @@ const deleteCourseFromCartFunction = (course) => {
                       <div className=" bg-white h-[50vh]  overflow-y-scroll">
                         <div className="mt-4">
                           <ul  className="-my-4 p-0 divide-y divide-gray-200">
-                            {cart?.map((item) => (
+                            {cart.map((item) => (
                               <li key={item.product.id} className="p-1 mt-2">
                                 <div className="">
                                   <div className="flex">

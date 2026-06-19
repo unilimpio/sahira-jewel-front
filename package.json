@@ -19,7 +19,6 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.31.0",
     "react-validation": "^3.0.7",
-    "recharts": "^2.15.1",
     "slick-carousel": "^1.8.1",
     "svgo": "^4.0.0",
     "validator": "^13.7.0",
@@ -41,7 +40,8 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "iOS >= 12"
     ],
     "development": [
       "last 1 chrome version",

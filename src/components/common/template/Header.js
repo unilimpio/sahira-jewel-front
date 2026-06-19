@@ -114,7 +114,7 @@ const Header = ({isLoggedIn}) => {
     useEffect(() => {
       const handleScroll = () => {
         // Define el punto de corte (ej. 100 píxeles)
-        if (window.scrollY > 30) {
+        if (window.scrollY > 30 ) {
           setIsVisible(true);
         } else {
           setIsVisible(false);
@@ -152,11 +152,11 @@ const Header = ({isLoggedIn}) => {
                       
                       <div className="flex flex-grow justify-center py-3">
                         
-                          <Logo className={"text-black text-2xl w-44 "} iconClassName={'fill-black'}/>
+                          <Logo className={" "} iconClassName={'fill-black'}/>
                         
                       </div>
                                     
-                      <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600   "}  
+                      <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-7 h-7 fill-zinc-600   "}  
                         />
 
 
@@ -228,8 +228,8 @@ const Header = ({isLoggedIn}) => {
         <div className=" static  z-40  w-full flex place-content-between  bg-white           
             h-fit">
         
-          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5 ">
-            <Logo className={"w-36 sm:w-44 md:w-44 "}/>
+          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5">
+            <Logo className={" "}/>
           </Link>
           <div className=" flex-col w-1/2 place-content-start justify-items-end ">
             <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 -z-50 justify-end">

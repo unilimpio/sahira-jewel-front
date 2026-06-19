@@ -1,5 +1,5 @@
 import React from "react";
-import {  Link, NavLink } from "react-router";
+import {  NavLink } from "react-router";
  //import { NavLink } from 'react-router-dom';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -10,7 +10,6 @@ import JewelIcon from "../template/icons/JewelIcon"
 import RulerIcon from "../template/icons/RulerIcon"
 import FeaturedIcon from "../template/icons/FeaturedIcon"
 import HeartIcon from "../template/icons/HeartIcon"
-import AuthService from "../../../services/auth.service";
 import GiftIcon from "./icons/GiftIcon";
 
 const NavBottom = ({isLoggedIn, user}) => {

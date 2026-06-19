@@ -1,6 +1,6 @@
 import axios from "axios";
 import AuthService from "./auth.service";
-import qs from "qs";
+
 
 //esto se debe cambiar antes de actualizar el build y subir a produccion.
 //const API_URL = "https://back.sahirajewels.com/index.php/api/";

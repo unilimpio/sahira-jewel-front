@@ -1,6 +1,6 @@
 import React from "react";
 
-const LogoutIcon = ({}) => {
+const LogoutIcon = () => {
 
 
   return (

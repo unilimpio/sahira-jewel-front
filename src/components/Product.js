@@ -242,88 +242,7 @@ export default function Product () {
     
       }    
 
-      const BackButton = ({className, children}) => {
-
-        function handleClick (){
-        
-          setMessage("Product view cancelled");
-          console.log(message);
-          setLoading(false);
-          setProduct(false); 
-                   
-          setShowModal(false);
-          return navigate('collection')
-          
-        
-        }
       
-        return (  
-          
-    
-    
-          <button  
-                  type="button"
-                  className={className +
-                    `m-1 p-2 flex flex-row  
-                    rounded-md 
-                    hover:bg-white bg-zinc-50 border border-zinc-400 font-semibold
-                    
-                    `
-                  } 
-                  disabled={loading} onClick={handleClick}>
-            
-            <span className="mx-1 text-zinc-400 text-xs font-thin hover:no-underline">{children}</span>
-              
-          </button>
-    
-        );
-      }     
-
-      const ObsInput = ({className, children}) => {
-
-        const [obs, setObs] = useState("");
-        
-        
-        function handleChange(e){
-
-          const value = e.target.value;
-  
-          console.log(value);
-  
-          return setObs(value);
-  
-          
-  
-        }
-        
-
-        return (
-
-          <label htmlFor="obs" className="text-slate-700 text-sm font-thin hover:shadow-md rounded-md hover:bg-zinc-50 focus:bg-zinc-100 p-2">{children}:
-                    
-          <br/>  <textarea 
-              className={className + 
-                `text-sm font-thin 
-                border-zinc-800 
-                border rounded-md 
-                focus:shadow-sm 
-                focus:ring-slate-500 focus:ring-1 focus:outline-none
-                
-                
-              `}
-              name="obs" 
-              id="obs"
-              
-              value={obs}
-              cols="32"
-              onChange={ handleChange }
-             
-                      
-                      
-            /> 
-          </label>
-        );
-      }
 
           
       return(
@@ -333,15 +252,15 @@ export default function Product () {
               
               
               {product ? (
-          <div key={product.id} className="mb-20 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+          <div id={'div-'+product.id} className="mb-20 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
-          <TabGroup key={'tabgrp'+product.id} className="flex flex-col-reverse">
+          <TabGroup id={'tabgrp-'+product.id} className="flex flex-col-reverse">
             {/* Image selector */}
             <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
               <TabList className="grid grid-cols-4 gap-6 fixed -top-20 -left-20 sm:static">
                 {images?.map((image) => (
                   <Tab
-                    key={image.id}
+                    key={'tab'+image.imageSrc}
                     className=" group relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-zinc-600/50 focus:ring-offset-4"
                   >
                     <span className="sr-only">{image.imageAlt}</span>
@@ -363,7 +282,7 @@ export default function Product () {
             </div>
             <TabPanels className={'hidden sm:block'}>
               {images?.map((image) => (
-                <TabPanel key={image.id}>
+                <TabPanel key={'tabpanel-'+image.imageSrc}>
                   <img alt={image.imageAlt} src={backUrl+pathToImg+image.imageSrc} className="aspect-square w-full object-cover sm:rounded-lg mt-16" />
                 </TabPanel>
               ))}
@@ -433,7 +352,7 @@ export default function Product () {
                         
                         {options.sizes?.map((size) => (
                           <div
-                            key={size.id+size.name}
+                            key={'size-'+size.id+size.name}
                             className="flex relative rounded-full  outline-black/10"
                           >
                             <label className="text-[9px] border-none" htmlFor={size.id+size.name}>
@@ -475,7 +394,7 @@ export default function Product () {
 
               <div className="divide-y divide-gray-200 border-t border-gray-200">
                 {details.map((detail) => (
-                  <div className={detail.items.length === 0 ? ('hidden'):('')}>
+                  <div key={'detail-'+detail.name} className={detail.items.length === 0 ? ('hidden'):('')}>
                        <Disclosure key={detail.name} as="div">
                     <h3>
                       <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
