@@ -13,7 +13,7 @@ import Logo from "../Logo";
 import NavBottom from "./NavBottom";
 import Header from "./Header";
 import Footer from "./Footer";
-
+import WhatsAppConcierge from "../WhatsAppConcierge";
 
 import logoUni from '../../../logo-unilimpio.svg';
 
@@ -24,7 +24,7 @@ const user = AuthService.getCurrentUser();
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAmountCalculationFunction, addCourseToCartFunction, children}) => {
+const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAmountCalculationFunction, addCourseToCartFunction, bottomIsVisible, children}) => {
   //const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   //const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -61,7 +61,7 @@ const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAm
     </div>
     <Footer />
     <NavBottom isLoggedIn={isLoggedIn} user={user}/>
-    
+    <WhatsAppConcierge className="fixed bottom-28 lg:bottom-32 right-6 lg:right-8 isVisible " isVisible={bottomIsVisible}/>
     
   </div>
     

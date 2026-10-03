@@ -1,6 +1,6 @@
 import React from "react";
 
-const HeartIcon = ({className, iconClassName}) => {
+const HeartIcon = ({className='', iconClassName='stroke-black'}) => {
  
 
   return (
@@ -9,7 +9,7 @@ const HeartIcon = ({className, iconClassName}) => {
     <div className={` ${className}`}>
     
     <svg viewBox="0 0 64 64" 
-                           strokeWidth="stroke-inherit"                     
+                           strokeWidth="1"                     
                           fill="none"
                           className={` ${iconClassName} `}
                           >

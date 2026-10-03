@@ -91,10 +91,10 @@ const getCards = (catId = false) => {
   
 };
 
-const getContent = (catId = false) => {
+const getContent = (catId) => {
   if(!catId ){
           return axios
-        .get(API_URL + "getContent/false"  , 
+        .get(API_URL + "getContent"  , 
           { headers: {}})
         .catch(function (error){
           console.log(error)
@@ -148,6 +148,10 @@ const getOrders = (user) => {
     { headers: {"Authorization" : `Bearer ${user.token}`}})
   .catch(function (error){
     console.log(error)
+    if(error.includes('401')){
+      localStorage.removeItem('sj_user_session');
+      window.location.reload();
+    }
   });
   
 };
@@ -216,6 +220,7 @@ const UserService = {
   
   getCart,
   getContent,
+  
   getWishlist,
   getCategories,
   getProducts,

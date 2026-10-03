@@ -2,15 +2,15 @@ import React from "react";
 
 
 
-const Logo = ({className,iconClassName}) => {
+const Logo = ({className=' w-44 ',iconClassName=' h-10 '}) => {
   
   
     
 
   return (
-    <div id="brand-logo" className={`relative w-44 ${className}`}>
+    <div id="brand-logo" className={`relative  ${className}`}>
       
-        <svg  viewBox="40 250 1100 300" className={`h-10 ${iconClassName}`}>
+        <svg  viewBox="40 250 1100 300" className={` ${iconClassName}`}>
           <defs><clipPath id="b" clipPathUnits="userSpaceOnUse">
           <use href="#a" transform="translate(-221.1 -348.762)"/></clipPath><clipPath id="c" clipPathUnits="userSpaceOnUse"><use href="#a" transform="translate(-211.747 -358.014)"/></clipPath><clipPath id="d" clipPathUnits="userSpaceOnUse"><use href="#a" transform="translate(-110.884 -218.393)"/></clipPath><clipPath id="e" clipPathUnits="userSpaceOnUse">
           <use href="#a" transform="translate(-103.727 -294.668)"/></clipPath><clipPath id="f" clipPathUnits="userSpaceOnUse">
@@ -33,8 +33,10 @@ const Logo = ({className,iconClassName}) => {
     
               
       <div className="absolute -bottom-1 right-10  ">
-        <span className="font-extralight text-[9px] mx-1 text-black ">by Liz G.</span>
+        
         {/*
+        <span className="font-extralight text-[9px] mx-1 text-black ">by Liz G.</span>
+        
           <picture >
           <source srcset="/liz_g_img_transparent.png" media="(min-width: 600px)"  />
           <img src="/liz_g_img_transparent.png" alt="by Liz Guayasamín." class="size-8"/>

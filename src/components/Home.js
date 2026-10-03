@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 
 
@@ -20,6 +20,7 @@ import InstagramIcon from "./common/template/icons/InstagramIcon";
 import hero_img from '../assets/hero-image.png';
 
 import Logo from "./common/Logo";
+import WhatsAppConcierge from "./common/WhatsAppConcierge";
 
 
 const user = AuthService.getCurrentUser();
@@ -34,12 +35,16 @@ export default function Home () {
   const wrapperClass = `w-full h-full mx-auto mb-54 overflow-hidden`;
 
   if (!user ){
-     localStorage.removeItem("sj_session");
+     localStorage.removeItem("sj_token");
+     localStorage.removeItem("sj_user");
   }
 
+  const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(false);
   const [content, setContent] = useState(false);//the whole data object returned by the api call
+
+   const bottomRef = useRef(null);
 
   /*const cardData = [
           { title: 'Card 1', description: 'Description for card 1' },
@@ -82,10 +87,28 @@ export default function Home () {
 
     setLoading(false)
     
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // If the bottom sentinel is visible, hide the component. 
+        // Otherwise, keep it visible.
+        setBottomIsVisible(!entry.isIntersecting);
+        console.log('the bottom of the page has been reached!!!!!!!!')
+      },
+      { 
+        threshold: 0.1, // Triggers as soon as the bottom 10% of the sentinel enters
+        rootMargin: "0px 0px 50px 0px" // Optional: Triggers 50px before reaching the exact bottom
+      }
+    );
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
           
-          return () => {
-    
-          };
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
     
   }, []);
       
@@ -94,7 +117,7 @@ export default function Home () {
     return (
     
 
-      <Template >
+      <Template bottomIsVisible={bottomIsVisible}>
 
         <div className={`mt-12 `+wrapperClass}>
           
@@ -119,46 +142,64 @@ export default function Home () {
               {//<HeroBanner banners={content.banners} />
               }
               <div className={`flex justify-center pl-6`}>
-                  <Logo className={" "} iconClassName={'fill-sahira-black'}/>
+                  <Logo className={"w-44 "} iconClassName={'fill-sahira-black h-11'}/>
               </div>
 
               <h1 className="text-[9px] text-center font-light font-script mt-4">Jewelry born from the soul of Ecuador</h1>
               <Link to="/collection" className="text-zinc-700 no-underline hover:underline">
                 <h2 className="text-[8px] text-center font-script mb-20 ">EXPLORE THE COLLECTION</h2>
               </Link>
-              <div className="flex ">
-                <picture className="w-full object-contain">
-                        <source
-                          media="(max-width: 768px)"
-                          srcSet={hero_img}
-                          className="w-full"
-                          fetchPriority="high"
-                        />
-                        <source
-                          media="(min-width: 768px)"
-                          srcSet={hero_img}
-                          fetchPriority="high"
-                        />
-                        <img
-                          src={hero_img}
-                          alt="Hero"
-                          className="w-full"
-                          fetchPriority="high"
-                        />
+              <div className="flex w-full mx-auto lg:h-[50vh] overflow-hidden items-center ">
+                <picture className="w-full h-auto object-fill object-bottom">
+                  
+                  <source 
+                    media="(min-width: 1440px)" 
+                    srcSet="/assets/images/hero-banner-xlarge.jpg" 
+                    type="image/jpeg"
+                  />
+
+                 
+                  <source 
+                    media="(min-width: 1024px)" 
+                    srcSet="/assets/images/hero-banner-desktop.jpg" 
+                    type="image/jpeg"
+                  />
+
+                  
+                  <source 
+                    media="(min-width: 768px)" 
+                    srcSet="/assets/images/hero-banner-tablet.jpg" 
+                    type="image/jpeg"
+                  />
+
+                  
+                  <img 
+                    src="/assets/images/hero-banner-mobile.jpg" 
+                    alt="Close-up profile of a woman wearing structured geometric silver statement earrings" 
+                    className="w-full h-auto object-fill object-bottom"
+                    width="1024"
+                    height="576"
+                    loading="eager"
+                    decoding="async"
+                  />
                 </picture>
+
+               
+                
+              </div>
+              <div className="flex justify-center p-8 mt-24 ">
+                <div className="flex-col justify-center content-center my-2 text-center font-light text-[9px]">
+                  <h3 className="m-0 font-light text-[9px]">HANDCRAFTED IN ECUADOR</h3>
+                  <hr className="m-2 border-t border-black w-[9px] mx-auto"></hr>
+                  <h3 className="m-0 font-light text-[9px]">STERLING SILVER 925</h3>
+                  <hr className="m-2 border-t  border-black w-[9px] mx-auto"></hr>
+                  <h3 className="m-0 font-light text-[9px]">LIMITED PIECES</h3>
+                </div>             
+                  
               </div>
               
           </div>
-          <div className="flex justify-center p-8 h-[40vh]">
-            <div className="flex-col justify-center content-center my-2 text-center font-light text-[9px]">
-              <h3 className="m-0 font-light text-[9px]">HANDCRAFTED IN ECUADOR</h3>
-              <hr className="m-2 border-t border-black w-[9px] mx-auto"></hr>
-              <h3 className="m-0 font-light text-[9px]">STERLING SILVER 925</h3>
-              <hr className="m-2 border-t  border-black w-[9px] mx-auto"></hr>
-              <h3 className="m-0 font-light text-[9px]">LIMITED PIECES</h3>
-            </div>             
-              
-          </div>
+          
           <div className="flex flex-col justify-center ">
             <h2 className="text-center font-script text-sm ">Colecciones Exclusivas</h2>
             <h3 className="text-[10px] font-light text-center">Joyas de autor hechas a mano en Ecuador</h3>
@@ -179,15 +220,7 @@ export default function Home () {
              
                   
               
-          &nbsp;&nbsp;&nbsp;
-          <div className="mx-auto w-[85vw] sm:w-full mt-24 mb-56">
-                <h2 className={'text-center font-light text-zinc-400 text-4xl my-8'}>Follow Us</h2>
-                <a href={'https://www.instagram.com/sahirajewelry.ec'} className={'text-center text-4xl'}>
-                  <InstagramIcon className={'transition-all  hover:scale-110 delay-75'} 
-                  iconClassName={'w-10 h-10 mx-auto stroke-zinc-400 fill-none stroke-1'} />
-                </a>
           
-          </div> 
 
         </div>
           )
@@ -207,7 +240,10 @@ export default function Home () {
         
       </div>
       
-      
+        <div 
+          ref={bottomRef} 
+          style={{ height: "1px", width: "100%", position: "absolute", bottom: 0 }} 
+        />  
       </Template>
     
     

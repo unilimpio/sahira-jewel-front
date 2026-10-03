@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useId} from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
@@ -52,7 +52,11 @@ export default function Collection () {
    const [products, setProducts] = useState(false);
   
    const [searchCourse, setSearchCourse] = useState('');
+
+  const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
+   
   
+    const bottomRef = useRef(null);
   /*
   if(searchParams.get("cId")){
     setCatId(searchParams.get("cId"))
@@ -114,10 +118,30 @@ export default function Collection () {
       )
 
       setLoading(false)
-      return () => {
 
 
-      };
+      const observer = new IntersectionObserver(
+      ([entry]) => {
+        // If the bottom sentinel is visible, hide the component. 
+        // Otherwise, keep it visible.
+        setBottomIsVisible(!entry.isIntersecting);
+        console.log('the bottom of the page has been reached!!!!!!!!')
+      },
+      { 
+        threshold: 0.1, // Triggers as soon as the bottom 10% of the sentinel enters
+        rootMargin: "0px 0px 50px 0px" // Optional: Triggers 50px before reaching the exact bottom
+      }
+    );
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+          
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
   
     }, []);//
 //this use effect populates the products to be shown depending on the catId state
@@ -207,55 +231,56 @@ export default function Collection () {
     function GridTemplate({products}){
 
                     
-        return(
-            <div className="mb-48 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
-            {products?.map((product) => (
-            <div key={'div-'+product.id+'-'+product.name} className="relative">
-              <div  className="group  ">
-                <div className="w-full  h-[35vh] md:h-[30vh] overflow-clip">
-                  <Link to={'/product?pId='+product.id} className="flex no-underline hover:underline justify-center">
-                  <img
-                    alt={product.imageAlt}
-                    src={backUrl+pathToImg+product.imageSrc}
-                    className="w-full object-cover group-hover:scale-125 transition-all duration-700 delay-200 ease-in-out"
-                  />
-                  </Link>
-                </div>
-                <h3 className="text-[10px]  text-center font-serif mt-4 mb-0 ">
-                      
-                        
-                        {product.name}
-                     
-                </h3>
-                <p className="w-3/4  text-center font-script font-light my-0 text-[9px] md:text-xs text-zinc-500 truncate">{product.description}</p>
-                <p className="text-[7px] text-black font-light font-script text-center">Edición Limitada</p>
-                 
-              </div>
-              
-                  
-                    
-              <Link to={'/product?pId='+product.id} className="flex no-underline hover:underline justify-center">
-                    <span className="text-black font-light font-script text-[10px] ">
-                      Descubrir
-                    </span>
-              </Link> 
-                   
-                    
-                  
-              
-              
-                <WishlistButton product={product} setFlashMessage={setFlashMessage} buttonClassName={`group absolute  bottom-2 right-0  items-center content-center 
-                                transition-all hover:scale-105 hover:-translate-y-2 delay-150 duration-500
-                                
-                                p-3`} iconClassName={'-mt-4 h-6 w-6 group-hover:fill-red-400'}/>
+        return (
+  <div className="mb-48 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+    {products?.map((product) => (
+      <div 
+        key={`product-${product.id}`} 
+        className="group relative flex flex-col justify-between"
+      >
+        {/* Contenedor de la Imagen con Relación de Aspecto Fija */}
+        <div className="aspect-[3/4] w-full overflow-hidden bg-zinc-50 rounded-sm">
+          <Link to={`/product?pId=${product.id}`} className="block h-full w-full">
+            <img
+              alt={product.imageAlt}
+              src={`${backUrl}${pathToImg}${product.imageSrc}`}
+              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          </Link>
+        </div>
 
+        {/* Información del Producto */}
+        <div className="mt-4 flex flex-col items-center text-center px-2 flex-grow">
+          <h3 className="font-serif text-xs font-medium text-zinc-900 tracking-wide">
+            {product.name}
+          </h3>
+          <p className="mt-1 max-w-[85%] text-[11px] font-light text-zinc-500 line-clamp-2 min-h-[2rem]">
+            {product.description}
+          </p>
+        </div>
 
-              </div>
-            
-            ))}
-          </div>
-            
-        );
+        {/* Botón de Acción Principal (Descubrir) */}
+        <div className="mt-3 flex justify-center">
+          <Link 
+            to={`/product?pId=${product.id}`} 
+            className="text-[11px] font-light tracking-widest text-zinc-400 uppercase transition-colors duration-300 hover:text-black hover:underline underline-offset-4"
+          >
+            Descubrir
+          </Link>
+        </div>
+
+        {/* Botón de Wishlist Absoluto */}
+        <WishlistButton 
+          product={product} 
+          setFlashMessage={setFlashMessage} 
+          buttonClassName="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-xs rounded-full shadow-xs opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110" 
+          iconClassName="h-5 w-5 text-zinc-600 transition-colors duration-300 hover:text-red-500 hover:fill-red-500"
+        />
+      </div>
+    ))}
+  </div>
+);
+
       
       
     }
@@ -283,7 +308,7 @@ export default function Collection () {
   
   return (
     
-    <Template >
+    <Template bottomIsVisible={bottomIsVisible} >
       <div 
         className={` mt-10 sm:mt-16    `+wrapperClass}>
               
@@ -291,7 +316,7 @@ export default function Collection () {
                        
           
           <div className=" ">
-              <h1 className="text-zinc-600 text-2xl font-serif md:text-3xl lg:text-4xl">Collection</h1>
+              <h1 className="font-serif text-3xl font-light text-zinc-900 tracking-normal mb-1">Collection</h1>
               
               <SelectCategory categories={categories} />
           </div>          
@@ -327,6 +352,11 @@ export default function Collection () {
           <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
                  
       )}
+
+      <div 
+          ref={bottomRef} 
+          style={{ height: "1px", width: "100%", position: "absolute", bottom: 0 }} 
+        />  
       </Template>
   );
 

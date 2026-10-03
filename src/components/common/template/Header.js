@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router";
+import { Routes, Route, Link, useLocation } from "react-router";
 
 
 
@@ -40,7 +40,7 @@ const Header = ({isLoggedIn}) => {
   //const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   //const [showAdminBoard, setShowAdminBoard] = useState(false);
   
-	
+	const location = useLocation();
   const [searchCourse, setSearchCourse] = useState('');
 
 	//const [cart, setCart] = usePersistedState('sjCart', []);
@@ -54,13 +54,13 @@ const Header = ({isLoggedIn}) => {
 
 
   const linkClassIcons = `p-2 md:mx-4 text-slate-800 hover:text-white sm:text-xs md:text-lg lg:text-lg hover:-translate-y-1 hover:transition`;
-  const linkClass = `p-3 font-light text-zinc-600 no-underline hover:text-zinc-400 hover:underline text-sm sm:text-base md:text-lg lg:text-xl `;
+  const linkClass = `p-3 font-light text-zinc-600 no-underline hover:text-zinc-400 hover:underline text-sm sm:text-base md:text-lg lg:text-xl transition `;
   const link2Class = ` flex p-2 text-black font-light no-underline  
                         hover:no-underline hover:shadow-lg
                         text-sm sm:text-base md:text-lg lg:text-xl 
                         transition-all duration-300 ease-in-out `;
 
-  const linkDrawerClass = ` p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-lg  `;
+  const linkDrawerClass = ` p-3 text-zinc-600 no-underline hover:text-zinc-800 hover:underline text-lg font-light `;
 
   
 
@@ -68,10 +68,11 @@ const Header = ({isLoggedIn}) => {
 
   
 
-  const MobileTopNav=()=>{
+  const MobileTopNav=({location})=>{
 
     const [isVisible,setIsVisible] = useState(false);
     const [hamIsOpen,setHamIsOpen] = useState(false);
+   
 
     const HamburguerButton=({className,iconClassName,buttonClassName})=>{
 
@@ -112,6 +113,8 @@ const Header = ({isLoggedIn}) => {
   }
 
     useEffect(() => {
+      console.log("this is you current location",location.pathname)
+
       const handleScroll = () => {
         // Define el punto de corte (ej. 100 píxeles)
         if (window.scrollY > 30 ) {
@@ -121,7 +124,13 @@ const Header = ({isLoggedIn}) => {
         }
       };
 
-      window.addEventListener('scroll', handleScroll);
+      if(location.pathname === '/home'){
+        window.addEventListener('scroll', handleScroll);
+      } else{
+        setIsVisible(true)
+      }
+
+      
 
       // Limpieza del listener al desmontar el componente
       return () => {
@@ -151,9 +160,9 @@ const Header = ({isLoggedIn}) => {
 
                       
                       <div className="flex flex-grow justify-center py-3">
-                        
-                          <Logo className={" "} iconClassName={'fill-black'}/>
-                        
+                        <Link to="/">
+                          <Logo className={" w-42"} iconClassName={'h-9'}/>
+                        </Link>
                       </div>
                                     
                       <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-7 h-7 fill-zinc-600   "}  
@@ -175,35 +184,41 @@ const Header = ({isLoggedIn}) => {
                   <nav className="flex flex-col mx-auto ">
                   
                       <Link to={"/"} className={`ml-6 `+ linkDrawerClass}>
-                        Home
-                      </Link>                        
+                        HOME
+                      </Link>
+                      <Link to={"/collection"} className={`ml-6 `+ linkDrawerClass}>
+                        COLLECTIONS
+                      </Link>                       
                       <Link to={"/about"} className={`ml-6 `+ linkDrawerClass}>
-                        About
+                        THE LEGACY
                       </Link>
-                       <Link to={"/collection"} className={`ml-6 `+ linkDrawerClass}>
-                        Shop
-                      </Link>
+                      
                       <Link to={"/contact"} className={`ml-6 `+ linkDrawerClass}>
-                        Contact
+                        CONTACT
                       </Link>
                       {isLoggedIn ? (
                     
                           <>                                         
-                            <Link to={"/account"} className={`flex flex-row  -ml-6 `+linkDrawerClass}>
-                              <UserIcon iconClassName={"w-6 h-6 "} className={"p-1"} />
-                              Account
+                            <Link to={"/account"} className={`ml-6 `+linkDrawerClass}>
+                              
+                              MY ACCOUNT
                             </Link>
-                            <Link to={"/logout"} className={`flex flex-row `+linkDrawerClass}>
+                            {/*
+                                <Link to={"/logout"} className={`flex flex-row `+linkDrawerClass}>
                               <CloseIcon iconClassName={"w-6 h-6 fill-red-400"} className={"p-1"} />
                               Logout
                             </Link>
+                            
+                            
+                            */}
+                            
                           </>
                          
                       ) : (
                       
                       
-                          <Link to={"/login"} className={`flex flex-row`+linkDrawerClass}>
-                               <UserIcon iconClassName={"w-6 h-6 "} className={""} /> Account
+                          <Link to={"/login"} className={`ml-6 `+linkDrawerClass}>
+                              SIGN IN
 
                           
                           </Link>
@@ -228,26 +243,22 @@ const Header = ({isLoggedIn}) => {
         <div className=" static  z-40  w-full flex place-content-between  bg-white           
             h-fit">
         
-          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5">
-            <Logo className={" "}/>
+          <Link to={"/"} className="hover:no-underline fixed sm:static -top-20 -z-5 content-center">
+            <Logo className="ml-4 w-44" iconClassName="h-9" />
           </Link>
           <div className=" flex-col w-1/2 place-content-start justify-items-end ">
             <nav className="flex flex-row w-2/3 md:w-3/4 items-end fixed sm:static -top-20 -z-50 justify-end">
                     
                           
-                <Link to={"/about"} className={` `+ linkClass}>
-                  About Us
-                </Link>
-                <Link to={"/contact"} className={` `+ linkClass}>
-                  Contact
-                </Link>
+                
+                
                 {isLoggedIn ? (
               
                   <> 
                                     
-                    <Link to={"/logout"} className={` `+linkClass}>
-                      <LogoutIcon/>
-                      Logout
+                    <Link to={"/account"} className={` `+linkClass}>
+                     
+                      My Account
                     </Link>
                 
                   </>  
@@ -255,7 +266,8 @@ const Header = ({isLoggedIn}) => {
                   <>
                 
                     <Link to={"/login"} className={` `+linkClass}>
-                      <UserIcon iconClassName={"w-6 h-6 stroke-1"} className={""} /> 
+                    {/*<UserIcon iconClassName={"w-6 h-6 stroke-1"} className={""} />  */}
+                      Sign In
                     
                     </Link>
 
@@ -263,7 +275,7 @@ const Header = ({isLoggedIn}) => {
                   
                   </>
                 )}
-                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 hover:fill-zinc-400 "} 
+                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 group-hover:fill-zinc-400 "} 
                  />
           
             </nav>
@@ -280,22 +292,33 @@ const Header = ({isLoggedIn}) => {
                   Home
                 </Link>
                 <Link to={"/collection"} className={` `+ link2Class}>
-                  Collection
+                  Collections
                 </Link>
-                <Link to={"/gift"} className={` `+ link2Class}>
+                {/*
+                  <Link to={"/gift"} className={` `+ link2Class}>
                   Gift Ideas
                 </Link>
-                
+
                 <Link to={"/wishlist"} className={` `+ link2Class}>
                   Wishlist
                 </Link>
+                */}
+                
+                <Link to={"/about"} className={` `+ link2Class}>
+                  The Legacy
+                </Link>
+                
+                <Link to={"/contact"} className={` `+ link2Class}>
+                  Contact
+                </Link>
+                
               </div>             
                         
         </nav>
         {//folow the header for mobile, only visible when on mobile screen
         }
         
-        <MobileTopNav />
+        <MobileTopNav location={location}/>
         
         
         

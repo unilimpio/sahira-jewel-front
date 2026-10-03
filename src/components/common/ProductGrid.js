@@ -8,45 +8,54 @@ export default function ProductGrid({products}) {
     const pathToImg = "assets/uploads/"
   
     return (
-    <ul  className="grid grid-cols-2 grid-rows-3 p-0 gap-x-4 gap-y-6 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 lg:gap-y-8 xl:gap-x-8">
-      {products.map((item) => (
-        <li key={item.product_name} className="relative ">
-          
-          <div className="transition duration-250 ease-in-out overflow-hidden ">
-            <div className="w-full h-full group ">
-              <Link to={`/product?pId=${item.product_id}`} className="justify-center no-underline text-[9px] font-light m-0  text-black hover:no-underline outline outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10">
-                <div className="w-full h-40 overflow-hidden " >
-                  <img
-                    
-                    alt={`${item.product_name}`}
-                    src={`${backUrl+pathToImg}${item.product_imageSrc}`}
-                    className="  object-cover group-hover:scale-125 transition-all duration-700 delay-200 ease-in-out "
-                    
-                  />
-                </div>
-                <h3 className="m-2 text-center text-[10px] font-thin font-serif text-black dark:text-white">
-                  {item.product_name}
-                </h3>
-              </Link>
-            </div>
+  <ul className="grid grid-cols-2 gap-x-4 gap-y-10 p-0 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 lg:gap-y-12 xl:gap-x-8">
+    {products.map((item) => (
+      <li 
+        key={`home-prod-${item.product_id || item.product_name}`} 
+        className="group relative flex flex-col justify-between"
+      >
+        {/* Contenedor de la Imagen con Aspecto Fijo y Borde Sutil */}
+        <div className="aspect-[3/4] w-full overflow-hidden bg-zinc-50 dark:bg-zinc-900 rounded-sm outline outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10">
+          <Link to={`/product?pId=${item.product_id}`} className="block h-full w-full">
+            <img
+              alt={item.product_name}
+              src={`${backUrl}${pathToImg}${item.product_imageSrc}`}
+              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          </Link>
+        </div>
 
-            <p className=" truncate mb-0 text-[9px] text-center font-light text-zinc-800 dark:text-white">
-              {item.product_desc}
+        {/* Información del Producto */}
+        <div className="mt-4 flex flex-col items-center text-center px-1 flex-grow">
+          {/* Título */}
+          <h3 className="font-serif text-xs font-medium tracking-wide text-zinc-900 dark:text-zinc-100">
+            {item.product_name}
+          </h3>
+          
+          {/* Descripción corta */}
+          <p className="mt-1 max-w-[90%] text-[11px] font-light text-zinc-500 dark:text-zinc-400 line-clamp-1">
+            {item.product_desc}
           </p>
-          <p className=" text-[6px] mt-0 mb-2 text-center font-light text-zinc-800 dark:text-white">
-              Edición Limitada            
-          </p>   
-          <Link to={`/product?pId=${item.product_id}`} className="flex justify-center no-underline text-[9px] font-light m-0 p-2 text-black hover:underline">
+
+          {/* Tag de Edición Limitada 
+          <span className="mt-1.5 text-[9px] font-medium tracking-widest text-amber-600/80 dark:text-amber-400/80 uppercase">
+            Edición Limitada
+          </span>
+          */}
+        </div>
+
+        {/* Botón de Acción Principal (Descubrir) */}
+        <div className="mt-3 flex justify-center">
+          <Link 
+            to={`/product?pId=${item.product_id}`} 
+            className="text-[11px] font-light tracking-widest text-zinc-400 dark:text-zinc-500 uppercase transition-colors duration-300 hover:text-black dark:hover:text-white hover:underline underline-offset-4"
+          >
             Descubrir
           </Link>
-            
-          </div>
-          
-          
-          
-          
-        </li>
-      ))}
-    </ul>
-    )
+        </div>
+      </li>
+    ))}
+  </ul>
+);
+
 }

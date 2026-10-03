@@ -10,6 +10,7 @@
     "bootstrap": "^5.3.8",
     "flowbite": "^4.0.1",
     "http-proxy-middleware": "^2.0.1",
+    "lucide-react": "^1.49.0",
     "nth-check": "^2.1.1",
     "postcss": "^8.5.6",
     "qs": "^6.13.1",

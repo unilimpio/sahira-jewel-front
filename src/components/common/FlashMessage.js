@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import AlertBox from './template/AlertBox';
 
-const FlashMessage = ({ flashMessage,  setFlashMessage, duration = 8000 , divCss='bottom-24'}) => {
+const FlashMessage = ({ flashMessage,  setFlashMessage, duration = 8000 , divCss=' fixed bottom-36 left-0 w-full z-50    ' }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -39,9 +39,9 @@ const FlashMessage = ({ flashMessage,  setFlashMessage, duration = 8000 , divCss
     <>
       {options && (
         
-          <div className={`w-full  fixed ${divCss} right-0 z-50 ${!isVisible?('hidden'):('')}`}>
+          <div className={`   ${divCss}   ${!isVisible?('hidden'):('')}`}>
             
-            <div className="w-10/12 mx-auto opacity-70">
+            <div className="w-10/12 mx-auto opacity-70 h-18">
               <AlertBox message={options.message} type={options.type} setFlashMessage={setFlashMessage}/>
             </div>
             

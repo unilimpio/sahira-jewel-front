@@ -6,6 +6,7 @@ import Template from "./common/template/Template";
 import FlashMessage from "./common/FlashMessage";
 import AuthService from "../services/auth.service";
 
+import { useAuth } from "../context/AuthContext"; // 1. Importa tu nuevo Hook de contexto
 
 
 const Login = () => { 
@@ -20,6 +21,7 @@ const Login = () => {
  
   const [flashMessage, setFlashMessage] = useState(localStorage.getItem('sj_flashMessage'));
   
+   const { login } = useAuth(); // 2. Extrae la función login del contexto
   
   const navigate = useNavigate();
 
@@ -74,9 +76,16 @@ const Login = () => {
         //if(verifLenght && verifSpecial && verifNum && verifMayus && verifMinus ){
         if(onSubmitPassword !== null ){
             AuthService.login(email, password).then(
-                  () => {
-                    navigate(-1);
-                    //window.location.reload();
+                  (response) => {
+                    // 3. Guarda los datos en el AuthContext global de React.
+                    // Ajusta 'response.user' y 'response.token' según la estructura exacta que devuelva tu API.
+                    const userData = response.user || response.data?.user || response; 
+                    const token = response.token || response.data?.token || localStorage.getItem('token');
+
+                    login(userData, token); 
+
+                    // 4. Redirección limpia sin recargar la pantalla completa
+                    navigate(-1); 
                   },
                   (error) => {
                     setError(true)
@@ -104,7 +113,7 @@ const Login = () => {
 
           setError(true);
           setMessage('La contrasena ingresada no es valida. Por favor verifique y vuelva a intentar.')
-
+          setLoading(false);
         }
 
 
@@ -112,7 +121,7 @@ const Login = () => {
 
         setError(true);
         setMessage('EL correo ingresado parece ser invalido. Por favor verifique y vuelva a intentar.')
-      
+        setLoading(false);
       }
 
       
@@ -120,10 +129,10 @@ const Login = () => {
       
       setError(true)
       setMessage('Por favor ingrese su correo y contrasena para continuar.')
-
+      setLoading(false);
       
     }
-    setLoading(false);
+    
   };
 
   const wrapperClass = `w-full mx-auto  p-2 h-[80vh]`;

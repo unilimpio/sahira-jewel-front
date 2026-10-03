@@ -73,7 +73,7 @@ const deleteCourseFromCartFunction = (course) => {
         onClick={() => setOpen(true)}
         className={` ${buttonClassName}  `}
       >
-        <div className="relative">
+        <div className="relative group">
           <CartIcon className={`  ${className} `} iconClassName={` ${iconClassName} `} >
             {cart?.length > 0 ? (
             

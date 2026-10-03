@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { useNavigate, Navigate} from "react-router";
 
@@ -38,7 +38,9 @@ export default function Wishlist () {
 
   const wrapperClass = `w-full h-[80vh] p-4 mb-4 mx-auto `;
 
+    const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
   
+   const bottomRef = useRef(null);
 
   const [message,setMessage] = useState(false);
 
@@ -108,6 +110,29 @@ export default function Wishlist () {
       localStorage.setItem('sj_flashMessage',JSON.stringify({message:'Please login to view your Wishlist.',type:'info'}))
       navigate('/login')
     }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // If the bottom sentinel is visible, hide the component. 
+        // Otherwise, keep it visible.
+        setBottomIsVisible(!entry.isIntersecting);
+        console.log('the bottom of the page has been reached!!!!!!!!')
+      },
+      { 
+        threshold: 0.1, // Triggers as soon as the bottom 10% of the sentinel enters
+        rootMargin: "0px 0px 50px 0px" // Optional: Triggers 50px before reaching the exact bottom
+      }
+    );
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+          
+    return () => {
+      if (bottomRef.current) {
+        observer.unobserve(bottomRef.current);
+      }
+    };
   
 
     
@@ -247,13 +272,13 @@ const addCourseToCartFunction = (course) => {
                         <tbody className="text-zinc-600 ">
             { wishlist.length === 0  && (
 
-              <div className="flex items-center justify-center w-full h-1/2 text-zinc-500">
-                    <p className="font-light text-sm">Your Wishlist is empty...
+              <tr className="flex items-center justify-center w-full h-1/2 text-zinc-500">
+                    <td className="font-light text-sm">Your Wishlist is empty...
                       <Link to="/collection" className="text-current">Explore the collection?</Link>
                       
 
-                    </p>
-              </div>
+                    </td>
+              </tr>
 
               )}
             {wishlist.map((row,index)=>
@@ -332,13 +357,17 @@ const addCourseToCartFunction = (course) => {
   return (
     
 
-      <Template >
-
+      <Template bottomIsVisible={bottomIsVisible} >
+        {flashMessage && (
+                          
+            <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage} divCss={``} />
+                         
+        )}
         <div className={`mt-12 `+wrapperClass}>
           
           
           
-          <h1 className="text-zinc-600 font-serif text-2xl md:text-3xl lg:text-4xl ">Wishlist</h1>
+          <h1 className="font-serif text-3xl font-light text-zinc-900 tracking-normal mb-1 ">Wishlist</h1>
           <p className="font-light text-sm">Aqui encontrarás tus coup-de-coeur para una futura oportunidad...</p>
 
           {content && user &&(
@@ -363,12 +392,11 @@ const addCourseToCartFunction = (course) => {
       
         </div>
 
-        {flashMessage && (
-                          
-            <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
-                         
-        )}
-      
+        
+        <div 
+          ref={bottomRef} 
+          style={{ height: "1px", width: "100%", position: "absolute", bottom: 0 }} 
+        /> 
       
       </Template>
     

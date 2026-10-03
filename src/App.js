@@ -9,6 +9,8 @@ import "./App.css";
 
 import AuthService from "./services/auth.service";
 
+import ProtectedRoute from './components/ProtectedRoute';
+
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import Register from "./components/Register";
@@ -58,20 +60,27 @@ const App = () => {
             <Route path={"/collection"} element={<Collection />} />
             <Route path={"/product"} element={<Product />} />
             <Route path={"/gift"} element={<Gift />} />
-            <Route path={"/wishlist"} element={<Wishlist />} />
+            
             <Route path={"/about"} element={<About />} />
             <Route path={"/contact"} element={<Contact />} />
             
             <Route path={"/login"} element={<Login />} />
             <Route path={"/logout"} element={<Logout />} />
             <Route path={"/register"} element={<Register />} />
-            <Route path={"/account"} element={<Account />} />
-
-            <Route path={"/account/orders"} element={<MyOrders />} />
+            
             <Route path={"/finish-order"} element={<FinishOrder />} />
 
             <Route path={"/privacy"} element={<Privacy />} />
             
+            <Route element={<ProtectedRoute />}>
+              <Route path={"/account"} element={<Account />} />
+              <Route path={"/wishlist"} element={<Wishlist />} />
+              <Route path={"/account/orders"} element={<MyOrders />} />
+
+              {/* 
+              <Route path="/orders" element={<Orders />} />
+              Más páginas que requieran token aquí */}
+            </Route>
 
           </Routes>
       </div>
