@@ -124,9 +124,9 @@ const Header = ({isLoggedIn}) => {
         }
       };
 
-      if(location.pathname === '/home'){
+      if(location.pathname === '/home' || location.pathname === '/'){
         window.addEventListener('scroll', handleScroll);
-      } else{
+      } else {
         setIsVisible(true)
       }
 

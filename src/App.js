@@ -25,7 +25,7 @@ import Contact from "./components/Contact";
 import Wishlist from "./components/Wishlist";
 import About from "./components/About";
 import MyOrders from "./components/MyOrders";
-import FinishOrder from "./components/FinishOrder";
+import Checkout from "./components/Checkout";
 
 
 import Privacy from "./components/Privacy";
@@ -68,7 +68,7 @@ const App = () => {
             <Route path={"/logout"} element={<Logout />} />
             <Route path={"/register"} element={<Register />} />
             
-            <Route path={"/finish-order"} element={<FinishOrder />} />
+            <Route path={"/checkout"} element={<Checkout />} />
 
             <Route path={"/privacy"} element={<Privacy />} />
             

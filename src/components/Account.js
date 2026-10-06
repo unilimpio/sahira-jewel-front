@@ -7,21 +7,27 @@ import Template from "./common/template/Template";
 const user = AuthService.getCurrentUser();
 
 const Account = () => {
+
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState([]);
-  const bottomRef = useRef(null);
+
+    const bottomRef = useRef(null);
+      const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
+  
 
   // Reusable utility function to mask sensitive strings safely
   const maskString = (str, visibleCount = 3) => {
-    if (!str) return "";
-    if (str.length <= visibleCount) return str;
-    const visiblePart = str.slice(0, visibleCount);
-    const maskedPart = "•".repeat(str.length - visibleCount); // '•' looks cleaner than '*' for luxury brands
-    return visiblePart + maskedPart;
+      if (!str) return "";
+      if (str.length <= visibleCount) return str;
+      const visiblePart = str.slice(0, visibleCount);
+      const maskedPart = "•".repeat(str.length - visibleCount); // '•' looks cleaner than '*' for luxury brands
+      return visiblePart + maskedPart;
   };
 
   useEffect(() => {
+    
     if (!user) {
       navigate("/login", { replace: true, state: { from: "/account" } });
       return;
@@ -56,7 +62,7 @@ const Account = () => {
   }, [navigate]);
 
   return (
-    <Template>
+    <Template bottomIsVisible={bottomIsVisible}>
       <div className="max-w-3xl mx-auto mt-16 px-6 mb-24 font-sans antialiased text-zinc-800 tracking-wide">
         
         {/* Page Header */}

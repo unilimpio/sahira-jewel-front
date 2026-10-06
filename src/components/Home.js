@@ -39,13 +39,13 @@ export default function Home () {
      localStorage.removeItem("sj_user");
   }
 
-  const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
+ 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(false);
   const [content, setContent] = useState(false);//the whole data object returned by the api call
 
    const bottomRef = useRef(null);
-
+   const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
   /*const cardData = [
           { title: 'Card 1', description: 'Description for card 1' },
           { title: 'Card 2', description: 'Description for card 2' },

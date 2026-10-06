@@ -161,7 +161,7 @@ const deleteCourseFromCartFunction = (course) => {
                                   <div className="w-full">
                                     <div className="flex flex-row-reverse justify-between">
                                       <button
-                                        className="text-red-300 text-[9px] h-3 hover:underline"
+                                        className="text-zinc-700 text-[9px] h-3 hover:underline"
                                         onClick={() => 
                                         deleteCourseFromCartFunction(item.product)}>
                                         Remove
@@ -218,7 +218,7 @@ const deleteCourseFromCartFunction = (course) => {
                     </div>
                     <p className="mt-0.5 text-xs text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div className="mt-2 flex  justify-center">
-                      <Link to="/finish-order"
+                      <Link to="/checkout"
                         className="bg-white drop-shadow-md no-underline disabled:drop-shadow-none text-black rounded-md p-3 disabled:bg-zinc-200 disabled:text-zinc-400 transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-black"
                         disabled={cart.length === 0 || 
                         totalAmountCalculationFunction() === 0}

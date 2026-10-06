@@ -156,6 +156,18 @@ const getOrders = (user) => {
   
 };
 
+const getCheckout = () => {
+  
+  return axios
+  .get(API_URL + "getCheckout"  , 
+    { headers: {}})
+  .catch(function (error){
+    console.log(error)
+    
+  });
+  
+};
+
 const getOrderItems = (user,orderId) => {
   
   return axios
@@ -227,6 +239,7 @@ const UserService = {
   getCards,
   getProduct,
   getOrders,
+  getCheckout,
   getOrderItems,
   setWish,
   removeWish,
