@@ -26,7 +26,7 @@ import Wishlist from "./components/Wishlist";
 import About from "./components/About";
 import MyOrders from "./components/MyOrders";
 import Checkout from "./components/Checkout";
-
+import Thankyou from "./components/Thankyou";
 
 import Privacy from "./components/Privacy";
 import Gift from "./components/Gift"
@@ -69,6 +69,7 @@ const App = () => {
             <Route path={"/register"} element={<Register />} />
             
             <Route path={"/checkout"} element={<Checkout />} />
+             <Route path={"/thankyou/:newOrderId"} element={<Thankyou />} />
 
             <Route path={"/privacy"} element={<Privacy />} />
             

@@ -164,9 +164,17 @@ const Header = ({isLoggedIn}) => {
                           <Logo className={" w-42"} iconClassName={'h-9'}/>
                         </Link>
                       </div>
-                                    
-                      <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-7 h-7 fill-zinc-600   "}  
-                        />
+                      
+                       {
+                        location.pathname !== '/checkout' ?
+                        (
+                            <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-7 h-7 fill-zinc-600   "} />
+                        ) : (
+                            <div className="w-7"></div> 
+                        )
+                       }
+                                
+                      
 
 
           </nav>
@@ -275,8 +283,13 @@ const Header = ({isLoggedIn}) => {
                   
                   </>
                 )}
-                <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 group-hover:fill-zinc-400 "} 
-                 />
+                {
+                  location.pathname !== '/checkout' &&
+                  (
+                    <CartComponent buttonClassName={""} className={"p-3"} iconClassName={"w-6 h-6 fill-zinc-600 group-hover:fill-zinc-400 "} 
+                    />
+                  )
+                }
           
             </nav>
             

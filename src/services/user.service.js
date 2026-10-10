@@ -168,6 +168,20 @@ const getCheckout = () => {
   
 };
 
+const orderConfirm = (orderPayload) => {  
+  
+  return axios
+  .post(API_URL + "orderConfirm"  , orderPayload,
+    { headers: {
+          'Content-Type': 'application/json'
+        }})
+  .catch(function (error){
+    console.log(error)
+    
+  });
+  
+};
+
 const getOrderItems = (user,orderId) => {
   
   return axios

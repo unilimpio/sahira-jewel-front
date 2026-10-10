@@ -187,13 +187,13 @@ export default function Home () {
                
                 
               </div>
-              <div className="flex justify-center p-8 mt-24 ">
-                <div className="flex-col justify-center content-center my-2 text-center font-light text-[9px]">
-                  <h3 className="m-0 font-light text-[9px]">HANDCRAFTED IN ECUADOR</h3>
+              <div className="flex justify-center p-8 my-24 ">
+                <div className="flex-col justify-center content-center my-2 text-center font-light ">
+                  <h3 className="m-0 font-light text-[10px]">HANDCRAFTED IN ECUADOR</h3>
                   <hr className="m-2 border-t border-black w-[9px] mx-auto"></hr>
-                  <h3 className="m-0 font-light text-[9px]">STERLING SILVER 925</h3>
+                  <h3 className="m-0 font-light text-[10px]">STERLING SILVER 925</h3>
                   <hr className="m-2 border-t  border-black w-[9px] mx-auto"></hr>
-                  <h3 className="m-0 font-light text-[9px]">LIMITED PIECES</h3>
+                  <h3 className="m-0 font-light text-[10px]">LIMITED PIECES</h3>
                 </div>             
                   
               </div>

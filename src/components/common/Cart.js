@@ -102,8 +102,8 @@ const deleteCourseFromCartFunction = (course) => {
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                     <div className="flex items-start justify-between bg-white ">
-                      <DialogTitle className=" text-base font-light font-script text-black flex flex-row">
-                        <CartIcon className={`-mt-4 -ml-3  ${className} `} iconClassName={` w-6 h-6 fill-black `} />
+                      <DialogTitle className=" text-lg font-serif font-script text-black flex flex-row">
+                        <CartIcon className={`-mt-4 -ml-3  ${className} `} iconClassName={` w-7 h-7 fill-black `} />
 
                         Your Shopping cart</DialogTitle>
                       <div className="absolute top-0 right-0 m-2 ">
@@ -117,7 +117,7 @@ const deleteCourseFromCartFunction = (course) => {
                         >
                           <span className="absolute -inset-0.5" />
                           <span className="sr-only">Close panel</span>
-                          <XMarkIcon aria-hidden="true" className="size-4" />
+                          <XMarkIcon aria-hidden="true" className="size-6" />
                         </button>
                       </div>
                     </div>
@@ -142,7 +142,7 @@ const deleteCourseFromCartFunction = (course) => {
                                           
                                           
                                           <span className="font-light text-xs">Qty:</span>
-                                          <span className='text-zinc-600 bg-neutral-100 rounded-sm shadow-sm px-1 text-sm font-light mx-2'>{item.quantity} </span>
+                                          <span className='text-zinc-900 border-b border-zinc-600  px-1 text-sm font-light mx-2'> {item.quantity} </span>
                                           
                                           
                                         </div>
@@ -182,7 +182,7 @@ const deleteCourseFromCartFunction = (course) => {
                                             }}>                                          
                                               <span className="-mt-1.5 px-1 text-center font-light">-</span>                                          
                                         </button>
-                                        <button  className={`flex m-1 ${plusButtonClassName}`}
+                                        <button  className={`flex m-1  ${plusButtonClassName}`}
                                             onClick={(e) => {
                                             setCart((prevCart) => {
                                               const updatedCart = prevCart.map((prevItem) =>

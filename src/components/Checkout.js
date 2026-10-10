@@ -5,6 +5,15 @@ import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 import Template from "./common/template/Template";
 
+import { getCountries, getCountryCallingCode } from 'react-phone-number-input/input';
+import en from 'react-phone-number-input/locale/en.json';
+
+import GuestPhoneInput from './common/GuestPhoneInput';
+import CheckoutCheckboxes from './common/CheckoutCheckboxes';
+
+// Optional: Import standard flags CSS if you want to use the package's built-in flags
+// import 'react-phone-number-input/style.css';
+
  const user = AuthService.getCurrentUser();
 
  
@@ -37,14 +46,34 @@ const Checkout = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false)  
   const [cart, setCart] = usePersistedState('sjCart', 0);
+
+  const [totalAmount, setTotalAmount] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [payments, setPayments] = useState(false);
   const [shipping, setShipping] = useState(false);
-  const [paymentSelected, setPaymentSelected] = useState(false);
-  const [shippingSelected, setShippingSelected] = useState(false);
+  const [paymentSelected, setPaymentSelected] = useState(null);
+  const [shippingSelected, setShippingSelected] = useState(null);
   const [shippingCost, setShippingCost] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+ 
+  const [obs, setObs] = useState('');
+  const [email, setEmail] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [customerId, setCustomerId] = useState('');
+  
+  const [fullPhoneNumber, setFullPhoneNumber] = useState('');
 
-const deleteCourseFromCartFunction = (course) => {
+  const [preferences, setPreferences] = useState({
+    acceptTerms: false,
+    subscribeNewsletter: false,
+    createAccount: false,
+  });
+
+  const [newOrderId,setNewOrderId] = useState(false);
+
+  const deleteCourseFromCartFunction = (course) => {
     const updatedCart = cart
               .filter(item => item.product.id !== course.id);
     setCart(updatedCart);
@@ -106,35 +135,42 @@ const deleteCourseFromCartFunction = (course) => {
       }
     };
     
-  }, []);
+  }, [ ]);
 
   function SelectPayment({payments}){
       
       const handleChange = (event)=>{
         
         setPaymentSelected(event.target.value)
-        setShippingCost(event.target.value)
+        
 
       }
 
       if(payments){
              
         return(
-          <div className="flex">
-             
-            <select id="payments-select" className={` border border-zinc-500 rounded-lg text-sm font-light h-10`} value={paymentSelected} onChange={handleChange}>                             
-                  <option  value={ false  }>Please select...</option>
-              {
-                  
-                payments?.map(method => (
-                  <option key={'option-'+method.id+'-'+method.name} value={ method.code  }>{ ` ${method.name} ` }</option>
-                  
-                  
+          <div className="flex flex-col w-full ">
             
-                ))
-              }
+              <select id="payments-select" name="payment-method" className={`w-full border border-zinc-500 rounded-lg text-sm font-light h-10`} value={paymentSelected} onChange={handleChange}>                             
+                  <option  value={ ''  }>Please select...</option>
+                {
+                    
+                  payments?.map(method => (
+                    <option key={'option-'+method.id+'-'+method.name} value={ method.code  }>{ ` ${method.name} ` }</option>
+                    
+                    
+              
+                  ))
+                }
               
               </select>
+              {
+                paymentSelected &&
+                (              
+                  <p className="w-full">You will receive a secure payment link via Whatsapp.</p>
+                )
+              }
+
             
             
           </div>
@@ -149,21 +185,22 @@ const deleteCourseFromCartFunction = (course) => {
       
       const handleChange = (event)=>{
         
-        setShippingSelected(event.target.value)
+        setShippingSelected(parseFloat(event.target.value))
 
       }
 
       if(shipping){
              
         return(
-          <div className="flex w-1/2">
-             
-            <select id="payments-select" className={` border border-zinc-500 rounded-lg text-sm font-light w-full h-10`} value={shippingSelected} onChange={handleChange}>                             
-                  <option  value={ false  }>Please select...</option>
+          <div className="flex flex-row w-full justify-between">
+
+            <div className="w-1/2">
+              <select id="payments-select" name="shipping-method" className={`w-full border border-zinc-500 rounded-lg text-sm font-light h-10`} value={shippingSelected} onChange={handleChange}>                             
+                  <option  value={ '' }>Please select...</option>
               {
                   
                 shipping?.map(method => (
-                  <option key={'option-'+method.id+'-'+method.name} value={method.id}>{ `${method.name} - ${method.cost ? parseFloat(method.cost).toFixed(2) : '0.00' }` }</option>
+                  <option key={'option-'+method.id+'-'+method.name} value={method.cost}>{ `${method.name} - ${method.cost ? parseFloat(method.cost).toFixed(2) : '0.00' }` }</option>
                   
                   
             
@@ -171,7 +208,26 @@ const deleteCourseFromCartFunction = (course) => {
               }
               
               </select>
+            </div>
+
+            <div className="">
+
+              <p className="">
+                {
+                  shippingSelected &&  //this last comparison is for fixing the Nan error
+                  (
+                    <span className="text-zinc-900 font-light text-sm">USD {parseFloat(shippingSelected).toFixed(2)}</span>
+
+                  )
+                }
+              </p>
+
+            </div>
+             
             
+              
+              
+
             
           </div>
         );
@@ -179,7 +235,95 @@ const deleteCourseFromCartFunction = (course) => {
 
       return null
     
-  }  
+  } 
+
+  const handlePay = (event) => {
+
+    event.preventDefault();
+
+    setIsSubmitting(true);  
+    //setLoading(true);
+
+
+     // This outputs the standardized format ready for payment gateways (e.g., Stripe, PayPal)
+    console.log("Submitting order with phone:", fullPhoneNumber); 
+    const form = event.target;
+
+    const formData = new FormData(form);
+
+    
+
+    //const onSubmitShipping = formData.get("shipping-method");
+    //const onSubmitPayment = formData.get("payment-method");
+     
+
+      if (isSubmitting) {
+
+            // Build the payload payload object exactly how your backend expects it
+            const orderPayload = {
+              user_id: user.uId || null,
+              payment_method: paymentSelected,
+              shipping_method: shippingSelected,
+              cart: cart, // This sends your entire JSON object automatically
+              phone: fullPhoneNumber,
+              obs: obs,
+              acceptTerms: preferences.acceptTerms,
+              isSubscribed: preferences.subscribeNewsletter,
+              willCreateAccount: preferences.createAccount, // If true, your backend
+              totalAmount: totalAmount
+            };  
+
+            
+            try{
+
+              UserService.orderConfirm(orderPayload).then(
+
+                (response)=>{
+
+                    const newOrderId = response.data?.newOrderId;
+
+                    navigate(`/thankyou/${newOrderId}`)
+
+                },
+                (error)=>{
+
+                  console.log('there was an error processing the order!! .- ',error)
+
+                }
+
+
+              )
+
+
+
+
+            }catch (error) {
+
+              console.error('Error processing payment:', error);
+              alert('Payment failed. Please try again.');
+
+            } finally {
+              localStorage.removeItem('sjCart');
+              setIsSubmitting(false);
+            }
+
+    
+      
+      };
+  }
+
+  function handleObsChange(e){
+
+          const value = e.target.value;
+  
+          console.log(value);
+  
+          return setObs(value);
+  
+  }
+
+  const inputClassName = `border-1 border-zinc-300 rounded-md md:w-1/2 w-full  shadow-sm h-8`;
+ 
 
   return (
     <Template bottomIsVisible={bottomIsVisible}>
@@ -200,93 +344,94 @@ const deleteCourseFromCartFunction = (course) => {
                     {cart?.lenght === 0  ? (
 	                    <div className="w-full text-sm font-thin text-zinc-600">Oops...esto es extraño, aquí no hay nada para comprar...</div>
 	                  ) : (
+                      <form onSubmit={handlePay}>
+                        <div className="w-full bg-white h-auto ">
+                          <div className="">
+                            <ul  className="w-full my-4 p-0 divide-y divide-zinc-200">
 
-                      <div className="w-full bg-white h-auto ">
-                        <div className="">
-                          <ul  className="w-full my-4 p-0 divide-y divide-zinc-200">
-
-                            {cart?.map((item) => (
-                              <li key={item.product.id} className="w-full p-3">
-                                <div className="w-full">
-                                  <div className="flex justify-between">
-                                    <div className="flex flex-col items-center">
-                                      <Link href={`${baseUrl}product?pId=${item.product.id}`}
-                                        className="text-black  hover:text-zinc-600 no-underline " >
-                                        <img src={backUrl+pathToImg+item.product.imageSrc} 
-                                          alt={item.product.imageAlt} className="max-h-16 max-w-16 rounded-md"/>
-                                      </Link>
-                                        <div className="flex items-center mt-2 ">
-                                          
-                                          
-                                          <span className="font-light text-xs">Qty:</span>
-                                          <span className='text-zinc-900 border-b border-zinc-600  px-1 text-base font-light mx-2'>
-                                            {item.quantity} 
-                                          </span>
-                                          
-                                          
-                                        </div>
-                                    </div>
-                                    <div className="text-zinc-600">
-                                      <Link href={`${baseUrl}product?pId=${item.product.id}`}
-                                        className="text-zinc-900  hover:text-zinc-600 no-underline " >
-                                        <h6 className="text-lg text-right mt-2  font-serif" onClick={() => {
-                                                                                      setOpen(false)
-
-                                                                                } }>{item.product.name}</h6>
-                                      </Link>
-                                      <p className="font-light text-zinc-600 text-base text-right"> ${item.product.price}</p>
-                                    </div>
-                                  </div>
+                              {cart?.map((item) => (
+                                <li key={item.product.id} className="w-full p-3">
                                   <div className="w-full">
-                                    <div className="flex flex-row-reverse justify-between">
-                                      <button
-                                        className="text-zync-600 text-[9px] h-3 hover:underline"
-                                        onClick={() => 
-                                        deleteCourseFromCartFunction(item.product)}>
-                                        ✕&nbsp;Remove
-                                      </button>
-                                      <div className="flex items-center">
-                                        <button className={`flex m-1    ${minusButtonClassName}`}
-                                            onClick={(e) => {
+                                    <div className="flex justify-between">
+                                      <div className="flex flex-col items-center">
+                                        <Link href={`${baseUrl}product?pId=${item.product.id}`}
+                                          className="text-black  hover:text-zinc-600 no-underline " >
+                                          <img src={backUrl+pathToImg+item.product.imageSrc} 
+                                            alt={item.product.imageAlt} className="max-h-16 max-w-16 rounded-md"/>
+                                        </Link>
+                                          <div className="flex items-center mt-2 ">
+                                            
+                                            
+                                            <span className="font-light text-xs">Qty:</span>
+                                            <span className='text-zinc-900 border-b border-zinc-600  px-1 text-base font-light mx-2'>
+                                              {item.quantity} 
+                                            </span>
+                                            
+                                            
+                                          </div>
+                                      </div>
+                                      <div className="text-zinc-600">
+                                        <Link href={`${baseUrl}product?pId=${item.product.id}`}
+                                          className="text-zinc-900  hover:text-zinc-600 no-underline " >
+                                          <h6 className="text-lg text-right mt-2  font-serif" onClick={() => {
+                                                                                        setOpen(false)
+
+                                                                                  } }>{item.product.name}</h6>
+                                        </Link>
+                                        <p className="font-light text-zinc-600 text-base text-right"> ${item.product.price}</p>
+                                      </div>
+                                    </div>
+                                    <div className="w-full">
+                                      <div className="flex flex-row-reverse justify-between">
+                                        <button
+                                          className="text-zync-600 text-[9px] h-3 hover:underline"
+                                          onClick={() => 
+                                          deleteCourseFromCartFunction(item.product)}>
+                                          ✕&nbsp;Remove
+                                        </button>
+                                        <div className="flex items-center">
+                                          <button className={`flex m-1    ${minusButtonClassName}`}
+                                              onClick={(e) => {
+                                                setCart((prevCart) => {
+                                                  const updatedCart = prevCart.map(
+                                                  (prevItem) =>
+                                                  prevItem.product.id === item.product.id
+                                                      ? { ...prevItem, quantity:
+                                                      Math.max(item.quantity - 1, 0) }
+                                                      : prevItem
+                                                  );
+                                                  return updatedCart;
+                                                })
+                                              }}>                                          
+                                                <span className="-mt-[4px] px-[6px] text-center font-light">-</span>                                          
+                                          </button>
+                                          <button  className={`flex m-1 ${plusButtonClassName}`}
+                                              onClick={(e) => {
                                               setCart((prevCart) => {
-                                                const updatedCart = prevCart.map(
-                                                (prevItem) =>
-                                                prevItem.product.id === item.product.id
-                                                    ? { ...prevItem, quantity:
-                                                    Math.max(item.quantity - 1, 0) }
-                                                    : prevItem
+                                                const updatedCart = prevCart.map((prevItem) =>
+                                                            prevItem.product.id === item.product.id
+                                                                ? { ...prevItem, quantity: 
+                                                                item.quantity + 1 }
+                                                                : prevItem
                                                 );
                                                 return updatedCart;
                                               })
-                                            }}>                                          
-                                              <span className="-mt-[4px] px-[6px] text-center font-light">-</span>                                          
-                                        </button>
-                                        <button  className={`flex m-1 ${plusButtonClassName}`}
-                                            onClick={(e) => {
-                                            setCart((prevCart) => {
-                                              const updatedCart = prevCart.map((prevItem) =>
-                                                          prevItem.product.id === item.product.id
-                                                              ? { ...prevItem, quantity: 
-                                                              item.quantity + 1 }
-                                                              : prevItem
-                                              );
-                                              return updatedCart;
-                                            })
-                                          }}>
-                                            
-                                              <span className="-mt-[4px] px-[4px] text-center font-light">+</span>   
-                                            
-                                        </button>
+                                            }}>
+                                              
+                                                <span className="-mt-[4px] px-[4px] text-center font-light">+</span>   
+                                              
+                                          </button>
+                                        </div>
+                                        
                                       </div>
-                                      
                                     </div>
                                   </div>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
-                      </div>  
+                      </form>  
                     )  }
                   </div>
 
@@ -294,45 +439,161 @@ const deleteCourseFromCartFunction = (course) => {
 
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <p className="text-zinc-900 font-serif text-base ">SUBTOTAL</p>
-                      <p className="text-zinc-600 font-semibold text-base">USD {totalAmountCalculationFunction().toFixed(2)}</p>
+                      <p className="text-zinc-900 font-semibold text-base">USD {totalAmountCalculationFunction().toFixed(2)}</p>
                     </div>
                     <div className="flex justify-between  font-medium text-gray-900">
-                      <p className="text-zinc-900 font-serif text-sm ">VAT/IVA <span className="font-light text-zinc-600 ">(15%)</span></p>
-                      <p className="text-zinc-600 font-light text-sm">USD {(0.15*totalAmountCalculationFunction()).toFixed(2)}</p>
+                      <p className="text-zinc-900 font-serif text-sm ">VAT/IVA <span className="font-light text-zinc-900 ">(15%)</span></p>
+                      <p className="text-zinc-900 font-light text-sm">USD {(0.15*totalAmountCalculationFunction()).toFixed(2)}</p>
                     </div>
+                     <hr className="p-2"/>
                     <p className="text-zinc-900 font-serif text-lg ">Delivery Methods</p>
+                    
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <SelectShipping shipping={shipping}/>
-                      <p className="text-zinc-600 font-light text-sm">USD {parseFloat(shippingSelected).toFixed(2)}</p>
                     </div>
-                    <hr/>
+                    
+                    <hr className="p-2"/>
+                    
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <p className="text-zinc-900 font-serif text-lg ">TOTAL A PAGAR</p>
-                    <div className="flex-col">                      
-                        <p className="text-zinc-600 font-semibold text-lg text-right">USD {((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()).toFixed(2)}<br/>
+                      <div className="flex-col">                      
+                        <p className="text-zinc-900 font-bold text-lg text-right">USD {((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingSelected).toFixed(2)}<br/>
                         <span className="font-light text-[11px] text-right">Incluye impuestos y envío.</span>
-                        </p>
-                        
+                        </p>                        
+                      </div>
                     </div>
-                    </div>
+                    <hr className="p-2"/>
                     <p className="text-zinc-900 font-serif text-lg ">Payment Methods</p>
+                    
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <SelectPayment payments={payments}/>
                     </div>
+
+                    
+
+                    <div className="flex md:flex-row flex-col w-full p-3 m-1">
+                      <label htmlFor="email" className=""> 
+                        <span className="text-xs font-light text-zinc-600">Email: </span>       
+                      <input className={inputClassName} onChange={(e)=>{
+                                      //setIsPasaChecked(false);
+                                      //setIsNoPasaChecked(true);
+                                      //handleCheck(e);
+                                      setEmail(e.target.value);
+                                      console.log('email valu is', email );
+                  
+                                    
+                                    }} id="email" value={email} /></label>
+
+                      
+                    </div>
+
+                    <div className="flex md:flex-row flex-col w-full p-3 m-1">
+                      <label htmlFor="firstname" className=""> <span className="text-xs font-light text-zinc-600">Firstname: </span>       
+                      <input className={inputClassName} onChange={(e)=>{
+                                      //setIsPasaChecked(false);
+                                      //setIsNoPasaChecked(true);
+                                      //handleCheck(e);
+                                      setFirstname(e.target.value);
+                                      console.log('firstname value is :',e.target.value );
+                  
+                                    
+                                    }} id="firstname" value={firstname} /></label>
+
+                      
+                    </div>
+                    <div className="flex md:flex-row flex-col w-full p-3 m-1">
+                      <label htmlFor="lastname" className=""> <span className="text-xs font-light text-znc-600">LastName: </span>       
+                      <input className={inputClassName} onChange={(e)=>{
+                                      //setIsPasaChecked(false);
+                                      //setIsNoPasaChecked(true);
+                                      //handleCheck(e);
+                                      setLastname(e.target.value);
+                                      console.log('lastname value is :',e.target.value );
+                  
+                                    
+                                    }} id="lastname" value={lastname} /></label>
+
+                      
+                    </div>
+                     <div className="flex md:flex-row flex-col w-full p-3 m-1">
+                      <label htmlFor="customerId" className=""> <span className="text-xs font-light text-znc-600">Id (National Id / Passport / RUC): </span>       
+                      <input className={inputClassName} onChange={(e)=>{
+                                      //setIsPasaChecked(false);
+                                      //setIsNoPasaChecked(true);
+                                      //handleCheck(e);
+                                      setCustomerId(e.target.value);
+                                      console.log('cutomer-id value is :',e.target.value );
+                  
+                                    
+                                    }} id="customerId" value={customerId} /></label>
+                                    <span className="text-[9px]">As per local Ecuador Laws, all sales are subject to invoice.</span>
+
+                      
+                    </div>
+                    <div className="flex w-full p-3 m-1">
+                        
+                        <GuestPhoneInput onChange={(val) => setFullPhoneNumber(val)} />
+
+                      
+                    </div>
+                    
+                    
+
+                    <div className="flex md:flex-row flex-col w-full  p-3 m-1 ">
+                      <label htmlFor="obs" className=" "><span className="text-xs font-light text-znc-600">Notes: </span></label>
+                      <textarea 
+                          className={`text-xs font-thin 
+                            border-zinc-800 
+                            border rounded-md 
+                            focus:shadow-sm 
+                            focus:ring-slate-500 focus:ring-1 focus:outline-none
+                            md:w-1/2 w-full
+                            
+                          `}
+                          name="obs" 
+                          id="obs"
+                          
+                          value={obs}
+                          cols="32"
+                          onChange={ handleObsChange }
+                                
+                      /> 
+                    </div>
+
+                    <div className="flex md:flex-row flex-col w-full  p-3 m-1 ">
+                      {/* Checkbox Layout Component */}
+                      <CheckoutCheckboxes onCheckboxChange={(checkboxStates) => setPreferences(checkboxStates)} />
+                      
+                    </div>
+
+                    
                     
                     
                     <div className="mt-4 flex  justify-center">
-                      <button
-                        className="bg-white drop-shadow-md disabled:drop-shadow-none text-black rounded-lg p-3 disabled:bg-zinc-200 disabled:text-zinc-400 transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-zinc-600"
-                        disabled={cart.length === 0 || 
-                        totalAmountCalculationFunction() === 0}
-                      >
-                        <span className="font-serif text-lg">Confirm Order and Pay</span>
-                      </button>
-                    </div>
-                    <div className="mt-2 flex justify-center text-center text-sm text-gray-500">
+                      {
+                        cart.length === 0 || 
+                        totalAmountCalculationFunction() === 0 || paymentSelected === null || shippingSelected === null || email === null || firstname === null || lastname === null || fullPhoneNumber === null || customerId === null? 
+                         (
+                            <button
+                              className="bg-white pointer-events-none   rounded-lg p-3   ring-1 ring-zinc-300"
+                              disabled >
+                              <span className="font-serif text-lg text-zinc-300">Confirm Order and Pay</span>
+                            </button>
+                         ):(
+                            
+                            <button
+                              className="bg-white drop-shadow-md disabled:drop-shadow-none disabled:pointer-events-none  rounded-lg p-3  transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-zinc-600"
+                              disabled={cart.length === 0 || 
+                              totalAmountCalculationFunction() === 0 || paymentSelected === null || shippingSelected === null}
+                              
+                            >
+                              <span className="font-serif text-lg text-black">Confirm Order and Pay</span>
+                            </button>
+                         )
+                      }
                       
                     </div>
+                    
                   </div>
                 </div>
       </div>
