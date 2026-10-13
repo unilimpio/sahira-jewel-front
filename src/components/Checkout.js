@@ -36,25 +36,35 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
  }
  
  
-const Checkout = () => {
+const Checkout = ({cart, setCart}) => {
   
   const wrapperClass = `max-w-3xl mx-auto mt-16 px-6 mb-24 font-sans antialiased text-zinc-800 tracking-wide `;
+  
+  const minusButtonClassName = `bg-white h-6 w-6 rounded-md border-1 border-zinc-400 p-0 m-0`;
+  const plusButtonClassName = `bg-white h-6 w-6 rounded-md border-1 border-zinc-400 p-0 m-0`;
+  const minusPlusSpanClassName = ` text-base font-semibold`;  
+
+  const inputClassName = `border-1 border-zinc-300 rounded-md md:w-1/2 w-full  text-xs font-light px-3 py-[0.5] shadow-sm h-9`;
 
   const bottomRef = useRef(null);
     const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
 
   const navigate = useNavigate();
+
+
   const [open, setOpen] = useState(false)  
-  const [cart, setCart] = usePersistedState('sjCart', 0);
+  //const [cart, setCart] = usePersistedState('sjCart', []);
 
   const [totalAmount, setTotalAmount] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [payments, setPayments] = useState(false);
   const [shipping, setShipping] = useState(false);
-  const [paymentSelected, setPaymentSelected] = useState(null);
-  const [shippingSelected, setShippingSelected] = useState(null);
-  const [shippingCost, setShippingCost] = useState(false);
+  const [paymentSelected, setPaymentSelected] = useState('');
+  const [shippingSelected, setShippingSelected] = useState('');
+ 
+  const [shippingCost, setShippingCost] = useState(null);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
  
   const [obs, setObs] = useState('');
@@ -74,35 +84,37 @@ const Checkout = () => {
   const [newOrderId,setNewOrderId] = useState(false);
 
   const deleteCourseFromCartFunction = (course) => {
-    const updatedCart = cart
+    // Si cart no existe, usa un arreglo vacío para que .filter no falle
+  const updatedCart = (cart || [])
               .filter(item => item.product.id !== course.id);
     setCart(updatedCart);
   };
 
   const totalAmountCalculationFunction = () => {
-    return cart
+   return (cart || [])
       .reduce((total, item) => 
             total + item.product.price * item.quantity, 0);
   };
  
-  const minusButtonClassName = `bg-white h-5 w-5 rounded-md border-1 border-zinc-400 p-0 m-0`;
-  const plusButtonClassName = `bg-white h-5 w-5 rounded-md border-1 border-zinc-400 p-0 m-0`;
-  const minusPlusSpanClassName = ` text-base font-semibold`;  
+  
   
   console.log('the cart is at this momento:',cart)
   console.log('the cart.lenght is at this momento:',cart?.length)
 
   useEffect(() => {
 
-   setLoading(true);
-    UserService.getCheckout()
+    if(cart && cart.length > 0){
+
+
+      setLoading(true);
+      UserService.getCheckout()
       .then((response) => {
          console.log(response.data)
         setPayments(response?.data?.payment_methods || []);
         setShipping(response?.data?.shipping_methods || []);
         
-        console.log("This payment methods are available!", payments)
-        console.log("This shipping methods are available!", shipping)
+        console.log("This payment methods are available!", response?.data?.payment_methods)
+        console.log("This shipping methods are available!", response?.data?.shipping_methods)
 
       })
       .catch((error) => {
@@ -111,6 +123,17 @@ const Checkout = () => {
       .finally(() => {
         setLoading(false);
       });
+
+
+    } else {
+      console.log('Your cart seems to be empty, maybe you timed out? Please try again and sorry for the inconvenience...Redirecting you to the Home page now...',cart)
+
+      navigate('/');
+    }
+
+   
+
+      
     
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -135,13 +158,14 @@ const Checkout = () => {
       }
     };
     
-  }, [ ]);
+  }, [cart, navigate ]);
 
   function SelectPayment({payments}){
       
       const handleChange = (event)=>{
         
         setPaymentSelected(event.target.value)
+        
         
 
       }
@@ -151,12 +175,12 @@ const Checkout = () => {
         return(
           <div className="flex flex-col w-full ">
             
-              <select id="payments-select" name="payment-method" className={`w-full border border-zinc-500 rounded-lg text-sm font-light h-10`} value={paymentSelected} onChange={handleChange}>                             
-                  <option  value={ ''  }>Please select...</option>
+              <select id="payments-select" name="payment-method" className={`w-full border border-zinc-300 rounded-lg text-xs font-light h-10 shadow-sm py-[0.5] px-3`} value={paymentSelected} onChange={handleChange}>                             
+                  <option  value={''}>Please select...</option>
                 {
                     
                   payments?.map(method => (
-                    <option key={'option-'+method.id+'-'+method.name} value={ method.code  }>{ ` ${method.name} ` }</option>
+                    <option key={'option-'+method.id+'-'+method.name} value={ method.id  }>{ ` ${method.name} - [${method.code}] ` }</option>
                     
                     
               
@@ -167,7 +191,9 @@ const Checkout = () => {
               {
                 paymentSelected &&
                 (              
-                  <p className="w-full">You will receive a secure payment link via Whatsapp.</p>
+                  <div className="ml-7 mt-1.5 text-xs text-indigo-600 font-light bg-indigo-50 p-2.5 rounded-md border border-indigo-100 animate-fadeIn">
+                    ℹ️ You will receive a secure payment link via whatsapp or sms to the number assigned to this order.
+                  </div>
                 )
               }
 
@@ -185,7 +211,19 @@ const Checkout = () => {
       
       const handleChange = (event)=>{
         
-        setShippingSelected(parseFloat(event.target.value))
+
+        const methodId = event.target.value
+        setShippingSelected(methodId)
+
+        const chosenMethod = shipping.find(method => method.id === methodId );
+
+        if(chosenMethod){
+
+              setShippingCost(parseFloat(chosenMethod.cost))
+
+        } else {
+              setShippingCost(0)
+        }
 
       }
 
@@ -195,12 +233,18 @@ const Checkout = () => {
           <div className="flex flex-row w-full justify-between">
 
             <div className="w-1/2">
-              <select id="payments-select" name="shipping-method" className={`w-full border border-zinc-500 rounded-lg text-sm font-light h-10`} value={shippingSelected} onChange={handleChange}>                             
+              <select id="payments-select" 
+                      name="shipping-method" 
+                      className={`w-full border border-zinc-500 rounded-lg text-xs font-light h-10 shadow-sm px-3 py-[0.5] `} 
+                      value={shippingSelected} onChange={handleChange}
+                      >    
+
                   <option  value={ '' }>Please select...</option>
               {
                   
                 shipping?.map(method => (
-                  <option key={'option-'+method.id+'-'+method.name} value={method.cost}>{ `${method.name} - ${method.cost ? parseFloat(method.cost).toFixed(2) : '0.00' }` }</option>
+
+                  <option key={'option-'+method.id+'-'+method.name} value={method.id} >{ `${method.name} - ${method.cost ? parseFloat(method.cost).toFixed(2) : '0.00' }` }</option>
                   
                   
             
@@ -214,9 +258,9 @@ const Checkout = () => {
 
               <p className="">
                 {
-                  shippingSelected &&  //this last comparison is for fixing the Nan error
+                  shippingCost &&  //this last comparison is for fixing the Nan error
                   (
-                    <span className="text-zinc-900 font-light text-sm">USD {parseFloat(shippingSelected).toFixed(2)}</span>
+                    <span className="text-zinc-900 font-light text-sm">USD {parseFloat(shippingCost).toFixed(2)}</span>
 
                   )
                 }
@@ -259,18 +303,30 @@ const Checkout = () => {
 
       if (isSubmitting) {
 
+            const customerInfo = {
+              email : email,
+              id : customerId,
+              fullname : `${firstname} ${lastname}`,
+              phone : fullPhoneNumber
+
+            }
+
             // Build the payload payload object exactly how your backend expects it
             const orderPayload = {
               user_id: user.uId || null,
-              payment_method: paymentSelected,
+              
+              cart_data: cart, // This sends your entire JSON object automatically
+              
               shipping_method: shippingSelected,
-              cart: cart, // This sends your entire JSON object automatically
-              phone: fullPhoneNumber,
+              totalAmount: ((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2),
+              
+              customerInfo : customerInfo,
+              payment_method: paymentSelected,
               obs: obs,
               acceptTerms: preferences.acceptTerms,
               isSubscribed: preferences.subscribeNewsletter,
               willCreateAccount: preferences.createAccount, // If true, your backend
-              totalAmount: totalAmount
+              
             };  
 
             
@@ -280,7 +336,7 @@ const Checkout = () => {
 
                 (response)=>{
 
-                    const newOrderId = response.data?.newOrderId;
+                    const newOrderId = response.data?.order_id;
 
                     navigate(`/thankyou/${newOrderId}`)
 
@@ -321,15 +377,13 @@ const Checkout = () => {
           return setObs(value);
   
   }
-
-  const inputClassName = `border-1 border-zinc-300 rounded-md md:w-1/2 w-full  shadow-sm h-8`;
- 
+  
 
   return (
-    <Template bottomIsVisible={bottomIsVisible}>
+    <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart}>
       <div className={` ${wrapperClass} `}>
         {/* Page Header */}
-        <header className="border-b border-zinc-100 pt-8 pb-4 ">
+        <header className="border-b border-zinc-100 pt-8 pb-3">
           <h1 className="font-serif text-3xl font-light text-zinc-900 tracking-normal mb-1">
             Checkout
           </h1>
@@ -338,20 +392,20 @@ const Checkout = () => {
           </p>
         </header>
 
-          <div className="flex h-auto flex-col  bg-white ">
-                  <div className="flex p-2">
+          <div className=" h-auto flex-col  bg-white ">
+                  <div className="mx-auto  p-2">
                     
-                    {cart?.lenght === 0  ? (
-	                    <div className="w-full text-sm font-thin text-zinc-600">Oops...esto es extraño, aquí no hay nada para comprar...</div>
+                    {cart?.lenght === 0 || !cart  ? (
+	                    <div className=" text-sm font-thin text-zinc-600">Oops...esto es extraño, aquí no hay nada para comprar...</div>
 	                  ) : (
                       <form onSubmit={handlePay}>
-                        <div className="w-full bg-white h-auto ">
+                        <div className=" bg-white h-auto ">
                           <div className="">
-                            <ul  className="w-full my-4 p-0 divide-y divide-zinc-200">
+                            <ul  className="my-2 grid grid-cols-1 gap-2 p-0 divide-y divide-zinc-200">
 
                               {cart?.map((item) => (
-                                <li key={item.product.id} className="w-full p-3">
-                                  <div className="w-full">
+                                <li key={item.product.id} className=" p-3">
+                                  <div className="">
                                     <div className="flex justify-between">
                                       <div className="flex flex-col items-center">
                                         <Link href={`${baseUrl}product?pId=${item.product.id}`}
@@ -370,10 +424,10 @@ const Checkout = () => {
                                             
                                           </div>
                                       </div>
-                                      <div className="text-zinc-600">
+                                      <div className="w-full text-zinc-600">
                                         <Link href={`${baseUrl}product?pId=${item.product.id}`}
                                           className="text-zinc-900  hover:text-zinc-600 no-underline " >
-                                          <h6 className="text-lg text-right mt-2  font-serif" onClick={() => {
+                                          <h6 className="w-full text-lg text-right m-2  font-serif" onClick={() => {
                                                                                         setOpen(false)
 
                                                                                   } }>{item.product.name}</h6>
@@ -381,16 +435,17 @@ const Checkout = () => {
                                         <p className="font-light text-zinc-600 text-base text-right"> ${item.product.price}</p>
                                       </div>
                                     </div>
+                                    {/*BOTONES AUMENTAR REDUCIR Y REMOVER DE CADA ITEM DE LA CANASTA!!!!*/}
                                     <div className="w-full">
                                       <div className="flex flex-row-reverse justify-between">
-                                        <button
+                                        <button type="button"
                                           className="text-zync-600 text-[9px] h-3 hover:underline"
                                           onClick={() => 
                                           deleteCourseFromCartFunction(item.product)}>
                                           ✕&nbsp;Remove
                                         </button>
                                         <div className="flex items-center">
-                                          <button className={`flex m-1    ${minusButtonClassName}`}
+                                          <button type="button" className={`flex m-1    ${minusButtonClassName}`}
                                               onClick={(e) => {
                                                 setCart((prevCart) => {
                                                   const updatedCart = prevCart.map(
@@ -403,9 +458,9 @@ const Checkout = () => {
                                                   return updatedCart;
                                                 })
                                               }}>                                          
-                                                <span className="-mt-[4px] px-[6px] text-center font-light">-</span>                                          
+                                                <span className="-mt-[2px] pl-[8px] text-center font-light">-</span>                                          
                                           </button>
-                                          <button  className={`flex m-1 ${plusButtonClassName}`}
+                                          <button  type="button" className={`flex m-2 ${plusButtonClassName}`}
                                               onClick={(e) => {
                                               setCart((prevCart) => {
                                                 const updatedCart = prevCart.map((prevItem) =>
@@ -418,7 +473,7 @@ const Checkout = () => {
                                               })
                                             }}>
                                               
-                                                <span className="-mt-[4px] px-[4px] text-center font-light">+</span>   
+                                                <span className="-mt-[2px] pl-[6px] text-center font-light">+</span>   
                                               
                                           </button>
                                         </div>
@@ -445,35 +500,31 @@ const Checkout = () => {
                       <p className="text-zinc-900 font-serif text-sm ">VAT/IVA <span className="font-light text-zinc-900 ">(15%)</span></p>
                       <p className="text-zinc-900 font-light text-sm">USD {(0.15*totalAmountCalculationFunction()).toFixed(2)}</p>
                     </div>
-                     <hr className="p-2"/>
+                     <hr className="p-2 border-zinc-400 "/>
                     <p className="text-zinc-900 font-serif text-lg ">Delivery Methods</p>
                     
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <SelectShipping shipping={shipping}/>
                     </div>
                     
-                    <hr className="p-2"/>
+                    <hr className="p-2 border-zinc-400 "/>
                     
                     <div className="flex justify-between text-base font-medium text-gray-900">
-                      <p className="text-zinc-900 font-serif text-lg ">TOTAL A PAGAR</p>
+                      <p className="text-zinc-900 font-serif text-lg ">TOTAL</p>
                       <div className="flex-col">                      
-                        <p className="text-zinc-900 font-bold text-lg text-right">USD {((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingSelected).toFixed(2)}<br/>
-                        <span className="font-light text-[11px] text-right">Incluye impuestos y envío.</span>
+                        <p className="text-zinc-900 font-bold text-lg text-right">USD {((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2)}<br/>
+                        <span className="font-light text-[11px] text-right">Includes shipping, sales tax.</span>
                         </p>                        
                       </div>
                     </div>
-                    <hr className="p-2"/>
-                    <p className="text-zinc-900 font-serif text-lg ">Payment Methods</p>
-                    
-                    <div className="flex justify-between text-base font-medium text-gray-900">
-                      <SelectPayment payments={payments}/>
-                    </div>
 
+                <hr className="p-2 border-zinc-400 "/>
                     
-
+                    <p className="text-zinc-900 font-serif text-lg ">Invoice information</p>
+  
                     <div className="flex md:flex-row flex-col w-full p-3 m-1">
                       <label htmlFor="email" className=""> 
-                        <span className="text-xs font-light text-zinc-600">Email: </span>       
+                        <span className="text-xs font-light font-serif text-zinc-600">Email: </span>       
                       <input className={inputClassName} onChange={(e)=>{
                                       //setIsPasaChecked(false);
                                       //setIsNoPasaChecked(true);
@@ -488,7 +539,8 @@ const Checkout = () => {
                     </div>
 
                     <div className="flex md:flex-row flex-col w-full p-3 m-1">
-                      <label htmlFor="firstname" className=""> <span className="text-xs font-light text-zinc-600">Firstname: </span>       
+                      <label htmlFor="firstname" className=""> 
+                        <span className="text-xs font-light font-serif text-zinc-600">Firstname: </span>       
                       <input className={inputClassName} onChange={(e)=>{
                                       //setIsPasaChecked(false);
                                       //setIsNoPasaChecked(true);
@@ -502,7 +554,8 @@ const Checkout = () => {
                       
                     </div>
                     <div className="flex md:flex-row flex-col w-full p-3 m-1">
-                      <label htmlFor="lastname" className=""> <span className="text-xs font-light text-znc-600">LastName: </span>       
+                      <label htmlFor="lastname" className=""> 
+                        <span className="text-xs font-light  font-serif text-znc-600">LastName: </span>       
                       <input className={inputClassName} onChange={(e)=>{
                                       //setIsPasaChecked(false);
                                       //setIsNoPasaChecked(true);
@@ -516,7 +569,8 @@ const Checkout = () => {
                       
                     </div>
                      <div className="flex md:flex-row flex-col w-full p-3 m-1">
-                      <label htmlFor="customerId" className=""> <span className="text-xs font-light text-znc-600">Id (National Id / Passport / RUC): </span>       
+                      <label htmlFor="customerId" className=""> 
+                        <span className="text-xs font-light font-serif text-znc-600">Id (National Id / Passport / RUC): </span>       
                       <input className={inputClassName} onChange={(e)=>{
                                       //setIsPasaChecked(false);
                                       //setIsNoPasaChecked(true);
@@ -537,17 +591,26 @@ const Checkout = () => {
                       
                     </div>
                     
+                    <hr className="p-2"/>
+                    <p className="text-zinc-900 font-serif text-lg ">Payment Methods</p>
+                    
+                    <div className="flex justify-between text-base font-medium text-gray-900">
+                      <SelectPayment payments={payments}/>
+                    </div>
+
                     
 
-                    <div className="flex md:flex-row flex-col w-full  p-3 m-1 ">
-                      <label htmlFor="obs" className=" "><span className="text-xs font-light text-znc-600">Notes: </span></label>
+                    <div className="flex md:flex-row flex-col w-full   ">
+                      <label htmlFor="obs" className=" ">
+                        <span className="text-xs font-light font-serif  text-zinc-600">Additional Instructions for your order: </span></label>
                       <textarea 
-                          className={`text-xs font-thin 
+                          className={`text-xs font-thin shadow-sm
                             border-zinc-800 
                             border rounded-md 
                             focus:shadow-sm 
-                            focus:ring-slate-500 focus:ring-1 focus:outline-none
-                            md:w-1/2 w-full
+                            focus:ring-slate-200 focus:ring-1 focus:outline-none
+                            h-20
+                            px-2 py-1
                             
                           `}
                           name="obs" 
@@ -595,9 +658,10 @@ const Checkout = () => {
                     </div>
                     
                   </div>
-                </div>
+          </div>
       </div>
-       <div 
+      
+      <div 
           ref={bottomRef} 
           style={{ height: "1px", width: "100%", position: "absolute", bottom: 0 }} 
         />  

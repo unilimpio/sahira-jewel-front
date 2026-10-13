@@ -6,13 +6,26 @@ import JewelIcon from "../template/icons/JewelIcon";
 import HeartIcon from "../template/icons/HeartIcon";
 import UserIcon from "../template/icons/UserIcon";
 
-const NavBottom = ({ isLoggedIn, user }) => {
+// 1. Importa tu Hook de Autenticación Global
+import { useAuth } from "../../../context/AuthContext"; 
+
+
+
+// 2. Quitamos las props estáticas del paréntesis
+const NavBottom = () => { 
+  // 3. Extraemos el usuario actual directamente desde el Contexto de React
+  const { user } = useAuth(); 
+  
+  // 4. Si el objeto 'user' existe en el contexto, significa que está logueado
+  const isLoggedIn = !!user; 
+
+  
   // Pure monochromatic luxury styling classes
   const linkClass = "flex flex-col items-center justify-center relative py-2 px-3 no-underline text-zinc-400 hover:text-black transition-all duration-300 ease-out group";
   const linkClassActive = "flex flex-col items-center justify-center relative py-2 px-3 no-underline text-black transition-all duration-300 ease-out group";
   
   // Clean, thin iconography boundaries
-  const iconClass = "w-5 h-5 mb-1 transition-transform duration-300 ease-out group-hover:-translate-y-[2px] stroke-[1.25] stroke-zinc-400 group-hover:stroke-black";
+  const iconClass = "w-5 h-5 mb-1 transition-transform duration-300 ease-out group-hover:-translate-y-[2px] stroke-[1.25] stroke-zinc-400 group-hover:stroke-black ";
 
   return (
     <div className="sm:hidden fixed bottom-5 left-0 right-0 z-50 px-4 w-full flex justify-center pointer-events-none">

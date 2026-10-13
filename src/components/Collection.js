@@ -31,7 +31,7 @@ const wrapperClass = `mt-12 w-full h-full p-4 mb-4  mx-auto `;
 
 
 
-export default function Collection () {
+export default function Collection ({cart, setCart}) {
 
   const [searchParams, setSearchParams] = useSearchParams();
   
@@ -308,7 +308,7 @@ export default function Collection () {
   
   return (
     
-    <Template bottomIsVisible={bottomIsVisible} >
+    <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart} >
       <div 
         className={` mt-10 sm:mt-16    `+wrapperClass}>
               

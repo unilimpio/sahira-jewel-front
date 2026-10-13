@@ -21,7 +21,7 @@ import image2 from '../assets/sj-amparito.jpeg'
 
 const wrapperClass = `mt-12 w-full h-full p-4 mb-4  mx-auto `;
 
-export default function About () {
+export default function About ({cart,setCart}) {
   
   const user = AuthService.getCurrentUser();
 
@@ -62,7 +62,7 @@ export default function About () {
   
     return (
     
-      <Template bottomIsVisible={bottomIsVisible}>
+      <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart}>
 
       <div className={`  ${wrapperClass}`}>
 
@@ -150,14 +150,7 @@ For years, I questioned why my family chose an ancient, uncommon name when no on
           />
         </div>
 
-        {/* Feature section */}
-        <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-40 lg:px-8">
-          
-          
-        </div>
-
-        
-
+       
         
       </div>
       <div 

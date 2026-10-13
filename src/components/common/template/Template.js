@@ -24,12 +24,17 @@ const user = AuthService.getCurrentUser();
 //import AuthVerify from "./common/AuthVerify";
 //import EventBus from "./common/EventBus";
 
-const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAmountCalculationFunction, addCourseToCartFunction, bottomIsVisible, children}) => {
+const Template = ({message, 
+                    cart, setCart,
+                    //isCartOpen, setIsCartOpen, 
+                    deleteCourseFromCartFunction, totalAmountCalculationFunction, 
+                    addCourseToCartFunction, bottomIsVisible, children}) => {
   //const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   //const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+   // ✨ LA SOLUCIÓN: El Template debe gobernar de forma autónoma si el modal está abierto o cerrado
+  const [isCartOpen, setIsCartOpen] = useState(false); 
 
 
   useEffect(() => {
@@ -51,7 +56,7 @@ const Template = ({message, cart, setCart, deleteCourseFromCartFunction, totalAm
     
   <div className="relative ">
 
-    <Header  isLoggedIn={isLoggedIn} />
+    <Header  isLoggedIn={isLoggedIn} cart={cart} setCart={setCart} isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen}/>
     
    
 

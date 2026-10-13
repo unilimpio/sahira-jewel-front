@@ -53,7 +53,7 @@ function usePersistedState(key, defaultValue) {
   return [state, setState];
 }
 
-export default function Product () {
+export default function Product ({cart, setCart}) {
 
   const options = {
   sizes: [
@@ -126,7 +126,7 @@ export default function Product () {
 
   const [searchCourse, setSearchCourse] = useState('');
 
-  const [cart, setCart] = usePersistedState('sjCart', []);
+  //const [cart, setCart] = usePersistedState('sjCart', []);
 
   const wrapperClass = `w-full h-full p-3  mx-auto `;  
   const [product, setProduct] = useState(false);
@@ -458,7 +458,7 @@ export default function Product () {
   
   return (
     
-    <Template cart={cart} setCart={setCart}>
+    <Template cart={cart} setCart={setCart} >
       <div 
         className={`      `+wrapperClass}>
         

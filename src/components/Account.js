@@ -6,7 +6,7 @@ import Template from "./common/template/Template";
 
 const user = AuthService.getCurrentUser();
 
-const Account = () => {
+const Account = ({cart,setCart}) => {
 
 
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ const Account = () => {
   }, [navigate]);
 
   return (
-    <Template bottomIsVisible={bottomIsVisible}>
+    <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart} >
       <div className="max-w-3xl mx-auto mt-16 px-6 mb-24 font-sans antialiased text-zinc-800 tracking-wide">
         
         {/* Page Header */}

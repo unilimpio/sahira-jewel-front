@@ -33,31 +33,33 @@ function usePersistedState(key, defaultValue) {
 
 export default function Cart({
   className, iconClassName, buttonClassName,
-  //cart,
-  //setCart,
+  cart,
+  setCart,
+  open, setOpen
 	//deleteCourseFromCartFunction,
 	//totalAmountCalculationFunction,
 	
 }) {
 
 const navigate = useNavigate();
-const [open, setOpen] = useState(false)  
-const [cart, setCart] = usePersistedState('sjCart', []);
+//const [open, setOpen] = useState(false)  
+//const [cart, setCart] = usePersistedState('sjCart', []);
 
 const deleteCourseFromCartFunction = (course) => {
-    const updatedCart = cart
+    // Si cart no existe, usa un arreglo vacío para que .filter no falle
+  const updatedCart = (cart || [])
               .filter(item => item.product.id !== course.id);
     setCart(updatedCart);
   };
 
   const totalAmountCalculationFunction = () => {
-    return cart
+   return (cart || [])
       .reduce((total, item) => 
             total + item.product.price * item.quantity, 0);
   };
  
-  const minusButtonClassName = `bg-neutral-100 h-4 w-4 rounded-full border drop-shadow-md p-0 m-0`;
-  const plusButtonClassName = `bg-neutral-100 h-6 w-6 rounded-full border drop-shadow-md p-0 m-0`;
+  const minusButtonClassName = `bg-white h-6 w-6 rounded-md border-1 border-zinc-400 p-0 m-0`;
+  const plusButtonClassName = `bg-white h-6 w-6 rounded-md border-1 border-zinc-400 p-0 m-0`;
   const minusPlusSpanClassName = ` text-base font-semibold`;  
   
   console.log('the cart is at this momento:',cart)
@@ -86,10 +88,34 @@ const deleteCourseFromCartFunction = (course) => {
          
          
       </button>
-      <Dialog open={open} onClose={setOpen} className="fixed top-0 right-0 z-50 ">
+      {/*
+      
+      
+      <Dialog open={open}   onClose={() => {
+              // 🕵️‍♂️ Capturamos el elemento que tenía el foco justo en el momento del cierre
+              const activeEl = document.activeElement;
+              
+              // ⛔ Si el usuario hizo clic en tus botones, cancelamos el cierre del modal
+              if (
+                activeEl && 
+                (activeEl.tagName === 'BUTTON' || 
+                activeEl.closest('button') || 
+                activeEl.innerText?.includes('+') || 
+                activeEl.innerText?.includes('-') || 
+                activeEl.innerText?.toLowerCase().includes('remove'))
+              ) {
+                return; 
+              }
+              
+              // ✅ Si no son los botones (es la "X" o un clic fuera), se cierra normalmente
+              setOpen(false);
+            }} 
+          className="fixed top-0 right-0 z-50 "
+      >
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity duration-500 ease-in-out data-[closed]:opacity-0"
+          
         />
 
         <div className="fixed inset-0 ">
@@ -102,7 +128,7 @@ const deleteCourseFromCartFunction = (course) => {
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                     <div className="flex items-start justify-between bg-white ">
-                      <DialogTitle className=" text-lg font-serif font-script text-black flex flex-row">
+                      <DialogTitle className="my-3 text-lg font-serif font-script text-black flex flex-row">
                         <CartIcon className={`-mt-4 -ml-3  ${className} `} iconClassName={` w-7 h-7 fill-black `} />
 
                         Your Shopping cart</DialogTitle>
@@ -128,10 +154,11 @@ const deleteCourseFromCartFunction = (course) => {
                       <div className=" bg-white h-[50vh]  overflow-y-scroll">
                         <div className="mt-4">
                           <ul  className="-my-4 p-0 divide-y divide-gray-200">
-                            {cart.map((item) => (
-                              <li key={item.product.id} className="p-1 mt-2">
+                            {cart &&
+                              cart.map((item) => (
+                              <li key={item.product.id} className="p-3 ">
                                 <div className="">
-                                  <div className="flex">
+                                  <div className="flex justify-between">
                                     <div className="flex flex-col items-center">
                                       <Link href={`${baseUrl}product?pId=${item.product.id}`}
                                         className="text-black  hover:text-zinc-600 no-underline " >
@@ -160,44 +187,51 @@ const deleteCourseFromCartFunction = (course) => {
                                   </div>
                                   <div className="w-full">
                                     <div className="flex flex-row-reverse justify-between">
-                                      <button
-                                        className="text-zinc-700 text-[9px] h-3 hover:underline"
-                                        onClick={() => 
-                                        deleteCourseFromCartFunction(item.product)}>
-                                        Remove
-                                      </button>
+                                      <button type="button"
+                                          className="text-zync-600 text-[9px] h-3 hover:underline"
+                                          onClick={(e) => {
+
+                                           // e.stopPropagation();
+                                            deleteCourseFromCartFunction(item.product);
+                                          }
+                                          }>
+                                          ✕&nbsp;Remove
+                                        </button>
                                       <div className="flex items-center">
-                                        <button className={`flex m-1    ${minusButtonClassName}`}
-                                            onClick={(e) => {
+                                        <button type="button" className={`flex m-1    ${minusButtonClassName}`}
+                                              onClick={(e) => {
+                                                //e.stopPropagation();
+                                                setCart((prevCart) => {
+                                                  const updatedCart = prevCart.map(
+                                                  (prevItem) =>
+                                                  prevItem.product.id === item.product.id
+                                                      ? { ...prevItem, quantity:
+                                                      Math.max(item.quantity - 1, 0) }
+                                                      : prevItem
+                                                  );
+                                                  return updatedCart;
+                                                })
+                                              }}>                                          
+                                                <span className="-mt-[2px] pl-[8px] text-center font-light">-</span>                                          
+                                          </button>
+                                          <button  type="button" className={`flex m-2 ${plusButtonClassName}`}
+                                              onClick={(e) => {
+                                                
+                                               // e.stopPropagation();
                                               setCart((prevCart) => {
-                                                const updatedCart = prevCart.map(
-                                                (prevItem) =>
-                                                prevItem.product.id === item.product.id
-                                                    ? { ...prevItem, quantity:
-                                                    Math.max(item.quantity - 1, 0) }
-                                                    : prevItem
+                                                const updatedCart = prevCart.map((prevItem) =>
+                                                            prevItem.product.id === item.product.id
+                                                                ? { ...prevItem, quantity: 
+                                                                item.quantity + 1 }
+                                                                : prevItem
                                                 );
                                                 return updatedCart;
                                               })
-                                            }}>                                          
-                                              <span className="-mt-1.5 px-1 text-center font-light">-</span>                                          
-                                        </button>
-                                        <button  className={`flex m-1  ${plusButtonClassName}`}
-                                            onClick={(e) => {
-                                            setCart((prevCart) => {
-                                              const updatedCart = prevCart.map((prevItem) =>
-                                                          prevItem.product.id === item.product.id
-                                                              ? { ...prevItem, quantity: 
-                                                              item.quantity + 1 }
-                                                              : prevItem
-                                              );
-                                              return updatedCart;
-                                            })
-                                          }}>
-                                            
-                                              <span className="-mt-0.5 px-1.5 text-center font-light">+</span>   
-                                            
-                                        </button>
+                                            }}>
+                                              
+                                                <span className="-mt-[2px] pl-[7px] text-center font-light">+</span>   
+                                              
+                                          </button>
                                       </div>
                                       
                                     </div>
@@ -210,7 +244,7 @@ const deleteCourseFromCartFunction = (course) => {
                       </div>  
                     )  }
                   </div>
-
+                  {cart &&
                   <div className="border-t border-gray-200 px-4 py-4 sm:px-6">
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <p className="text-zinc-600">Subtotal</p>
@@ -240,12 +274,15 @@ const deleteCourseFromCartFunction = (course) => {
                       </p>
                     </div>
                   </div>
+                  }
                 </div>
               </DialogPanel>
             </div>
           </div>
         </div>
       </Dialog>
+
+      */}
     </>
   )
 }

@@ -38,7 +38,7 @@ export default function GuestPhoneInput({ onChange }) {
   return (
     <div className="flex md:flex-row flex-col  ">
       <label htmlFor="phone-number" className="">
-       <span className=" text-xs font-light  text-zinc-600"> Mobile Number (For order updates): </span>
+       <span className=" font-serif text-xs font-light  text-zinc-600"> Mobile Number (For order updates): </span>
       
       
       <div className="inline-flex mt-1 rounded-md shadow-sm border border-gray-300 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 overflow-hidden bg-white">

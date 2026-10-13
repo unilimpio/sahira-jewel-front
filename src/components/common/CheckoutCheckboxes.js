@@ -35,7 +35,7 @@ export default function CheckoutCheckboxes({ onCheckboxChange }) {
           />
         </div>
         <div className="ml-3 text-xs">
-          <label htmlFor="acceptTerms" className="font-light text-gray-700 cursor-pointer">
+          <label htmlFor="acceptTerms" className="font-serif text-gray-700 cursor-pointer">
             I agree to the <a href="/sales-policy" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline hover:text-indigo-500">Store Sales Policy</a> and Terms of Service. <span className="text-red-500">*</span>
           </label>
         </div>
@@ -70,7 +70,7 @@ export default function CheckoutCheckboxes({ onCheckboxChange }) {
               type="checkbox"
               checked={formData.createAccount}
               onChange={handleChange}
-              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              className="h-4 w-4 rounded  border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
             />
           </div>
           <div className="ml-3 text-xs">
@@ -82,8 +82,8 @@ export default function CheckoutCheckboxes({ onCheckboxChange }) {
         
         {/* Conditional helper text that smoothly updates based on selection */}
         {formData.createAccount && (
-          <div className="ml-7 mt-1.5 text-xs text-indigo-600 bg-indigo-50 p-2.5 rounded-md border border-indigo-100 animate-fadeIn">
-            ✨ Great choice! You will be asked to set up a secure password **after your order is processed**, using your checkout email address.
+          <div className="ml-7 mt-1.5 text-xs font-light text-indigo-600 bg-indigo-50 p-2.5 rounded-md border border-indigo-100 animate-fadeIn">
+            ✨ <span className="font-semibold"> Great choice!</span> You will be asked to set up a secure password **after your order is processed**, using your checkout email address.
           </div>
         )}
       </div>

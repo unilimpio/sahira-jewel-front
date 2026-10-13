@@ -26,7 +26,7 @@ const Footer = () => {
   return (
     
       <footer className=" w-full flex-col z-40  bg-white content-end mb-24 sm:mb-0">
-        <div className="mx-auto w-[85vw] sm:w-full mt-24 mb-56">
+        <div className="mx-auto w-[85vw] sm:w-full mt-24 mb-20   md:mb-44">
               <div className="flex flex-col justify-center items-center">
                 <h2 className={'text-center font-light text-zinc-400 text-4xl my-8'}>For personalized guidance, our jewelry concierge is at your service.</h2>
                 <WhatsAppConcierge className="w-fit "/>

@@ -15,14 +15,14 @@ const wrapperClass = `w-full h-full p-4 mb-4 mx-auto `;
 
  
 
-export default function Contact () {
+export default function Contact ({cart,setCart,isCartOpen,setIsCartOpen}) {
   
   const user = AuthService.getCurrentUser();
 
   
     return (
     
-      <Template>
+      <Template cart={cart} setCart={setCart} isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen}>
       <div className={` `+wrapperClass}>
 
         

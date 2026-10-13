@@ -28,7 +28,7 @@ const backUrl = process.env.REACT_APP_BACK_URL;
 const baseUrl = process.env.REACT_APP_BASE_URL;
 const pathToImg = "assets/uploads/"
 
-export default function Home () {
+export default function Home ({cart, setCart}) {
   
  
 
@@ -117,7 +117,7 @@ export default function Home () {
     return (
     
 
-      <Template bottomIsVisible={bottomIsVisible}>
+      <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart} >
 
         <div className={`mt-12 `+wrapperClass}>
           

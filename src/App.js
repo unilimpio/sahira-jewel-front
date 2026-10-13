@@ -47,36 +47,37 @@ function usePersistedState(key, defaultValue) {
 
 const App = () => {
 
-   
+const [cart, setCart] = usePersistedState('sjCart', []);
+//const [isCartOpen, setIsCartOpen] = useState(false); // ✨ Mueve el estado 'open' aquí   
 
   return (
     
       
       <div id="routes" className=" " >
           <Routes>
-            <Route path={"/"} element={<Home />} />
-            <Route path={"/home"} element={<Home />} />
+            <Route path={"/"} element={<Home cart={cart} setCart={setCart} />} />
+            <Route path={"/home"} element={<Home cart={cart} setCart={setCart}  />} />
             
-            <Route path={"/collection"} element={<Collection />} />
-            <Route path={"/product"} element={<Product />} />
-            <Route path={"/gift"} element={<Gift />} />
+            <Route path={"/collection"} element={<Collection cart={cart} setCart={setCart}  />} />
+            <Route path={"/product"} element={<Product cart={cart} setCart={setCart}  />} />
+            <Route path={"/gift"} element={<Gift cart={cart} setCart={setCart}  />} />
             
-            <Route path={"/about"} element={<About />} />
-            <Route path={"/contact"} element={<Contact />} />
+            <Route path={"/about"} element={<About cart={cart} setCart={setCart}  />} />
+            <Route path={"/contact"} element={<Contact cart={cart} setCart={setCart}  />} />
             
             <Route path={"/login"} element={<Login />} />
             <Route path={"/logout"} element={<Logout />} />
             <Route path={"/register"} element={<Register />} />
             
-            <Route path={"/checkout"} element={<Checkout />} />
+            <Route path={"/checkout"} element={<Checkout cart={cart} setCart={setCart}  />} />
              <Route path={"/thankyou/:newOrderId"} element={<Thankyou />} />
 
             <Route path={"/privacy"} element={<Privacy />} />
             
             <Route element={<ProtectedRoute />}>
-              <Route path={"/account"} element={<Account />} />
-              <Route path={"/wishlist"} element={<Wishlist />} />
-              <Route path={"/account/orders"} element={<MyOrders />} />
+              <Route path={"/account"} element={<Account cart={cart} setCart={setCart}  />} />
+              <Route path={"/wishlist"} element={<Wishlist cart={cart} setCart={setCart} />} />
+              <Route path={"/account/orders"} element={<MyOrders cart={cart} setCart={setCart}  />} />
 
               {/* 
               <Route path="/orders" element={<Orders />} />

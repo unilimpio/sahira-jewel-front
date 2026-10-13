@@ -32,7 +32,7 @@ function usePersistedState(key, defaultValue) {
   return [state, setState];
 }
 
-export default function Wishlist () {
+export default function Wishlist ({cart,setCart}) {
   
   const navigate = useNavigate();
 
@@ -50,7 +50,6 @@ export default function Wishlist () {
 
   const [searchCourse, setSearchCourse] = useState('');
   
-    const [cart, setCart] = usePersistedState('sjCart', []);
 
   const [product, setProduct] = useState(false);
 
@@ -320,9 +319,9 @@ const addCourseToCartFunction = (course) => {
                               }
                             
                             <button  name="remove" value={row.id}
-                                        className="static text-red-300 text-[9px]  hover:underline"
+                                        className="static text-zinc-900 text-[9px]  hover:underline"
                                         onClick={handleRemove}>
-                                        Remove
+                                        ✕&nbsp;Remove
                             </button>
                             </div>
                           </td>
@@ -357,10 +356,11 @@ const addCourseToCartFunction = (course) => {
   return (
     
 
-      <Template bottomIsVisible={bottomIsVisible} >
+      <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart} >
+        
         {flashMessage && (
                           
-            <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage} divCss={``} />
+            <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
                          
         )}
         <div className={`mt-12 `+wrapperClass}>
