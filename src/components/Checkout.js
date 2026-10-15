@@ -292,7 +292,7 @@ const Checkout = ({cart, setCart}) => {
   const totalCalculated = ((0.15 * totalAmountCalculationFunction()) + totalAmountCalculationFunction() + shippingCost).toFixed(2);
 
   const orderPayload = {
-    user_id: user.uId || null,
+    user_id: user ? user.uId : null,
     cart_data: cart,
     shipping_method: shippingSelected,
     totalAmount: totalCalculated,

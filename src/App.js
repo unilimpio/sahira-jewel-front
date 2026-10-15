@@ -65,9 +65,9 @@ const [cart, setCart] = usePersistedState('sjCart', []);
             <Route path={"/about"} element={<About cart={cart} setCart={setCart}  />} />
             <Route path={"/contact"} element={<Contact cart={cart} setCart={setCart}  />} />
             
-            <Route path={"/login"} element={<Login />} />
-            <Route path={"/logout"} element={<Logout />} />
-            <Route path={"/register"} element={<Register />} />
+            <Route path={"/login"} element={<Login cart={cart} setCart={setCart}/>} />
+            <Route path={"/logout"} element={<Logout cart={cart} setCart={setCart}/>} />
+            <Route path={"/register"} element={<Register cart={cart} setCart={setCart}/>} />
             
             <Route path={"/checkout"} element={<Checkout cart={cart} setCart={setCart}  />} />
              <Route path={"/thankyou/:newOrderId"} element={<Thankyou />} />

@@ -9,7 +9,7 @@ import AuthService from "../services/auth.service";
 import { useAuth } from "../context/AuthContext"; // 1. Importa tu nuevo Hook de contexto
 
 
-const Login = () => { 
+const Login = ({cart, setCart}) => { 
   
 
   const [email, setEmail] = useState("");
@@ -141,7 +141,7 @@ const Login = () => {
 
   return (
 
-    <Template>
+    <Template cart={cart} setCart={setCart}>
       <div className={wrapperClass}>
         <div className=" w-full z-0 m-2 p-2 sm-p-4 ">
        
