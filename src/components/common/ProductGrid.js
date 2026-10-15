@@ -16,12 +16,19 @@ export default function ProductGrid({products}) {
       >
         {/* Contenedor de la Imagen con Aspecto Fijo y Borde Sutil */}
         <div className="aspect-[3/4] w-full overflow-hidden bg-zinc-50 dark:bg-zinc-900 rounded-sm outline outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10">
-          <Link to={`/product?pId=${item.product_id}`} className="block h-full w-full">
+          <Link to={`/product?pId=${item.product_id}`} className="block relative h-full w-full">
             <img
               alt={item.product_name}
               src={`${backUrl}${pathToImg}${item.product_imageSrc}`}
               className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
+            {
+              parseInt(item.product_is_sold_out) &&
+                <div className="absolute w-full z-40  bottom-2 p-1">
+                  <span className="fles w-24 text-zinc-500 font-serif text-xs text-center ring-1 ring-zinc-300 bg-white bg-opacity-75 rounded-full p-2">Sold Out</span>
+                </div>
+
+            }
           </Link>
         </div>
 

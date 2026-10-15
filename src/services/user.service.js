@@ -182,6 +182,34 @@ const orderConfirm = (orderPayload) => {
   
 };
 
+const payLinkRequest = (payload) => {  
+  
+  return axios
+  .post(API_URL + "setLinkPago"  , payload,
+    { headers: {
+          'Content-Type': 'application/json',
+        }})
+  .catch(function (error){
+    console.log(error)
+    
+  });
+  
+};
+
+const paymentConfirm = (payload) => {  
+  
+  return axios
+  .post(API_URL + "orderConfirm"  , payload,
+    { headers: {
+          'Content-Type': 'application/json'
+        }})
+  .catch(function (error){
+    console.log(error)
+    
+  });
+  
+};
+
 const getOrderItems = (user,orderId) => {
   
   return axios
@@ -258,7 +286,9 @@ const UserService = {
   setWish,
   removeWish,
   getProductFromWish,
-  
+  orderConfirm,
+  payLinkRequest,
+  paymentConfirm,
 }
 
 export default UserService;

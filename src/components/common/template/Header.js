@@ -334,7 +334,7 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                 }
           
             </nav>
-            <Dialog open={isCartOpen}   onClose={() => {
+      <Dialog open={isCartOpen}   onClose={() => {
               // 🕵️‍♂️ Capturamos el elemento que tenía el foco justo en el momento del cierre
               const activeEl = document.activeElement;
               
@@ -363,13 +363,13 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
 
         <div className="fixed inset-0 ">
           <div className="absolute inset-0 ">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16 ">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-24  ">
               <DialogPanel
                 transition
-                className="pointer-events-auto w-full max-w-md transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
+                className="pointer-events-auto w-full max-w-md  transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
               >
-                <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
-                  <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+                <div className="flex h-full flex-col overflow-hidden bg-white shadow-xl">
+                  <div className="flex-1 overflow-hidden p-4 sm:p-6">
                     <div className="flex items-start justify-between bg-white ">
                       <DialogTitle className="my-3 text-lg font-serif font-script text-black flex flex-row">
                         <CartIcon className={`-mt-4 -ml-3 p-3 `} iconClassName={` w-7 h-7 fill-black `} />
@@ -390,8 +390,10 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                         </button>
                       </div>
                     </div>
-                    {cart?.lenght === 0  ? (
-	                    <div className="text-sm font-thin text-zinc-600">Tu bolsa de compras esta vacia, llenala de productos maravillosos...</div>
+                    {cart?.length === 0 || totalAmountCalculationFunction() === 0 ? (
+	                    <div className="flex text-sm font-thin text-zinc-600">
+                        Your shopping bag is empty... fill it with gorgeous items from our collection.
+                      </div>
 	                  ) : (
 
                       <div className=" bg-white h-[50vh]  overflow-y-scroll">
@@ -399,6 +401,7 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                           <ul  className="-my-4 p-0 divide-y divide-gray-200">
                             {cart &&
                               cart.map((item) => (
+                                item.quantity > 0 &&
                               <li key={item.product.id} className="p-3 ">
                                 <div className="">
                                   <div className="flex justify-between">
@@ -417,15 +420,19 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                                           
                                         </div>
                                     </div>
-                                    <div className="text-zinc-600 m-2">
+                                    <div className="text-zinc-600  justify-right">
                                       <Link to={`${baseUrl}product?pId=${item.product.id}`}
                                         className="text-black  hover:text-zinc-600 no-underline " >
-                                        <h6 className="text-sm mt-2 font-serif" onClick={() => {
+                                        <h6 className="text-sm text-right mt-2 font-serif" onClick={() => {
                                                                                       setIsCartOpen(false)
 
                                                                                 } }>{item.product.name}</h6>
                                       </Link>
-                                      <p className="font-light text-sm "> ${item.product.price}</p>
+                                      <p className="font-light text-sm text-right">
+                                          <span className="text-[8px] font-extralight"></span> 
+                                          ${item.product.price} 
+                                          <span className="text-[8px] font-extralight ml-2"> USD / each </span>
+                                      </p>
                                     </div>
                                   </div>
                                   <div className="w-full">
@@ -487,7 +494,7 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                       </div>  
                     )  }
                   </div>
-                  {cart &&
+                  {cart && cart.length > 0 && totalAmountCalculationFunction() > 0 &&
                   <div className="border-t border-gray-200 px-4 py-4 sm:px-6">
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <p className="text-zinc-600 font-serif">Subtotal</p>
@@ -497,8 +504,7 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                     <div className="mt-2 flex  justify-center">
                       <Link to="/checkout"
                         className="bg-white drop-shadow-md no-underline disabled:drop-shadow-none text-black rounded-md p-3 disabled:bg-zinc-200 disabled:text-zinc-400 transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-black"
-                        disabled={cart.length === 0 || 
-                        totalAmountCalculationFunction() === 0}
+                        
                       >
                         <span className="font-serif">Check Out</span>
                       </Link>

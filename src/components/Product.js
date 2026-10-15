@@ -382,7 +382,17 @@ export default function Product ({cart, setCart}) {
               
 
               <div className="mt-10 flex">
-                <Add2CartButton className={"bg-white"} addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
+                {
+                  parseInt(product.is_sold_out) ?
+                  (
+                    <button type="button" className="ring-1 ring-zinc-300  font-serif rounded-lg px-3 py-2 text-zinc-300" disabled>
+                      Sold Out 
+                    </button>) 
+                  :
+                  (
+                    <Add2CartButton className={"bg-white"} addCourseToCartFunction={addCourseToCartFunction}>Add to bag</Add2CartButton>
+                  ) 
+                }
 
               </div>
             </form>

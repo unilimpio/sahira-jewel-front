@@ -5,6 +5,10 @@ import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 import Template from "./common/template/Template";
 
+// 1. Importa tu Hook de Autenticación Global
+import { useAuth } from "../context/AuthContext"; 
+
+
 import { getCountries, getCountryCallingCode } from 'react-phone-number-input/input';
 import en from 'react-phone-number-input/locale/en.json';
 
@@ -12,14 +16,17 @@ import GuestPhoneInput from './common/GuestPhoneInput';
 import CheckoutCheckboxes from './common/CheckoutCheckboxes';
 
 // Optional: Import standard flags CSS if you want to use the package's built-in flags
-// import 'react-phone-number-input/style.css';
+ import 'react-phone-number-input/style.css';
 
- const user = AuthService.getCurrentUser();
+ //const user = AuthService.getCurrentUser();
 
  
 const pathToImg = "assets/uploads/"
 const backUrl = process.env.REACT_APP_BACK_URL;
 const baseUrl = process.env.REACT_APP_BASE_URL;
+const payphToken = `
+3pzXVx6dwrfYV6eEkrjg2e4F8xXgV7mhTiATjj1re5BYdL8RUr8W2tDfqbpj2vpUXcBwHpFzTcfiNYxBQC0NSXvJpln8bV40jvtuaFMOlwDbxxnvanxPwPFmrS-b-wD_diTwq1ppLmmCouDBUVajUyxmvzEnE3xEMegS5gFq91DsDxyvVhr1EJvQ4S6IIKxvGGUUPwQNI2xS3QF8COy9OD9gybCy1v2J3jv4rR7hz28YKVhUPmTaXPgZVKrqfusaqw6SKZrDdYzES-HDMKl05w8zLKJA4E92RNon96suwn79gn3P7Bhv-lffm13RUg2sJTxh-w
+`
 
 
  function usePersistedState(key, defaultValue) {
@@ -37,6 +44,9 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
  
  
 const Checkout = ({cart, setCart}) => {
+
+   // 3. Extraemos el usuario actual directamente desde el Contexto de React
+    const { user } = useAuth(); 
   
   const wrapperClass = `max-w-3xl mx-auto mt-16 px-6 mb-24 font-sans antialiased text-zinc-800 tracking-wide `;
   
@@ -77,6 +87,7 @@ const Checkout = ({cart, setCart}) => {
 
   const [preferences, setPreferences] = useState({
     acceptTerms: false,
+    acceptDataTerms: false,
     subscribeNewsletter: false,
     createAccount: false,
   });
@@ -129,11 +140,7 @@ const Checkout = ({cart, setCart}) => {
       console.log('Your cart seems to be empty, maybe you timed out? Please try again and sorry for the inconvenience...Redirecting you to the Home page now...',cart)
 
       navigate('/');
-    }
-
-   
-
-      
+    }      
     
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -163,7 +170,7 @@ const Checkout = ({cart, setCart}) => {
   function SelectPayment({payments}){
       
       const handleChange = (event)=>{
-        
+        console.log('payment option changed to ',event.target.value)
         setPaymentSelected(event.target.value)
         
         
@@ -188,14 +195,7 @@ const Checkout = ({cart, setCart}) => {
                 }
               
               </select>
-              {
-                paymentSelected &&
-                (              
-                  <div className="ml-7 mt-1.5 text-xs text-indigo-600 font-light bg-indigo-50 p-2.5 rounded-md border border-indigo-100 animate-fadeIn">
-                    ℹ️ You will receive a secure payment link via whatsapp or sms to the number assigned to this order.
-                  </div>
-                )
-              }
+             
 
             
             
@@ -211,7 +211,7 @@ const Checkout = ({cart, setCart}) => {
       
       const handleChange = (event)=>{
         
-
+        console.log('shippoing option changed to ',event.target.value)
         const methodId = event.target.value
         setShippingSelected(methodId)
 
@@ -281,10 +281,11 @@ const Checkout = ({cart, setCart}) => {
     
   } 
 
-  const handlePay = (event) => {
+  const handlePay = async (event) => {
 
     event.preventDefault();
 
+    console.log("Processing payment")
     setIsSubmitting(true);  
     //setLoading(true);
 
@@ -295,13 +296,19 @@ const Checkout = ({cart, setCart}) => {
 
     const formData = new FormData(form);
 
-    
+    const fecha = new Date();
+    const yyyymmdd = fecha.toISOString().slice(0,10).replace(/-/g,"");
+    const hhmmss = fecha.toTimeString().split(' ')[0].replace(/:/g,"");
+    const random = Math.floor(1000 + Math.random() * 9000); // 4 dígitos aleatorios
+
+    const clientTxId = `transaccion-${yyyymmdd}-${hhmmss}-${random}`;
+    console.log(clientTxId); 
 
     //const onSubmitShipping = formData.get("shipping-method");
     //const onSubmitPayment = formData.get("payment-method");
      
 
-      if (isSubmitting) {
+      //if (isSubmitting) {
 
             const customerInfo = {
               email : email,
@@ -319,15 +326,36 @@ const Checkout = ({cart, setCart}) => {
               
               shipping_method: shippingSelected,
               totalAmount: ((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2),
-              
+              tx_id: clientTxId,
               customerInfo : customerInfo,
               payment_method: paymentSelected,
               obs: obs,
               acceptTerms: preferences.acceptTerms,
+              acceptDataTerms: preferences.acceptDataTerms,
               isSubscribed: preferences.subscribeNewsletter,
               willCreateAccount: preferences.createAccount, // If true, your backend
               
-            };  
+            }; 
+
+            const paymentPayload = {
+                "amount": ((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2)*100,  
+                "amountWithoutTax": ((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2)*100,   
+                "amountWithTax": 0,  
+                "tax": 0, 
+                "service": 0, 
+                "tip": 0, 
+                "currency": "USD", 
+                "reference": "Pago por API Link",    
+                "clientTransactionId": clientTxId,
+                 
+                "additionalData": "Descripción Extra", 
+                "oneTime": true,  
+                "expireIn": 0,    
+                "isAmountEditable": false,
+                 "email" : email,       
+                "phoneNumber" : fullPhoneNumber,    
+                "documentId" : customerId,     
+              }
 
             
             try{
@@ -335,10 +363,10 @@ const Checkout = ({cart, setCart}) => {
               UserService.orderConfirm(orderPayload).then(
 
                 (response)=>{
+                    console.log('trying to orderConfirm',response)
+                    setNewOrderId(response.data?.order_id);
 
-                    const newOrderId = response.data?.order_id;
-
-                    navigate(`/thankyou/${newOrderId}`)
+                    
 
                 },
                 (error)=>{
@@ -350,6 +378,24 @@ const Checkout = ({cart, setCart}) => {
 
               )
 
+            console.log('starting payohone sequence')
+            
+              UserService.payLinkRequest(paymentPayload)
+            .then(
+
+              (response)=>{
+                  console.log('there is a response from payphone API',response)
+                  // Open in a new window/tab
+                  window.open(response, "_blank", "noopener,noreferrer");
+              },
+              (error)=>{
+                console.log('there was an error getting the pay link from payphone platform',error)
+              }
+            )
+            
+            
+             
+            
 
 
 
@@ -359,13 +405,16 @@ const Checkout = ({cart, setCart}) => {
               alert('Payment failed. Please try again.');
 
             } finally {
+
               localStorage.removeItem('sjCart');
               setIsSubmitting(false);
+              navigate(`/thankyou/${newOrderId}`)
+
             }
 
     
       
-      };
+     // };
   }
 
   function handleObsChange(e){
@@ -377,10 +426,21 @@ const Checkout = ({cart, setCart}) => {
           return setObs(value);
   
   }
+
+   // Usamos un ref para controlar de forma segura el ciclo de vida del contenedor
+  const contenedorRef = useRef(null);
+  
+
+  
+
+  // 3. Este segundo useEffect se dispara SOLO cuando el JS externo se cargó
+  // Y cuando React ya pintó físicamente el DIV en el DOM (contenedorRef.current ya no es null)
+ // ESCENCIAL: Añadimos 'paymentSelected' a las dependencias de este useEffect
+
   
 
   return (
-    <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart}>
+    <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart} >
       <div className={` ${wrapperClass} `}>
         {/* Page Header */}
         <header className="border-b border-zinc-100 pt-8 pb-3">
@@ -393,17 +453,21 @@ const Checkout = ({cart, setCart}) => {
         </header>
 
           <div className=" h-auto flex-col  bg-white ">
-                  <div className="mx-auto  p-2">
+            {
+              cart.filter((item)=>item.quantity > 0).length > 0 && 
+                        totalAmountCalculationFunction() > 0  ? 
+                (
+                <form onSubmit={handlePay}>
+                  <div className="mx-auto  p-2">    
                     
-                    {cart?.lenght === 0 || !cart  ? (
-	                    <div className=" text-sm font-thin text-zinc-600">Oops...esto es extraño, aquí no hay nada para comprar...</div>
-	                  ) : (
-                      <form onSubmit={handlePay}>
+                      
                         <div className=" bg-white h-auto ">
                           <div className="">
                             <ul  className="my-2 grid grid-cols-1 gap-2 p-0 divide-y divide-zinc-200">
 
-                              {cart?.map((item) => (
+                              {
+                              cart?.map((item) => (
+                                item.quantity > 0 &&
                                 <li key={item.product.id} className=" p-3">
                                   <div className="">
                                     <div className="flex justify-between">
@@ -458,7 +522,7 @@ const Checkout = ({cart, setCart}) => {
                                                   return updatedCart;
                                                 })
                                               }}>                                          
-                                                <span className="-mt-[2px] pl-[8px] text-center font-light">-</span>                                          
+                                                <span className="-mt-[2px] pl-[6px] text-center font-light">-</span>                                          
                                           </button>
                                           <button  type="button" className={`flex m-2 ${plusButtonClassName}`}
                                               onClick={(e) => {
@@ -473,7 +537,7 @@ const Checkout = ({cart, setCart}) => {
                                               })
                                             }}>
                                               
-                                                <span className="-mt-[2px] pl-[6px] text-center font-light">+</span>   
+                                                <span className="-mt-[2px] pl-[5px] text-center font-light">+</span>   
                                               
                                           </button>
                                         </div>
@@ -482,12 +546,13 @@ const Checkout = ({cart, setCart}) => {
                                     </div>
                                   </div>
                                 </li>
-                              ))}
+                              ))
+                              }
                             </ul>
                           </div>
                         </div>
-                      </form>  
-                    )  }
+                      
+                   
                   </div>
 
                   <div className="border-t border-gray-200 px-4 py-4 sm:px-6">
@@ -497,8 +562,8 @@ const Checkout = ({cart, setCart}) => {
                       <p className="text-zinc-900 font-semibold text-base">USD {totalAmountCalculationFunction().toFixed(2)}</p>
                     </div>
                     <div className="flex justify-between  font-medium text-gray-900">
-                      <p className="text-zinc-900 font-serif text-sm ">VAT/IVA <span className="font-light text-zinc-900 ">(15%)</span></p>
-                      <p className="text-zinc-900 font-light text-sm">USD {(0.15*totalAmountCalculationFunction()).toFixed(2)}</p>
+                      <p className="text-zinc-900 font-serif text-sm ">VAT/IVA <span className="font-light text-zinc-900 ">(0%)</span></p>
+                      <p className="text-zinc-900 font-light text-sm">USD {0.00}</p>
                     </div>
                      <hr className="p-2 border-zinc-400 "/>
                     <p className="text-zinc-900 font-serif text-lg ">Delivery Methods</p>
@@ -512,7 +577,7 @@ const Checkout = ({cart, setCart}) => {
                     <div className="flex justify-between text-base font-medium text-gray-900">
                       <p className="text-zinc-900 font-serif text-lg ">TOTAL</p>
                       <div className="flex-col">                      
-                        <p className="text-zinc-900 font-bold text-lg text-right">USD {((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2)}<br/>
+                        <p className="text-zinc-900 font-bold text-lg text-right">USD {(totalAmountCalculationFunction()+shippingCost).toFixed(2)}<br/>
                         <span className="font-light text-[11px] text-right">Includes shipping, sales tax.</span>
                         </p>                        
                       </div>
@@ -520,15 +585,13 @@ const Checkout = ({cart, setCart}) => {
 
                 <hr className="p-2 border-zinc-400 "/>
                     
-                    <p className="text-zinc-900 font-serif text-lg ">Invoice information</p>
+                    <p className="text-zinc-900 font-serif text-lg ">Contact for this sale</p>
   
                     <div className="flex md:flex-row flex-col w-full p-3 m-1">
                       <label htmlFor="email" className=""> 
                         <span className="text-xs font-light font-serif text-zinc-600">Email: </span>       
                       <input className={inputClassName} onChange={(e)=>{
-                                      //setIsPasaChecked(false);
-                                      //setIsNoPasaChecked(true);
-                                      //handleCheck(e);
+                                     
                                       setEmail(e.target.value);
                                       console.log('email valu is', email );
                   
@@ -542,9 +605,7 @@ const Checkout = ({cart, setCart}) => {
                       <label htmlFor="firstname" className=""> 
                         <span className="text-xs font-light font-serif text-zinc-600">Firstname: </span>       
                       <input className={inputClassName} onChange={(e)=>{
-                                      //setIsPasaChecked(false);
-                                      //setIsNoPasaChecked(true);
-                                      //handleCheck(e);
+                                      ;
                                       setFirstname(e.target.value);
                                       console.log('firstname value is :',e.target.value );
                   
@@ -557,9 +618,7 @@ const Checkout = ({cart, setCart}) => {
                       <label htmlFor="lastname" className=""> 
                         <span className="text-xs font-light  font-serif text-znc-600">LastName: </span>       
                       <input className={inputClassName} onChange={(e)=>{
-                                      //setIsPasaChecked(false);
-                                      //setIsNoPasaChecked(true);
-                                      //handleCheck(e);
+                                     
                                       setLastname(e.target.value);
                                       console.log('lastname value is :',e.target.value );
                   
@@ -572,9 +631,7 @@ const Checkout = ({cart, setCart}) => {
                       <label htmlFor="customerId" className=""> 
                         <span className="text-xs font-light font-serif text-znc-600">Id (National Id / Passport / RUC): </span>       
                       <input className={inputClassName} onChange={(e)=>{
-                                      //setIsPasaChecked(false);
-                                      //setIsNoPasaChecked(true);
-                                      //handleCheck(e);
+                                     
                                       setCustomerId(e.target.value);
                                       console.log('cutomer-id value is :',e.target.value );
                   
@@ -594,8 +651,39 @@ const Checkout = ({cart, setCart}) => {
                     <hr className="p-2"/>
                     <p className="text-zinc-900 font-serif text-lg ">Payment Methods</p>
                     
-                    <div className="flex justify-between text-base font-medium text-gray-900">
+                    <div className="flex flex-col text-base font-medium text-gray-900">
                       <SelectPayment payments={payments}/>
+                        {
+                          paymentSelected === '1' && //method selected is link by phone
+                          (              
+                            <div className="ml-7 mt-1.5 text-xs text-indigo-600 font-light bg-indigo-50 p-2.5 rounded-md border border-indigo-100 animate-fadeIn">
+                              ℹ️ You will be redirected to a secure payment gateway.
+                            </div>
+                            
+                          )
+                        }
+                        {
+                          paymentSelected === '2' && //the mehtod selected is credit card
+                          (              
+                            <>
+                                
+                                
+                                <div style={{ padding: '20px', textAlign: 'center' }}>
+                                  <h2>Pasarela de Pago PayPhone</h2>
+                                  
+                                  {/* Asignamos la referencia física y mantenemos el ID requerido por PayPhone */}
+                                  <div 
+                                    ref={contenedorRef} 
+                                    id="pp-button" 
+                                    style={{ margin: '20px auto', maxWidth: '414px', minHeight: '300px' }}
+                                  ></div>
+                                </div>
+
+                            
+                            </>
+                          )
+                        }
+
                     </div>
 
                     
@@ -633,31 +721,64 @@ const Checkout = ({cart, setCart}) => {
                     
                     
                     <div className="mt-4 flex  justify-center">
-                      {
-                        cart.length === 0 || 
-                        totalAmountCalculationFunction() === 0 || paymentSelected === null || shippingSelected === null || email === null || firstname === null || lastname === null || fullPhoneNumber === null || customerId === null? 
-                         (
-                            <button
-                              className="bg-white pointer-events-none   rounded-lg p-3   ring-1 ring-zinc-300"
-                              disabled >
-                              <span className="font-serif text-lg text-zinc-300">Confirm Order and Pay</span>
-                            </button>
-                         ):(
+                      
+                          {
+                            !email 
+                            || !firstname 
+                            || !lastname 
+                            || !fullPhoneNumber 
+                            || !customerId
+                            || !paymentSelected
+                            || !shippingSelected 
+                            || !preferences.acceptTerms ?
+
+                            (
+                              <button
+                                type="button" disabled 
+                                className="ring-1 ring-zinc-300 text-zinc-300 font-serif rounded-lg px-3 py-2">
+
+                                Confirm Order and Pay
+                              </button>
+                            ):(
+                                <button
+                                  type="submit"
+                                  className={` 
+                                    w-60
+                                    bg-white drop-shadow-md disabled:drop-shadow-none disabled:pointer-events-none  rounded-lg px-3 py-2  transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-zinc-600`}
+                                  disabled={ isSubmitting }
+                                  
+                                >
+                                  <span className="font-serif text-lg text-black">
+                                    {!isSubmitting ? (
+                                        <span className="text-zinc-900 font-light ">Confirm Order and Pay</span>
+                                      ) : (
+                                        
+                                          <span className="inline-flex text-zinc-900 font-light ">
+                                            <svg className="animate-spin h-5 w-5 fill-zinc-600 mx-2" viewBox="0 0 24 24">
+                                              <path opacity="0.2" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                                              <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                                            </svg> Please wait...
+                                          </span>
+                                        
+                                        
+                                      )
+                                  
+                                    }   
+                                  </span>
+                                </button>
+                            )
+                          }  
                             
-                            <button
-                              className="bg-white drop-shadow-md disabled:drop-shadow-none disabled:pointer-events-none  rounded-lg p-3  transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-zinc-600"
-                              disabled={cart.length === 0 || 
-                              totalAmountCalculationFunction() === 0 || paymentSelected === null || shippingSelected === null}
-                              
-                            >
-                              <span className="font-serif text-lg text-black">Confirm Order and Pay</span>
-                            </button>
-                         )
-                      }
+                         
                       
                     </div>
                     
                   </div>
+                </form>
+                ) : (
+                  <p className="text-sm font-light text-zinc-900">Your cart is empty.</p>
+                )
+            }  
           </div>
       </div>
       

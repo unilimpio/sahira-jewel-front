@@ -7,6 +7,8 @@ import AuthService from "../services/auth.service";
 
 import Template from "./common/template/Template";
 
+// 1. Importa tu Hook de Autenticación Global
+import { useAuth } from "../context/AuthContext"; 
 
 
 
@@ -23,7 +25,9 @@ const wrapperClass = `mt-12 w-full h-full p-4 mb-4  mx-auto `;
 
 export default function About ({cart,setCart}) {
   
-  const user = AuthService.getCurrentUser();
+ // const user = AuthService.getCurrentUser();
+  // 3. Extraemos el usuario actual directamente desde el Contexto de React
+   const { user } = useAuth(); 
 
     const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
     
@@ -141,14 +145,7 @@ For years, I questioned why my family chose an ancient, uncommon name when no on
           </div>
         </div>
 
-        {/* Image section */}
-        <div className="my-16 sm:mt-40 xl:mx-auto xl:max-w-7xl xl:px-8">
-          <img
-            alt=""
-            src={image2}
-            className="aspect-[5/3] object-center w-full object-cover content-end outline outline-1 -outline-offset-1 outline-black/5 xl:rounded-3xl dark:outline-white/10"
-          />
-        </div>
+        
 
        
         
