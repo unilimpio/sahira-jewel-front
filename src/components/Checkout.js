@@ -282,140 +282,84 @@ const Checkout = ({cart, setCart}) => {
   } 
 
   const handlePay = async (event) => {
+  event.preventDefault();
 
-    event.preventDefault();
+  console.log("Processing payment");
+  setIsSubmitting(true);  
 
-    console.log("Processing payment")
-    setIsSubmitting(true);  
-    //setLoading(true);
+  const clientTxId = `transaccion-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-${new Date().toTimeString().split(' ')[0].replace(/:/g,"")}-${Math.floor(1000 + Math.random() * 9000)}`;
 
+  const totalCalculated = ((0.15 * totalAmountCalculationFunction()) + totalAmountCalculationFunction() + shippingCost).toFixed(2);
 
-     // This outputs the standardized format ready for payment gateways (e.g., Stripe, PayPal)
-    console.log("Submitting order with phone:", fullPhoneNumber); 
-    const form = event.target;
+  const orderPayload = {
+    user_id: user.uId || null,
+    cart_data: cart,
+    shipping_method: shippingSelected,
+    totalAmount: totalCalculated,
+    tx_id: clientTxId,
+    customerInfo: { email, id: customerId, fullname: `${firstname} ${lastname}`, phone: fullPhoneNumber },
+    payment_method: paymentSelected,
+    obs: obs,
+    acceptTerms: preferences.acceptTerms,
+    acceptDataTerms: preferences.acceptDataTerms,
+    isSubscribed: preferences.subscribeNewsletter,
+    willCreateAccount: preferences.createAccount,
+  }; 
 
-    const formData = new FormData(form);
+  const paymentPayload = {
+    "amount": Math.round(totalCalculated * 100), // Evita errores de decimales en JS
+    "amountWithoutTax": Math.round(totalCalculated * 100),   
+    "amountWithTax": 0,  
+    "tax": 0, 
+    "service": 0, 
+    "tip": 0, 
+    "currency": "USD", 
+    "reference": "Pago por API Link",    
+    "clientTransactionId": clientTxId,
+    "additionalData": "Descripción Extra", 
+    "oneTime": true,  
+    "expireIn": 0,    
+    "isAmountEditable": false,
+    "email": email,       
+    "phoneNumber": fullPhoneNumber,    
+    "documentId": customerId,     
+  };
 
-    const fecha = new Date();
-    const yyyymmdd = fecha.toISOString().slice(0,10).replace(/-/g,"");
-    const hhmmss = fecha.toTimeString().split(' ')[0].replace(/:/g,"");
-    const random = Math.floor(1000 + Math.random() * 9000); // 4 dígitos aleatorios
-
-    const clientTxId = `transaccion-${yyyymmdd}-${hhmmss}-${random}`;
-    console.log(clientTxId); 
-
-    //const onSubmitShipping = formData.get("shipping-method");
-    //const onSubmitPayment = formData.get("payment-method");
-     
-
-      //if (isSubmitting) {
-
-            const customerInfo = {
-              email : email,
-              id : customerId,
-              fullname : `${firstname} ${lastname}`,
-              phone : fullPhoneNumber
-
-            }
-
-            // Build the payload payload object exactly how your backend expects it
-            const orderPayload = {
-              user_id: user.uId || null,
-              
-              cart_data: cart, // This sends your entire JSON object automatically
-              
-              shipping_method: shippingSelected,
-              totalAmount: ((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2),
-              tx_id: clientTxId,
-              customerInfo : customerInfo,
-              payment_method: paymentSelected,
-              obs: obs,
-              acceptTerms: preferences.acceptTerms,
-              acceptDataTerms: preferences.acceptDataTerms,
-              isSubscribed: preferences.subscribeNewsletter,
-              willCreateAccount: preferences.createAccount, // If true, your backend
-              
-            }; 
-
-            const paymentPayload = {
-                "amount": ((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2)*100,  
-                "amountWithoutTax": ((0.15*totalAmountCalculationFunction())+totalAmountCalculationFunction()+shippingCost).toFixed(2)*100,   
-                "amountWithTax": 0,  
-                "tax": 0, 
-                "service": 0, 
-                "tip": 0, 
-                "currency": "USD", 
-                "reference": "Pago por API Link",    
-                "clientTransactionId": clientTxId,
-                 
-                "additionalData": "Descripción Extra", 
-                "oneTime": true,  
-                "expireIn": 0,    
-                "isAmountEditable": false,
-                 "email" : email,       
-                "phoneNumber" : fullPhoneNumber,    
-                "documentId" : customerId,     
-              }
-
-            
-            try{
-
-              UserService.orderConfirm(orderPayload).then(
-
-                (response)=>{
-                    console.log('trying to orderConfirm',response)
-                    setNewOrderId(response.data?.order_id);
-
-                    
-
-                },
-                (error)=>{
-
-                  console.log('there was an error processing the order!! .- ',error)
-
-                }
-
-
-              )
-
-            console.log('starting payohone sequence')
-            
-              UserService.payLinkRequest(paymentPayload)
-            .then(
-
-              (response)=>{
-                  console.log('there is a response from payphone API',response)
-                  // Open in a new window/tab
-                  window.open(response, "_blank", "noopener,noreferrer");
-              },
-              (error)=>{
-                console.log('there was an error getting the pay link from payphone platform',error)
-              }
-            )
-            
-            
-             
-            
-
-
-
-            }catch (error) {
-
-              console.error('Error processing payment:', error);
-              alert('Payment failed. Please try again.');
-
-            } finally {
-
-              localStorage.removeItem('sjCart');
-              setIsSubmitting(false);
-              navigate(`/thankyou/${newOrderId}`)
-
-            }
-
+  try {
+    // 1. PRIMERO: Guardar y confirmar la orden en tu Base de Datos
+    console.log('Enviando confirmación de orden...');
+    const orderResponse = await UserService.orderConfirm(orderPayload);
+    console.log('Orden confirmada en Backend:', orderResponse);
     
-      
-     // };
+    // Obtener el ID de la orden directamente de la respuesta devuelta por la promesa
+    const currentOrderId = orderResponse.data?.order_id;
+    setNewOrderId(currentOrderId); 
+
+    // 2. SEGUNDO: Solicitar el link de pagos a PayPhone (A través de tu backend CodeIgniter)
+    console.log('Iniciando secuencia de PayPhone...');
+    const payphoneResponse = await UserService.payLinkRequest(paymentPayload);
+    console.log('Respuesta recibida de PayPhone API', payphoneResponse);
+
+    // Nota: Si tu backend devuelve un objeto JSON, asegúrate de extraer la URL correctamente.
+    // Ej: payphoneResponse.data.redirectUrl
+    const urlDePago = payphoneResponse.data
+
+    // 3. TERCERO: Abrir la pasarela de pagos
+    window.open(urlDePago, "_blank", "noopener,noreferrer");
+
+    // 4. CUARTO: Ahora que todo fue exitoso, limpiamos carrito y redirigimos
+    localStorage.removeItem('sjCart');
+    // Usamos 'currentOrderId' directamente porque 'newOrderId' (useState) es asíncrono y no se habrá actualizado aún en esta línea
+    navigate(`/thankyou/${currentOrderId || ''}`);
+
+  } catch (error) {
+    console.error('Error procesando el flujo de pago:', error);
+    alert('Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
+  } finally {
+    setIsSubmitting(false);
   }
+  };
+
 
   function handleObsChange(e){
 
@@ -448,7 +392,7 @@ const Checkout = ({cart, setCart}) => {
             Checkout
           </h1>
           <p className="text-xs text-zinc-400 uppercase tracking-widest font-light">
-            Please review your cart contents
+            Please review your order items
           </p>
         </header>
 

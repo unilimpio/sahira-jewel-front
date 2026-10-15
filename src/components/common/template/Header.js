@@ -374,7 +374,7 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                       <DialogTitle className="my-3 text-lg font-serif font-script text-black flex flex-row">
                         <CartIcon className={`-mt-4 -ml-3 p-3 `} iconClassName={` w-7 h-7 fill-black `} />
 
-                        Your Shopping cart</DialogTitle>
+                        Your Shopping Bag</DialogTitle>
                       <div className="absolute top-0 right-0 m-2 ">
                         <button
                           type="button"
@@ -391,8 +391,9 @@ const Header = ({cart, setCart, isCartOpen, setIsCartOpen}) => {
                       </div>
                     </div>
                     {cart?.length === 0 || totalAmountCalculationFunction() === 0 ? (
-	                    <div className="flex text-sm font-thin text-zinc-600">
-                        Your shopping bag is empty... fill it with gorgeous items from our collection.
+	                    <div className="flex flex-col text-sm font-thin text-zinc-600">
+                        <p>Your shopping bag is empty... fill it with gorgeous items from our collection.</p>
+                        <Link to="/collection" className="text-current">Explore the collection?</Link>
                       </div>
 	                  ) : (
 

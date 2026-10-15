@@ -80,6 +80,7 @@ useEffect(() => {
     
     if(newOrderId){
       console.log('en este bucle no se valida el pago solo se muestra la confirmacion de la orden con el order id')
+       localStorage.removeItem('sjCart');//assure you refresh the memory with a blank cart
     }
     
     

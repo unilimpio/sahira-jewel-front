@@ -23,7 +23,7 @@ const login = (email, password) => {
     })
     .then((response) => {
       if (response.data.email) {
-        localStorage.setItem("sj_user_session", JSON.stringify(response.data));
+        localStorage.setItem("sj_user", JSON.stringify(response.data));
       }
 
       return response.data;
@@ -65,7 +65,7 @@ const logout = () => {
 
 const getCurrentUser = () => {
 
-  const user = localStorage.getItem("sj_user_session");
+  const user = localStorage.getItem("sj_user");
   
   if(!user){
     return null;
@@ -73,7 +73,7 @@ const getCurrentUser = () => {
 
     if (user.exp < Date.now()){
       //removeCurrentUser();
-      localStorage.removeItem("sj_user_session");
+      localStorage.removeItem("sj_user");
       return null;
     }
 
@@ -88,10 +88,10 @@ const getCurrentUser = () => {
 const removeCurrentUser = () => {
 
   
-  if(!localStorage.getItem("sj_user_session")){
+  if(!localStorage.getItem("sj_user")){
     return null;
   } else {
-    return localStorage.removeItem("sj_user_session");    
+    return localStorage.removeItem("sj_user");    
   }
   
     

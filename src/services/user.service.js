@@ -7,6 +7,30 @@ import AuthService from "./auth.service";
 //const API_URL = "http://sj/index.php/api/";
 const API_URL = process.env.REACT_APP_API_URL;
 
+// ==========================================
+// INTERCEPTOR GLOBAL PARA CAPTURAR EL 401
+// ==========================================
+axios.interceptors.response.use(
+  (response) => response, // Si todo sale bien, deja pasar la respuesta
+  (error) => {
+    // Axios guarda el error del servidor dentro de error.response
+    if (error.response && error.response.status === 401) {
+      console.warn("Token expirado (401). Limpiando sesión...");
+      
+      // Usamos el método que ya tienes en tu AuthService
+      AuthService.removeCurrentUser(); 
+      
+      // Opcional: limpiar también la sesión si usas otra llave en localStorage
+      localStorage.removeItem('sj_user'); 
+      
+      // Recargamos la página. Esto destruye el estado de React,
+      // obligando a tu Nav a renderizar "Sign In" y redirigiendo al usuario.
+      window.location.reload(); 
+    }
+    return Promise.reject(error);
+  }
+);
+// ==========================================
 
 
 const getCart = () => {

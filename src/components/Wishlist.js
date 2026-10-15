@@ -11,7 +11,9 @@ import CartIcon from "./common/template/icons/CartIcon";
 
 import FlashMessage from "./common/FlashMessage";
 
-const user = AuthService.getCurrentUser();
+import { useAuth } from "../context/AuthContext";
+
+//const user = AuthService.getCurrentUser();
 
 const pathToImg = "assets/uploads/"
 const backUrl = process.env.REACT_APP_BACK_URL;
@@ -33,6 +35,8 @@ function usePersistedState(key, defaultValue) {
 }
 
 export default function Wishlist ({cart,setCart}) {
+
+  const { user } = useAuth();
   
   const navigate = useNavigate();
 
@@ -293,7 +297,7 @@ const addCourseToCartFunction = (course) => {
                             <div className="w-28 overflow-clip">
                               <Link to={'/product?pId='+row.product_id} className="flex no-underline hover:underline justify-center">
                               <img src={` ${backUrl+pathToImg+row.product_imageSrc }`} alt={`${row.product_imageAlt}`} 
-                                className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out" /></Link>                        
+                                className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out rounded-lg overflow-hidden" /></Link>                        
                             </div>
                           </td>
                           <td className="p-2  overflow-clip "    >
@@ -368,7 +372,7 @@ const addCourseToCartFunction = (course) => {
           
           
           <h1 className="font-serif text-3xl font-light text-zinc-900 tracking-normal mb-1 ">Wishlist</h1>
-          <p className="font-light text-sm">Aqui encontrarás tus coup-de-coeur para una futura oportunidad...</p>
+          <p className="font-light text-sm">These are your "coup-de-coeur" for a future occasion...</p>
 
           {content && user &&(
 

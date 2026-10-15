@@ -121,17 +121,17 @@ export default function Collection ({cart, setCart}) {
 
 
       const observer = new IntersectionObserver(
-      ([entry]) => {
-        // If the bottom sentinel is visible, hide the component. 
-        // Otherwise, keep it visible.
-        setBottomIsVisible(!entry.isIntersecting);
-        console.log('the bottom of the page has been reached!!!!!!!!')
-      },
-      { 
-        threshold: 0.1, // Triggers as soon as the bottom 10% of the sentinel enters
-        rootMargin: "0px 0px 50px 0px" // Optional: Triggers 50px before reaching the exact bottom
-      }
-    );
+        ([entry]) => {
+          // If the bottom sentinel is visible, hide the component. 
+          // Otherwise, keep it visible.
+          setBottomIsVisible(!entry.isIntersecting);
+          console.log('the bottom of the page has been reached!!!!!!!!')
+        },
+        { 
+          threshold: 0.1, // Triggers as soon as the bottom 10% of the sentinel enters
+          rootMargin: "0px 0px 50px 0px" // Optional: Triggers 50px before reaching the exact bottom
+        }
+      );
 
     if (bottomRef.current) {
       observer.observe(bottomRef.current);
