@@ -31,6 +31,8 @@ import Thankyou from "./components/Thankyou";
 import Privacy from "./components/Privacy";
 import Gift from "./components/Gift"
 
+import ScrollToTop from "./components/common/template/ScrollToTop";
+
 function usePersistedState(key, defaultValue) {
   const [state, setState] = useState(() => {
     const storedValue = localStorage.getItem(key);
@@ -54,6 +56,7 @@ const [cart, setCart] = usePersistedState('sjCart', []);
     
       
       <div id="routes" className=" " >
+          <ScrollToTop />
           <Routes>
             <Route path={"/"} element={<Home cart={cart} setCart={setCart} />} />
             <Route path={"/home"} element={<Home cart={cart} setCart={setCart}  />} />
