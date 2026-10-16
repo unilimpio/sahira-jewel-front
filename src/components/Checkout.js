@@ -338,7 +338,8 @@ const Checkout = ({cart, setCart}) => {
     // 4. CUARTO: Ahora que todo fue exitoso, limpiamos carrito y redirigimos
     localStorage.removeItem('sjCart');
     // Usamos 'currentOrderId' directamente porque 'newOrderId' (useState) es asíncrono y no se habrá actualizado aún en esta línea
-    navigate(`/thankyou/${currentOrderId || ''}`);
+    //navigate(`/thankyou/${currentOrderId || ''}`);
+    window.location.replace(`/thankyou/${currentOrderId || ''}`);
 
   } catch (error) {
     console.error('Error procesando el flujo de pago:', error);
