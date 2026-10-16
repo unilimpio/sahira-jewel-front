@@ -204,7 +204,7 @@ export default function Home ({cart, setCart}) {
             <h2 className="text-center font-script text-sm ">Colecciones Exclusivas</h2>
             <h3 className="text-[10px] font-light text-center">Joyas de autor hechas a mano en Ecuador</h3>
             <div className="mx-auto w-[85vw] sm:w-full mb-24 p-4">
-              <ProductGrid products={content.products} />
+              <ProductGrid products={content.productsRecent} />
             </div>
           </div>
           

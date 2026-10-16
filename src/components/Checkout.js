@@ -207,7 +207,7 @@ const Checkout = ({cart, setCart}) => {
     
   }
 
-  function SelectShipping({shipping}){
+  function SelectShipping({shipping, className='w-1/2'}){
       
       const handleChange = (event)=>{
         
@@ -230,9 +230,9 @@ const Checkout = ({cart, setCart}) => {
       if(shipping){
              
         return(
-          <div className="flex flex-row w-full justify-between">
+          
 
-            <div className="w-1/2">
+            <div className={` ${className} `}>
               <select id="payments-select" 
                       name="shipping-method" 
                       className={`w-full border border-zinc-500 rounded-lg text-xs font-light h-10 shadow-sm px-3 py-[0.5] `} 
@@ -254,26 +254,14 @@ const Checkout = ({cart, setCart}) => {
               </select>
             </div>
 
-            <div className="">
-
-              <p className="">
-                {
-                  shippingCost &&  //this last comparison is for fixing the Nan error
-                  (
-                    <span className="text-zinc-900 font-light text-sm">USD {parseFloat(shippingCost).toFixed(2)}</span>
-
-                  )
-                }
-              </p>
-
-            </div>
+            
              
             
               
               
 
             
-          </div>
+          
         );
       }
 
@@ -289,7 +277,7 @@ const Checkout = ({cart, setCart}) => {
 
   const clientTxId = `transaccion-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-${new Date().toTimeString().split(' ')[0].replace(/:/g,"")}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  const totalCalculated = ((0.15 * totalAmountCalculationFunction()) + totalAmountCalculationFunction() + shippingCost).toFixed(2);
+  const totalCalculated = ( totalAmountCalculationFunction() + shippingCost).toFixed(2);
 
   const orderPayload = {
     user_id: user ? user.uId : null,
@@ -513,7 +501,23 @@ const Checkout = ({cart, setCart}) => {
                     <p className="text-zinc-900 font-serif text-lg ">Delivery Methods</p>
                     
                     <div className="flex justify-between text-base font-medium text-gray-900">
-                      <SelectShipping shipping={shipping}/>
+                      <div className="flex flex-row w-full justify-between">
+                          <SelectShipping shipping={shipping}/>
+                          <div className="flex">
+                            {
+                                //shippingCost &&  //this last comparison is for fixing the Nan error
+                                (
+                                  <p className="">
+                                    
+                                        <span className="text-zinc-900 font-light text-sm">USD {shippingCost ? parseFloat(shippingCost).toFixed(2) : '0.00'}</span>
+
+                                      
+                                  </p>
+                                )
+                            }
+                          </div>
+                      </div>
+                     
                     </div>
                     
                     <hr className="p-2 border-zinc-400 "/>
