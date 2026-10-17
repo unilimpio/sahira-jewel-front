@@ -21,7 +21,7 @@ import image2 from '../assets/sj-amparito.jpeg'
 
 
 
-const wrapperClass = `mt-12 w-full h-full p-4 mb-4  mx-auto `;
+const wrapperClass = `mt-12 w-full h-full p-2 mb-4  mx-auto `;
 
 export default function About ({cart,setCart}) {
   
@@ -116,25 +116,25 @@ export default function About ({cart,setCart}) {
                 
                 
               </div>
-        <div className="w-full mx-auto mt-2 max-w-7xl px-6 sm:mt-0 lg:px-8 xl:-mt-8">
-          <div className="w-full mx-auto max-w-2xl lg:mx-0 lg:max-w-none p-6">
+        <div className="w-full mx-auto mt-2 max-w-7xl px-2 sm:mt-0 lg:px-3 xl:-mt-8">
+          <div className="w-full mx-auto max-w-2xl lg:mx-0 lg:max-w-none p-1">
             
             <h1 className="p-8 text-zinc-600 text-4xl font-serif  md:text-5xl lg:text-6xl text-center">THE LEGACY</h1>
             
             <div className="w-full mt-6 flex flex-col gap-x-8 gap-y-20 lg:flex-row">
               <div className="lg:w-full flex-col">
                 
-                  <h2 className="italic font-serif my-40 mx-4 p-6 text-zinc-600 text-justify">
+                  <h2 className="italic font-serif my-40 mx-4 p-2 text-zinc-600 text-justify">
                     "Two generations, one shared essence. A mother and daughter united by a lifelong devotion to art, design, and the alchemy of metalsmithing."
                   </h2>
 
-                  <p className="text-xl/12  text-justify font-serif leading-loose p-4   ">
+                  <p className="text-xl/12  text-justify font-serif leading-loose p-1   ">
                       We began this journey following our hearts, creating pieces that modernize our pre-Columbian culture through a timeless lens. Our purpose is to design contemporary fine jewelry that defies eras and trends—treasures meant to be worn, shared, and passed down across generations.
 
                       When a woman wears a SAHIRA piece, she is not just wearing a sculpture of silver and light; she carries a symbol of her own power. We create to remind every woman that she is strong, resilient, brave, and fierce—capable of everything for those she loves. It is art turned into armor.
 
                       In Kichwa, Sahira means Goddess of Creation.</p> 
-                  <p className="text-xl/12  text-justify font-serif leading-loose p-4   ">
+                  <p className="text-xl/12  text-justify font-serif leading-loose p-1   ">
 For years, I questioned why my family chose an ancient, uncommon name when no one around me spoke the language. Today, in the quiet of our workshop, everything makes sense. Long before I was born, my destiny was already written: I was meant to create art alongside my mother, the woman who gave me life and taught me to fight for my dreams without ever giving up.
 
                       To you, Mom, thank you for your constant support in each of my wild pursuits, for your unwavering example of womanhood, and for every sacrifice you have made for our family. If it weren't for you, for your strength and your guidance, this dream would have never begun. This project is, above all, a tribute to you.

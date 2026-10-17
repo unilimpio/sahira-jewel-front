@@ -27,10 +27,40 @@ const ProductImages = ({ images, className }) => {
           {images.map((image, index) => (
             
             
-            <div key={index+image.title} className={`rounded-b-md  max-h-80 ${className}`}>
+            <div key={index+image.title+image.imageSrc} className={`rounded-b-md  max-h-80 ${className}`}>
             
-              <img src={backUrl+pathToImg+image.imageSrc} alt={image.imageAlt} className={'object-cover rounded-b-md brightness-105'}/>
-                         
+               <picture className="object-cover rounded-b-md brightness-105">
+                  
+                  <source 
+                    media="(min-width: 1440px)" 
+                    srcSet={backUrl+pathToImg+image.image_lg}  
+                    type="image/jpeg"
+                  />
+
+                 
+                  <source 
+                    media="(min-width: 1024px)" 
+                    srcSet={backUrl+pathToImg+image.image_md} 
+                    type="image/jpeg"
+                  />
+
+                  
+                  <source 
+                    media="(min-width: 768px)" 
+                    srcSet={backUrl+pathToImg+image.image_sm}
+                    type="image/jpeg"
+                  />
+
+                  
+                  <img 
+                    src={backUrl+pathToImg+image.imageSrc} 
+                    alt={image.imageAlt} 
+                    className="object-cover rounded-b-md brightness-105"
+                    
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>          
               
             </div>
             

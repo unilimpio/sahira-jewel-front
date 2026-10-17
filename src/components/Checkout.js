@@ -270,83 +270,89 @@ const Checkout = ({cart, setCart}) => {
   } 
 
   const handlePay = async (event) => {
-  event.preventDefault();
 
-  console.log("Processing payment");
-  setIsSubmitting(true);  
+    event.preventDefault();
 
-  const clientTxId = `transaccion-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-${new Date().toTimeString().split(' ')[0].replace(/:/g,"")}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const payWindow = window.open('/payment-processing', '_blank', "noopener,noreferrer");
 
-  const totalCalculated = ( totalAmountCalculationFunction() + shippingCost).toFixed(2);
 
-  const orderPayload = {
-    user_id: user ? user.uId : null,
-    cart_data: cart,
-    shipping_method: shippingSelected,
-    totalAmount: totalCalculated,
-    tx_id: clientTxId,
-    customerInfo: { email, id: customerId, fullname: `${firstname} ${lastname}`, phone: fullPhoneNumber },
-    payment_method: paymentSelected,
-    obs: obs,
-    acceptTerms: preferences.acceptTerms,
-    acceptDataTerms: preferences.acceptDataTerms,
-    isSubscribed: preferences.subscribeNewsletter,
-    willCreateAccount: preferences.createAccount,
-  }; 
+    console.log("Processing payment");
+    setIsSubmitting(true);  
 
-  const paymentPayload = {
-    "amount": Math.round(totalCalculated * 100), // Evita errores de decimales en JS
-    "amountWithoutTax": Math.round(totalCalculated * 100),   
-    "amountWithTax": 0,  
-    "tax": 0, 
-    "service": 0, 
-    "tip": 0, 
-    "currency": "USD", 
-    "reference": "Pago por API Link",    
-    "clientTransactionId": clientTxId,
-    "additionalData": "Descripción Extra", 
-    "oneTime": true,  
-    "expireIn": 0,    
-    "isAmountEditable": false,
-    "email": email,       
-    "phoneNumber": fullPhoneNumber,    
-    "documentId": customerId,     
-  };
+    const clientTxId = `transaccion-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-${new Date().toTimeString().split(' ')[0].replace(/:/g,"")}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  try {
-    // 1. PRIMERO: Guardar y confirmar la orden en tu Base de Datos
-    console.log('Enviando confirmación de orden...');
-    const orderResponse = await UserService.orderConfirm(orderPayload);
-    console.log('Orden confirmada en Backend:', orderResponse);
-    
-    // Obtener el ID de la orden directamente de la respuesta devuelta por la promesa
-    const currentOrderId = orderResponse.data?.order_id;
-    setNewOrderId(currentOrderId); 
+    const totalCalculated = ( totalAmountCalculationFunction() + shippingCost).toFixed(2);
 
-    // 2. SEGUNDO: Solicitar el link de pagos a PayPhone (A través de tu backend CodeIgniter)
-    console.log('Iniciando secuencia de PayPhone...');
-    const payphoneResponse = await UserService.payLinkRequest(paymentPayload);
-    console.log('Respuesta recibida de PayPhone API', payphoneResponse);
+    const orderPayload = {
+      user_id: user ? user.uId : null,
+      cart_data: cart,
+      shipping_method: shippingSelected,
+      totalAmount: totalCalculated,
+      tx_id: clientTxId,
+      customerInfo: { email, id: customerId, fullname: `${firstname} ${lastname}`, phone: fullPhoneNumber },
+      payment_method: paymentSelected,
+      obs: obs,
+      acceptTerms: preferences.acceptTerms,
+      acceptDataTerms: preferences.acceptDataTerms,
+      isSubscribed: preferences.subscribeNewsletter,
+      willCreateAccount: preferences.createAccount,
+    }; 
 
-    // Nota: Si tu backend devuelve un objeto JSON, asegúrate de extraer la URL correctamente.
-    // Ej: payphoneResponse.data.redirectUrl
-    const urlDePago = payphoneResponse.data
+    const paymentPayload = {
+      "amount": Math.round(totalCalculated * 100), // Evita errores de decimales en JS
+      "amountWithoutTax": Math.round(totalCalculated * 100),   
+      "amountWithTax": 0,  
+      "tax": 0, 
+      "service": 0, 
+      "tip": 0, 
+      "currency": "USD", 
+      "reference": "Pago por API Link",    
+      "clientTransactionId": clientTxId,
+      "additionalData": "Descripción Extra", 
+      "oneTime": true,  
+      "expireIn": 0,    
+      "isAmountEditable": false,
+      "email": email,       
+      "phoneNumber": fullPhoneNumber,    
+      "documentId": customerId,     
+    };
 
-    // 3. TERCERO: Abrir la pasarela de pagos
-    window.open(urlDePago, "_blank", "noopener,noreferrer");
+    try {
+      // 1. PRIMERO: Guardar y confirmar la orden en tu Base de Datos
+      console.log('Enviando confirmación de orden...');
+      const orderResponse = await UserService.orderConfirm(orderPayload);
+      console.log('Orden confirmada en Backend:', orderResponse);
+      
+      // Obtener el ID de la orden directamente de la respuesta devuelta por la promesa
+      const currentOrderId = orderResponse.data?.order_id;
+      setNewOrderId(currentOrderId); 
 
-    // 4. CUARTO: Ahora que todo fue exitoso, limpiamos carrito y redirigimos
-    localStorage.removeItem('sjCart');
-    // Usamos 'currentOrderId' directamente porque 'newOrderId' (useState) es asíncrono y no se habrá actualizado aún en esta línea
-    //navigate(`/thankyou/${currentOrderId || ''}`);
-    window.location.replace(`/thankyou/${currentOrderId || ''}`);
+      // 2. SEGUNDO: Solicitar el link de pagos a PayPhone (A través de tu backend CodeIgniter)
+      console.log('Iniciando secuencia de PayPhone...');
+      const payphoneResponse = await UserService.payLinkRequest(paymentPayload);
+      console.log('Respuesta recibida de PayPhone API', payphoneResponse);
 
-  } catch (error) {
-    console.error('Error procesando el flujo de pago:', error);
-    alert('Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
-  } finally {
-    setIsSubmitting(false);
-  }
+      // Nota: Si tu backend devuelve un objeto JSON, asegúrate de extraer la URL correctamente.
+      // Ej: payphoneResponse.data.redirectUrl
+      const payUrl = payphoneResponse.data
+
+      // 3. TERCERO: Abrir la pasarela de pagos
+      //window.open(urlDePago, "_blank", "noopener,noreferrer");
+      payWindow.location.href = payUrl;
+
+      // 4. CUARTO: Ahora que todo fue exitoso, limpiamos carrito y redirigimos
+      localStorage.removeItem('sjCart');
+      // Usamos 'currentOrderId' directamente porque 'newOrderId' (useState) es asíncrono y no se habrá actualizado aún en esta línea
+      //navigate(`/thankyou/${currentOrderId || ''}`);
+      window.location.replace(`/thankyou/${currentOrderId || ''}`);
+
+    } catch (error) {
+      console.error('Error procesando el flujo de pago:', error);
+      //alert('Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
+      payWindow.close();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -390,7 +396,14 @@ const Checkout = ({cart, setCart}) => {
               cart.filter((item)=>item.quantity > 0).length > 0 && 
                         totalAmountCalculationFunction() > 0  ? 
                 (
-                <form onSubmit={handlePay}>
+                <form onSubmit={ 
+                                  (e)=>{
+
+                                    handlePay();
+
+                                  }
+                                }>
+                  
                   <div className="mx-auto  p-2">    
                     
                       

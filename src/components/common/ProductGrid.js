@@ -17,11 +17,39 @@ export default function ProductGrid({products}) {
         {/* Contenedor de la Imagen con Aspecto Fijo y Borde Sutil */}
         <div className="aspect-[3/4] w-full overflow-hidden bg-zinc-50 dark:bg-zinc-900 rounded-sm outline outline-1 -outline-offset-1 outline-black/5 dark:outline-white/10">
           <Link to={`/product?pId=${item.product_id}`} className="block relative h-full w-full">
-            <img
-              alt={item.product_name}
-              src={`${backUrl}${pathToImg}${item.product_imageSrc}`}
-              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            />
+            
+            <picture className="w-full h-auto object-fill object-bottom">
+                  
+                  <source 
+                    media="(min-width: 1440px)" 
+                    srcSet={`${backUrl}${pathToImg}${item.product_image_lg}`}  
+                    type="image/jpeg"
+                  />
+
+                 
+                  <source 
+                    media="(min-width: 1024px)" 
+                    srcSet={`${backUrl}${pathToImg}${item.product_image_md}`} 
+                    type="image/jpeg"
+                  />
+
+                  
+                  <source 
+                    media="(min-width: 768px)" 
+                    srcSet={`${backUrl}${pathToImg}${item.product_image_sm}`}
+                    type="image/jpeg"
+                  />
+
+                  
+                  <img 
+                    src={`${backUrl}${pathToImg}${item.product_imageSrc}`} 
+                    alt={`${item.product_name} ${item.product_desc} from Sahira's Original silver jewel collection.`} 
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>
             {
               parseInt(item.product_is_sold_out) &&
                 <div className="absolute w-full z-40  bottom-2 p-1">

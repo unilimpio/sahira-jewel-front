@@ -29,6 +29,8 @@ import Checkout from "./components/Checkout";
 import Thankyou from "./components/Thankyou";
 
 import Privacy from "./components/Privacy";
+import PaymentProcessing from "./components/PaymentProcessing";
+
 import Gift from "./components/Gift"
 
 import ScrollToTop from "./components/common/template/ScrollToTop";
@@ -76,6 +78,7 @@ const [cart, setCart] = usePersistedState('sjCart', []);
              <Route path={"/thankyou/:newOrderId"} element={<Thankyou />} />
 
             <Route path={"/privacy"} element={<Privacy />} />
+             <Route path={"/payment-processing"} element={<PaymentProcessing />} />
             
             <Route element={<ProtectedRoute />}>
               <Route path={"/account"} element={<Account cart={cart} setCart={setCart}  />} />
