@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import { Navigate, useNavigate, Link  } from "react-router";
+import { Navigate, useNavigate, Link, useAsyncError  } from "react-router";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 import Template from "./common/template/Template";
@@ -8,6 +8,7 @@ import Template from "./common/template/Template";
 // 1. Importa tu Hook de Autenticación Global
 import { useAuth } from "../context/AuthContext"; 
 
+import FlashMessage from "./common/FlashMessage";
 
 import { getCountries, getCountryCallingCode } from 'react-phone-number-input/input';
 import en from 'react-phone-number-input/locale/en.json';
@@ -24,9 +25,7 @@ import CheckoutCheckboxes from './common/CheckoutCheckboxes';
 const pathToImg = "assets/uploads/"
 const backUrl = process.env.REACT_APP_BACK_URL;
 const baseUrl = process.env.REACT_APP_BASE_URL;
-const payphToken = `
-3pzXVx6dwrfYV6eEkrjg2e4F8xXgV7mhTiATjj1re5BYdL8RUr8W2tDfqbpj2vpUXcBwHpFzTcfiNYxBQC0NSXvJpln8bV40jvtuaFMOlwDbxxnvanxPwPFmrS-b-wD_diTwq1ppLmmCouDBUVajUyxmvzEnE3xEMegS5gFq91DsDxyvVhr1EJvQ4S6IIKxvGGUUPwQNI2xS3QF8COy9OD9gybCy1v2J3jv4rR7hz28YKVhUPmTaXPgZVKrqfusaqw6SKZrDdYzES-HDMKl05w8zLKJA4E92RNon96suwn79gn3P7Bhv-lffm13RUg2sJTxh-w
-`
+
 
 
  function usePersistedState(key, defaultValue) {
@@ -48,7 +47,7 @@ const Checkout = ({cart, setCart}) => {
    // 3. Extraemos el usuario actual directamente desde el Contexto de React
     const { user } = useAuth(); 
   
-  const wrapperClass = `max-w-3xl mx-auto mt-16 px-6 mb-24 font-sans antialiased text-zinc-800 tracking-wide `;
+  const wrapperClass = ` max-w-3xl mx-auto mt-16 px-6 mb-24 font-sans antialiased text-zinc-800 tracking-wide `;
   
   const minusButtonClassName = `bg-white h-6 w-6 rounded-md border-1 border-zinc-400 p-0 m-0`;
   const plusButtonClassName = `bg-white h-6 w-6 rounded-md border-1 border-zinc-400 p-0 m-0`;
@@ -61,6 +60,7 @@ const Checkout = ({cart, setCart}) => {
 
   const navigate = useNavigate();
 
+  const [flashMessage, setFlashMessage] = useState(localStorage.getItem('sj_flashMessage'))
 
   const [open, setOpen] = useState(false)  
   //const [cart, setCart] = usePersistedState('sjCart', []);
@@ -93,6 +93,8 @@ const Checkout = ({cart, setCart}) => {
   });
 
   const [newOrderId,setNewOrderId] = useState(false);
+
+  const[payUrl, setPayUrl] = useState(null)
 
   const deleteCourseFromCartFunction = (course) => {
     // Si cart no existe, usa un arreglo vacío para que .filter no falle
@@ -269,11 +271,13 @@ const Checkout = ({cart, setCart}) => {
     
   } 
 
-  const handlePay = async (event) => {
+  const handleCheckout = async (event) => {
 
     event.preventDefault();
 
-    const payWindow = window.open('/payment-processing', '_blank', "noopener,noreferrer");
+    setLoading(true);
+
+    //const payWindow = window.open('/payment-processing', '_blank', "noopener,noreferrer");
 
 
     console.log("Processing payment");
@@ -334,24 +338,28 @@ const Checkout = ({cart, setCart}) => {
 
       // Nota: Si tu backend devuelve un objeto JSON, asegúrate de extraer la URL correctamente.
       // Ej: payphoneResponse.data.redirectUrl
-      const payUrl = payphoneResponse.data
+      setPayUrl(payphoneResponse.data)
+      setFlashMessage(JSON.stringify({'message':'Pay Link generated succesfully!','type':'success'}))
 
       // 3. TERCERO: Abrir la pasarela de pagos
       //window.open(urlDePago, "_blank", "noopener,noreferrer");
-      payWindow.location.href = payUrl;
+      //payWindow.location.href = payUrl;
+
+      
 
       // 4. CUARTO: Ahora que todo fue exitoso, limpiamos carrito y redirigimos
-      localStorage.removeItem('sjCart');
+      //localStorage.removeItem('sjCart');
       // Usamos 'currentOrderId' directamente porque 'newOrderId' (useState) es asíncrono y no se habrá actualizado aún en esta línea
       //navigate(`/thankyou/${currentOrderId || ''}`);
-      window.location.replace(`/thankyou/${currentOrderId || ''}`);
+      //window.location.replace(`/thankyou/${currentOrderId || ''}`);
 
     } catch (error) {
       console.error('Error procesando el flujo de pago:', error);
       //alert('Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
-      payWindow.close();
+      //payWindow.close();
     } finally {
       setIsSubmitting(false);
+      setLoading(false)
     }
   };
 
@@ -369,7 +377,7 @@ const Checkout = ({cart, setCart}) => {
    // Usamos un ref para controlar de forma segura el ciclo de vida del contenedor
   const contenedorRef = useRef(null);
   
-
+  console.log('current payUrl value',payUrl)
   
 
   // 3. Este segundo useEffect se dispara SOLO cuando el JS externo se cargó
@@ -380,7 +388,26 @@ const Checkout = ({cart, setCart}) => {
 
   return (
     <Template bottomIsVisible={bottomIsVisible} cart={cart} setCart={setCart} >
-      <div className={` ${wrapperClass} `}>
+      {flashMessage && (
+                          
+            <FlashMessage flashMessage={flashMessage} setFlashMessage={setFlashMessage}  />
+                         
+        )}
+        
+      <div className={`relative ${wrapperClass} `}>
+        {loading &&(
+          <div className={`absolute inset-0`}>
+
+            <div className="flex mx-auto items-center justify-center w-fit rounded-lg bg-opacity-75 bg-black p-3">
+                  <svg className="animate-spin h-10 w-10 fill-white" viewBox="0 0 24 24">
+                    <path opacity="0.3" fillRule="evenodd" clipRule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                  </svg>
+                  <span className="text-white font-extralight ml-2">Loading...</span>
+            </div>
+          </div>
+
+        )}
         {/* Page Header */}
         <header className="border-b border-zinc-100 pt-8 pb-3">
           <h1 className="font-serif text-3xl font-light text-zinc-900 tracking-normal mb-1">
@@ -396,13 +423,7 @@ const Checkout = ({cart, setCart}) => {
               cart.filter((item)=>item.quantity > 0).length > 0 && 
                         totalAmountCalculationFunction() > 0  ? 
                 (
-                <form onSubmit={ 
-                                  (e)=>{
-
-                                    handlePay();
-
-                                  }
-                                }>
+                <form onSubmit={ handleCheckout }>
                   
                   <div className="mx-auto  p-2">    
                     
@@ -682,7 +703,7 @@ const Checkout = ({cart, setCart}) => {
                     
                     
                     
-                    <div className="mt-4 flex  justify-center">
+                    <div className="w-full mx-auto mt-4 flex flex-col p-3 items-center">
                       
                           {
                             !email 
@@ -697,7 +718,7 @@ const Checkout = ({cart, setCart}) => {
                             (
                               <button
                                 type="button" disabled 
-                                className="ring-1 ring-zinc-300 text-zinc-300 font-serif rounded-lg px-3 py-2">
+                                className="w-full sm:w-60 my-3 ring-1 ring-neutral-100 text-zinc-300 font-serif rounded-lg px-3 py-2">
 
                                 Confirm Order and Pay
                               </button>
@@ -705,7 +726,7 @@ const Checkout = ({cart, setCart}) => {
                                 <button
                                   type="submit"
                                   className={` 
-                                    w-60
+                                    w-full sm:w-60 my-3
                                     bg-white drop-shadow-md disabled:drop-shadow-none disabled:pointer-events-none  rounded-lg px-3 py-2  transition-all delay-100 duration-300 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-lg ring-1 ring-zinc-600`}
                                   disabled={ isSubmitting }
                                   
@@ -729,6 +750,43 @@ const Checkout = ({cart, setCart}) => {
                                   </span>
                                 </button>
                             )
+                          }
+                          {
+                            payUrl && //the order was sucesfully saved on the db and the pay link was obtained, 
+
+                              <button
+                                type="button" disabled={!payUrl}
+                                onClick={(e)=>{
+                                          
+                                                  const payWindow = window.open(payUrl, 'PayPhone', 'width=600,height=700');
+
+                                                  // Validamos que los bloqueadores de pop-ups no hayan impedido la apertura
+                                                  if (!payWindow) {
+                                                    alert("Por favor, permite las ventanas emergentes para proceder con el pago.");
+                                                    return;
+                                                  }
+
+                                                  // 2. Iniciamos el temporizador que vigila la ventana que acabamos de abrir
+                                                  const timer = setInterval(() => {
+                                                    if (payWindow.closed) {
+                                                      clearInterval(timer);
+                                                      console.log("El usuario cerró la ventana de PayPhone. Validando estado...");
+                                                      setLoading(false);
+                                                      
+                                                      // Limpiamos el carrito local
+                                                      localStorage.removeItem('sjCart');
+                                                      
+                                                      // Redirigimos a la página de verificación en CodeIgniter
+                                                      window.location.replace(`/thankyou/${newOrderId || ''}`);
+                                                    }
+                                                  }, 1000);
+                                }}
+
+                                className="w-full sm:w-60 my-3 ring-1 ring-zinc-300 text-neutral-100 bg-gradient-to-b hover:shadow-sm from-green-400 to-green-600 font-serif rounded-lg px-3 py-2 ">
+
+                                Open Pay Link 🗗
+                              </button>
+
                           }  
                             
                          

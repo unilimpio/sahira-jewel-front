@@ -94,38 +94,45 @@ useEffect(() => {
         {/* Page Header */}
         <header className="border-b border-zinc-100 pt-8 pb-4 ">
           <h1 className="font-serif text-3xl font-light text-zinc-900 tracking-normal mb-1">
-            THANK YOU!
+            THANK YOU FOR YOUR ORDER!
           </h1>
-          {
-            newOrderId &&
-            
-            <p className="text-xs text-zinc-400 uppercase tracking-widest font-light">
-                Your Order ID:{newOrderId} has been registered and Confirmed succesfully! 
-              </p>
-              
-           
-              
-          }    
-          
-          
 
-          
         </header>
 
           <div className="flex h-auto flex-col  bg-white ">
-              <p className="text-xs text-zinc-400 uppercase tracking-widest font-light">
-                You should receive an e-mail confirmation soon with this information, for your record. 
-              </p>
+            {              
+              
+              newOrderId ?
+              <>
+                <h2 className="font-serif text-zinc-900 text-lg">Your Order ID: #{newOrderId}</h2>              
+                <p className="text-xs text-zinc-400 uppercase tracking-widest font-light">
+                  has been processed succesfully! 
+                </p>
+              </>
+              :
+              <><h2 className="font-serif text-zinc-900 text-lg">Your Order  </h2>              
+                <p className="text-xs text-zinc-400 uppercase tracking-widest font-light">
+                  Your Order has been processed but we seem unable to retrieve an order id for your reference, please contact the store for confirmation of your order and further support.  
+                </p>
+              </>                   
+           
+              
+            }  
+            
+            <p className="text-xs text-zinc-400  tracking-widest font-light">
+                Your payment is in process of being completed, once this step is verified you'll receive a confirmation e-mail. 
+            </p>
+              
               {
                 cTxId &&
                   <p className="text-xs text-zinc-400 uppercase tracking-widest font-light">
-                    Your payment transaction ID:{cTxId} is being processed!
+                    Your payment transaction ID:{cTxId} has been succesfully confirmed!
                   </p>
               }
 
-              <h2 className="text-[11px] text-zinc-400 uppercase tracking-widest font-light">
-                Thank you for shopping with Us! Have a great day!
-              </h2>
+              <h3 className="text-[11px] text-zinc-900 font-serif tracking-widest font-light">
+                Thank you for shopping with Us!  Have a great day!
+              </h3>
 
                 
           </div>

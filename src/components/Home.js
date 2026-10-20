@@ -226,7 +226,7 @@ export default function Home ({cart, setCart}) {
           )
        }
 
-       {(!content  || loading) &&(
+        {(!content  || loading) &&(
 
             <div className="flex mx-auto items-center justify-center w-fit rounded-lg bg-opacity-75 bg-black p-3">
                   <svg className="animate-spin h-10 w-10 fill-white" viewBox="0 0 24 24">
@@ -236,7 +236,7 @@ export default function Home ({cart, setCart}) {
                   <span className="text-white font-extralight ml-2">Loading...</span>
             </div>
 
-          )}
+        )}
         
       </div>
       
