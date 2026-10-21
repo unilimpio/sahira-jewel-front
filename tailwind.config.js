@@ -19,7 +19,8 @@ module.exports = {
           '0%, 100%': { transform: 'rotate(-8deg)' },
           '50%': { transform: 'rotate(15deg)' },
         }
-      }
+      },
+      
     },
   },
   plugins: [

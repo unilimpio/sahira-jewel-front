@@ -16,6 +16,8 @@ import en from 'react-phone-number-input/locale/en.json';
 import GuestPhoneInput from './common/GuestPhoneInput';
 import CheckoutCheckboxes from './common/CheckoutCheckboxes';
 
+import { ExternalLink } from "lucide-react";
+
 // Optional: Import standard flags CSS if you want to use the package's built-in flags
  import 'react-phone-number-input/style.css';
 
@@ -53,7 +55,7 @@ const Checkout = ({cart, setCart}) => {
   const plusButtonClassName = `bg-white h-6 w-6 rounded-md border-1 border-zinc-400 p-0 m-0`;
   const minusPlusSpanClassName = ` text-base font-semibold`;  
 
-  const inputClassName = `border-1 border-zinc-300 rounded-md md:w-1/2 w-full  text-xs font-light px-3 py-[0.5] shadow-sm h-9`;
+  const inputClassName = `border-1 border-zinc-300 rounded-md  w-full sm:w-60 text-xs font-light px-3 py-[0.5] shadow-sm h-9`;
 
   const bottomRef = useRef(null);
     const [bottomIsVisible, setBottomIsVisible] = useState(true);//bottom boserver interceptor reference trick
@@ -182,7 +184,7 @@ const Checkout = ({cart, setCart}) => {
       if(payments){
              
         return(
-          <div className="flex flex-col w-full ">
+          <div className="flex flex-col w-full sm:w-1/2 ">
             
               <select id="payments-select" name="payment-method" className={`w-full border border-zinc-300 rounded-lg text-xs font-light h-10 shadow-sm py-[0.5] px-3`} value={paymentSelected} onChange={handleChange}>                             
                   <option  value={''}>Please select...</option>
@@ -599,7 +601,7 @@ const Checkout = ({cart, setCart}) => {
                     </div>
                     <div className="flex md:flex-row flex-col w-full p-3 m-1">
                       <label htmlFor="lastname" className=""> 
-                        <span className="text-xs font-light  font-serif text-znc-600">LastName: </span>       
+                        <span className="text-xs font-light  font-serif text-zinc-600">LastName: </span>       
                       <input className={inputClassName} onChange={(e)=>{
                                      
                                       setLastname(e.target.value);
@@ -612,7 +614,7 @@ const Checkout = ({cart, setCart}) => {
                     </div>
                      <div className="flex md:flex-row flex-col w-full p-3 m-1">
                       <label htmlFor="customerId" className=""> 
-                        <span className="text-xs font-light font-serif text-znc-600">Id (National Id / Passport / RUC): </span>       
+                        <span className="text-xs font-light font-serif text-zinc-600">Id (National Id / Passport / RUC): </span>       
                       <input className={inputClassName} onChange={(e)=>{
                                      
                                       setCustomerId(e.target.value);
@@ -620,7 +622,7 @@ const Checkout = ({cart, setCart}) => {
                   
                                     
                                     }} id="customerId" value={customerId} /></label>
-                                    <span className="text-[9px]">As per local Ecuador Laws, all sales are subject to invoice.</span>
+                                    
 
                       
                     </div>
@@ -671,11 +673,11 @@ const Checkout = ({cart, setCart}) => {
 
                     
 
-                    <div className="flex md:flex-row flex-col w-full   ">
+                    <div className="flex md:flex-row flex-col w-full  p-3 m-1 ">
                       <label htmlFor="obs" className=" ">
                         <span className="text-xs font-light font-serif  text-zinc-600">Additional Instructions for your order: </span></label>
                       <textarea 
-                          className={`text-xs font-thin shadow-sm
+                          className={`text-xs font-thin shadow-sm w-full sm:w-60 md:w-80 m-2
                             border-zinc-800 
                             border rounded-md 
                             focus:shadow-sm 
@@ -712,7 +714,8 @@ const Checkout = ({cart, setCart}) => {
                             || !fullPhoneNumber 
                             || !customerId
                             || !paymentSelected
-                            || !shippingSelected 
+                            || !shippingSelected
+                            || newOrderId  
                             || !preferences.acceptTerms ?
 
                             (
@@ -720,7 +723,7 @@ const Checkout = ({cart, setCart}) => {
                                 type="button" disabled 
                                 className="w-full sm:w-60 my-3 ring-1 ring-neutral-100 text-zinc-300 font-serif rounded-lg px-3 py-2">
 
-                                Confirm Order and Pay
+                                { newOrderId ? 'Order Confirmed !':'Confirm Order'}
                               </button>
                             ):(
                                 <button
@@ -782,9 +785,9 @@ const Checkout = ({cart, setCart}) => {
                                                   }, 1000);
                                 }}
 
-                                className="w-full sm:w-60 my-3 ring-1 ring-zinc-300 text-neutral-100 bg-gradient-to-b hover:shadow-sm from-green-400 to-green-600 font-serif rounded-lg px-3 py-2 ">
+                                className="w-full sm:w-60 my-3 ring ring-zinc-100 text-neutral-100 bg-gradient-to-b drop-shadow-sm hover:drop-shadow-lg transition-all ease-out delay-50 duration-300 hover:scale-105 from-green-400 to-green-600 font-serif rounded-lg px-3 py-2 ">
 
-                                Open Pay Link 🗗
+                                <span className="inline-flex">Open Secure Pay Link <ExternalLink size={11}/></span>
                               </button>
 
                           }  

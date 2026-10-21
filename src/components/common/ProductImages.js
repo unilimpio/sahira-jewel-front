@@ -27,7 +27,7 @@ const ProductImages = ({ images, className }) => {
           {images.map((image, index) => (
             
             
-            <div key={index+image.title+image.imageSrc} className={`rounded-b-md  max-h-80 ${className}`}>
+            <div key={index+image.title+image.imageSrc} className={`rounded-b-md  max-h-80  ${className}`}>
             
                <picture className="object-cover rounded-b-md brightness-105">
                   

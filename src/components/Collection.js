@@ -241,11 +241,39 @@ export default function Collection ({cart, setCart}) {
         {/* Contenedor de la Imagen con Relación de Aspecto Fija */}
         <div className="aspect-[3/4] w-full overflow-hidden bg-zinc-50 rounded-sm">
           <Link to={`/product?pId=${product.id}`} className="block h-full w-full">
-            <img
-              alt={product.imageAlt}
-              src={`${backUrl}${pathToImg}${product.imageSrc}`}
-              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            />
+          <picture className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+                  
+                  <source 
+                    media="(min-width: 1440px)" 
+                    srcSet={`${backUrl}${pathToImg}${product.image_lg}`}  
+                    type="image/jpeg"
+                  />
+
+                 
+                  <source 
+                    media="(min-width: 1024px)" 
+                    srcSet={`${backUrl}${pathToImg}${product.image_md}`} 
+                    type="image/jpeg"
+                  />
+
+                  
+                  <source 
+                    media="(min-width: 768px)" 
+                    srcSet={`${backUrl}${pathToImg}${product.image_sm}`}
+                    type="image/jpeg"
+                  />
+
+                  
+                  <img 
+                    src={`${backUrl}${pathToImg}${product.imageSrc}`} 
+                    alt={`${product.name} ${product.description} from Sahira's Original silver jewel collection.`} 
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>
+            
           </Link>
         </div>
 

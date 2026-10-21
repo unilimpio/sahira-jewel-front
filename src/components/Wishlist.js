@@ -296,8 +296,41 @@ const addCourseToCartFunction = (course) => {
                           <td className="p-2 "    >
                             <div className="w-28 overflow-clip">
                               <Link to={'/product?pId='+row.product_id} className="flex no-underline hover:underline justify-center">
-                              <img src={` ${backUrl+pathToImg+row.product_imageSrc }`} alt={`${row.product_imageAlt}`} 
-                                className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out rounded-lg overflow-hidden" /></Link>                        
+                              <picture className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out rounded-lg overflow-hidden">
+                  
+                                <source 
+                                  media="(min-width: 1440px)" 
+                                  srcSet={`${backUrl}${pathToImg}${row.product_image_lg}`}  
+                                  type="image/jpeg"
+                                />
+
+                              
+                                <source 
+                                  media="(min-width: 1024px)" 
+                                  srcSet={`${backUrl}${pathToImg}${row.product_image_md}`} 
+                                  type="image/jpeg"
+                                />
+
+                                
+                                <source 
+                                  media="(min-width: 768px)" 
+                                  srcSet={`${backUrl}${pathToImg}${row.product_image_sm}`}
+                                  type="image/jpeg"
+                                />
+
+                                
+                                <img 
+                                  src={`${backUrl}${pathToImg}${row.product_imageSrc}`} 
+                                  alt={`${product.name} ${row.product_description} from Sahira's Original silver jewel collection.`} 
+                                  className="w-full object-cover transition-all duration-700 delay-200 hover:scale-125 ease-in-out rounded-lg overflow-hidden"
+                                  
+                                  loading="eager"
+                                  decoding="async"
+                                />
+                              </picture>
+                                <img src={` ${backUrl+pathToImg+row.product_image_sm }`} alt={`${row.product_imageAlt}`} 
+                                  className="" />
+                              </Link>                        
                             </div>
                           </td>
                           <td className="p-2  overflow-clip "    >
